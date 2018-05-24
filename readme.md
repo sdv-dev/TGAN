@@ -15,6 +15,20 @@ TGAN is a tabular data synthesizer. It can generate fully synthetic data from re
 > pip3 install pandas numpy sklearn tensorflow-gpu tensorpack
 ```
 
+### Run Demo
+This demo shows how to generate synthetic version of census and covertype dataset. Generated synthetic datasets will be stored in `expdir/census` and `expdir/covertype`, while the GAN models will be stored in `train_log`. 
+
+```
+> # Dowload data
+> mkdir data
+> wget -O data/census-train.csv https://s3.amazonaws.com/hdi-demos/tgan-demo/census-train.csv
+> wget -O data/covertype-train.csv https://s3.amazonaws.com/hdi-demos/tgan-demo/covertype-train.csv
+> python3 src/launcher.py demo_config.json
+```
+
+This demo runs around 20 hours on our server which has 2 GTX 1080 GPUs. 
+
+## How it works?
 ### Datasets
 The input to this software is a csv file and a json config. 
 
@@ -44,14 +58,30 @@ Example JSON
 }, ...]
 ```
 
-### Run Demo
-```
-> # Dowload data
-> mkdir data
-> wget -O data/census-train.csv https://s3.amazonaws.com/hdi-demos/tgan-demo/census-train.csv
-> wget -O data/covertype-train.csv https://s3.amazonaws.com/hdi-demos/tgan-demo/covertype-train.csv
-> python3 src/launcher.py demo_config.json
-```
+### Training and Automated Evaluation
 
-## How it works?
+#### Split Training data. 
+We split training data into two parts. `expdir/{name}/data_I.csv` has 80% data while `expdir/{name}/data_II.csv` has 20% data. We use data\_I to train GAN and use data\_II to evaluate the model. 
 
+#### Random Search
+All tunable hyper parameters are listed in `src/TGAN_synthesize.py:23 tunable_variables`. In each iteration of random search, we randomly select a value for each tunable variable. We than train the model and generate synthetic data using the last output_epoch stored models. 
+
+#### Evaluation
+We train a decision tree classifier (with max depth=20) on the synthetic dataset and compute the accuracy of that model on data\_II. User can pick the best hyper parameter for a dataset by reading `expdir/{name}/exp-result.csv`. 
+
+### Outputs
+
+#### expdir/{name}
+- **data\_I.csv, data\_II.csv**: splited data. 
+- **exp-params.json**: hyper parameters selected in random search.
+- **exp-result.csv**: has num\_random\_search rows and output\_epoch columns, showing the classification accuracy of default classifier trained on a synthetic data and tested on data\_II. 
+- **train.npz**: convert data\_I.csv to an npz file.
+- **synthetic{iter}_{epoch}.csv/npz**: Synthetic data. iter is the random search iteration id. epoch is the training epoch. 
+
+#### train\_log/TGAN\_synthsizer:{name}-{iter}
+- This folder contains training log and last 5 models. 
+
+## TODOs
+- Select evaluation metrics for different experiment, e.g. F1, accuracy, AUC, etc. 
+- Select default classifier for evaluation. 
+- Support regression. 
