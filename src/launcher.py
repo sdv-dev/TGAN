@@ -1,6 +1,7 @@
 import subprocess
 import os
 import json
+import argparse
 import pandas as pd
 from scipy import stats
 import numpy as np
@@ -12,30 +13,6 @@ from dataprocess import npz_to_csv, csv_to_npz, split_csv
 
 
 test_dir = 'expdir'
-config = [
-    {
-        'name': 'census',
-        'num_random_search': 10,
-        'train_csv': 'data/census-train.csv',
-        'continuous_cols': [0, 5, 16, 17, 18, 29, 38],
-        'epoch': 5,
-        'steps_per_epoch': 10000,
-        'output_epoch': 3,
-        'sample_rows': 10000
-    },
-
-    {
-        'name': 'covertype',
-        'num_random_search': 20,
-        'train_csv': 'data/cover-train.csv',
-        'continuous_cols': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        'epoch': 5,
-        'steps_per_epoch': 10000,
-        'output_epoch': 3,
-        'sample_rows': 10000
-    },
-]
-
 
 def worker(task_tuple):
     worker_id = multiprocessing.current_process()._identity[0]
@@ -142,6 +119,13 @@ def run_experiment(task):
     np.savetxt(os.path.join(working_dir, 'exp-result.csv'), score_arr, delimiter=',')
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('config', help='a json config file')
+    args = parser.parse_args()
+    with open(args.config) as f:
+        config = json.load(f)
+    print(config)
+
     try:
         os.mkdir(test_dir)
     except:

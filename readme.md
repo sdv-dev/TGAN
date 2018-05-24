@@ -46,7 +46,11 @@ Example JSON
 
 ### Run Demo
 ```
-> python3 src/launcher.py demo/config.json
+> # Dowload data
+> mkdir data
+> wget -O data/census-train.csv https://s3.amazonaws.com/hdi-demos/tgan-demo/census-train.csv
+> wget -O data/covertype-train.csv https://s3.amazonaws.com/hdi-demos/tgan-demo/covertype-train.csv
+> python3 src/launcher.py demo_config.json
 ```
 
 ## How it works?

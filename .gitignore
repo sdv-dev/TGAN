@@ -131,3 +131,8 @@ venv.bak/
 
 # End of https://www.gitignore.io/api/macos,python
 
+train_log/
+expdir/
+data/
+*.npz
+*.csv
