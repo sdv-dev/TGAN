@@ -2,6 +2,22 @@
 
 TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data. Currently, TGAN can generate numerical columns and categorical columns. This software can do random search for TGAN parameters  on multiple datasets using multiple GPUs. 
 
+## Citation
+
+If you use TGAN, please cite the following work:
+
+> Lei Xu, Kalyan Veeramachaneni. 2018. Synthesizing Tabular Data using Generative Adversarial Networks.
+
+```
+@article{xu2018synthesizing,
+  title={Synthesizing Tabular Data using Generative Adversarial Networks},
+  author={Xu, Lei and Veeramachaneni, Kalyan},
+  journal={arXiv preprint arXiv:1811.11264},
+  year={2018}
+}
+```
+
+
 ## Quick Start
 ### requirements
 
