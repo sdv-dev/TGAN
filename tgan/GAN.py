@@ -1,10 +1,9 @@
-import tensorflow as tf
 import numpy as np
-from tensorpack import (TowerTrainer,
-                        ModelDescBase, DataFlow, StagingInput)
-from tensorpack.tfutils.tower import TowerContext, TowerFuncWrapper
+import tensorflow as tf
+from tensorpack import DataFlow, ModelDescBase, StagingInput, TowerTrainer
 from tensorpack.graph_builder import DataParallelBuilder, LeastLoadedDeviceSetter
 from tensorpack.tfutils.summary import add_moving_summary
+from tensorpack.tfutils.tower import TowerContext, TowerFuncWrapper
 from tensorpack.utils.argtools import memoized
 
 
@@ -35,14 +34,24 @@ class GANModelDesc(ModelDescBase):
             tf.summary.histogram('score-fake', score_fake)
 
             with tf.name_scope("discrim"):
-                d_loss_pos = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-                    logits=logits_real, labels=tf.ones_like(logits_real)) * .7 + \
-                    tf.random_uniform(tf.shape(logits_real), maxval=0.3), name='loss_real')
+                d_loss_pos = tf.reduce_mean(
+                    tf.nn.sigmoid_cross_entropy_with_logits(
+                        logits=logits_real,
+                        labels=tf.ones_like(logits_real)) * .7 + tf.random_uniform(
+                            tf.shape(logits_real),
+                            maxval=0.3
+                    ),
+                    name='loss_real'
+                )
+
                 d_loss_neg = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
                     logits=logits_fake, labels=tf.zeros_like(logits_fake)), name='loss_fake')
 
-                d_pos_acc = tf.reduce_mean(tf.cast(score_real > 0.5, tf.float32), name='accuracy_real')
-                d_neg_acc = tf.reduce_mean(tf.cast(score_fake < 0.5, tf.float32), name='accuracy_fake')
+                d_pos_acc = tf.reduce_mean(
+                    tf.cast(score_real > 0.5, tf.float32), name='accuracy_real')
+
+                d_neg_acc = tf.reduce_mean(
+                    tf.cast(score_fake < 0.5, tf.float32), name='accuracy_fake')
 
                 d_loss = .5 * d_loss_pos + .5 * d_loss_neg + \
                     tf.contrib.layers.apply_regularization(
@@ -62,7 +71,8 @@ class GANModelDesc(ModelDescBase):
                 extra_g = tf.identity(extra_g, name='klloss')
                 self.g_loss = tf.identity(g_loss + extra_g, name='final-g-loss')
 
-            add_moving_summary(g_loss, extra_g, self.g_loss, self.d_loss, d_pos_acc, d_neg_acc, decay=0.)
+            add_moving_summary(
+                g_loss, extra_g, self.g_loss, self.d_loss, d_pos_acc, d_neg_acc, decay=0.)
 
     @memoized
     def get_optimizer(self):
@@ -98,7 +108,9 @@ class GANTrainer(TowerTrainer):
             g_min_train_op = opt.apply_gradients(g_min_grad_clip, name='g_op')
             with tf.control_dependencies([g_min_train_op]):
                 d_min_grad = opt.compute_gradients(model.d_loss, var_list=model.d_vars)
-                d_min_grad_clip = [(tf.clip_by_value(grad, -5., 5.), var) for grad, var in d_min_grad]
+                d_min_grad_clip = [
+                    (tf.clip_by_value(grad, -5., 5.), var) for grad, var in d_min_grad]
+
                 d_min_train_op = opt.apply_gradients(d_min_grad_clip, name='d_op')
 
         self.train_op = d_min_train_op
@@ -106,6 +118,7 @@ class GANTrainer(TowerTrainer):
 
 class SeparateGANTrainer(TowerTrainer):
     """ A GAN trainer which runs two optimization ops with a certain ratio."""
+
     def __init__(self, input, model, d_period=1, g_period=1):
         """
         Args:
@@ -145,6 +158,7 @@ class MultiGPUGANTrainer(TowerTrainer):
     """
     A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support.
     """
+
     def __init__(self, nr_gpu, input, model):
         super(MultiGPUGANTrainer, self).__init__()
         assert nr_gpu > 1

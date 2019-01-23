@@ -1,7 +1,9 @@
+import json
+
 import numpy as np
 import pandas as pd
-import json
 from sklearn.mixture import GaussianMixture
+
 
 def split_csv(csv_filename, csv_out1, csv_out2, ratio=0.8):
     df = pd.read_csv(csv_filename, header=-1)
@@ -11,13 +13,13 @@ def split_csv(csv_filename, csv_out1, csv_out2, ratio=0.8):
     df1.to_csv(csv_out1, header=False, index=False)
     df2.to_csv(csv_out2, header=False, index=False)
 
+
 def value_clustering(data, n):
     assert isinstance(data, np.ndarray)
     assert data.shape[1] == 1
     model = GaussianMixture(n)
     model.fit(data)
 
-    weights = model.weights_
     means = model.means_.reshape((1, n))
     stds = np.sqrt(model.covariances_).reshape((1, n))
 
@@ -29,6 +31,7 @@ def value_clustering(data, n):
 
     features = np.clip(features, -.99, .99)
     return features, probs, list(means.flat), list(stds.flat)
+
 
 def csv_to_npz(csv_filename, npz_filename, continuous_cols):
     """csv_to_npz reads data from a csv file and convert it to
@@ -110,6 +113,7 @@ def _rev_feature(data, info):
     else:
         assert 0
 
+
 def npz_to_csv(npfilename, csvfilename):
     data = np.load(npfilename)
     info = json.loads(str(data['info']))
@@ -123,6 +127,7 @@ def npz_to_csv(npfilename, csvfilename):
     df = pd.DataFrame(dict(enumerate(table)))
     df.to_csv(csvfilename, index=False, header=False)
     return df
+
 
 if __name__ == "__main__":
     csv_to_npz("census-test.csv", "census.npz", [0, 5, 16, 17, 18, 29, 38])

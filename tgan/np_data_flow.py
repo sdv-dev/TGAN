@@ -1,6 +1,8 @@
-from tensorpack import *
-import numpy as np
 import json
+
+import numpy as np
+from tensorpack import BatchData, RNGDataFlow
+
 
 class NpDataFlow(RNGDataFlow):
     def __init__(self, filename, shuffle=True):
@@ -19,9 +21,11 @@ class NpDataFlow(RNGDataFlow):
                 cluster = col_data[:, 1:]
                 self.data.append(value)
                 self.data.append(cluster)
+
             elif col_info['type'] == 'category':
                 col_data = np.asarray(data['f%02d' % col_id], dtype='int32')
                 self.data.append(col_data)
+
             else:
                 assert 0
 
@@ -38,11 +42,11 @@ class NpDataFlow(RNGDataFlow):
         for k in idxs:
             yield self.data[k]
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     ds = NpDataFlow('census-2c.npz', shuffle=False)
     print(ds.distribution)
     ds = BatchData(ds, 3)
-
 
     for i in ds.get_data():
         print(i[0], i[2])
