@@ -11,7 +11,7 @@ with open('README.md') as readme_file:
 with open('HISTORY.md') as history_file:
     history = history_file.read()
 
-requirements = [
+install_requires = [
     'numpy>=1.16.0',
     'pandas>=0.23.4',
     'scikit-learn>=0.20.2',
@@ -19,11 +19,11 @@ requirements = [
     'tensorpack>=0.9.0.1',
 ]
 
-setup_requirements = [
+setup_requires = [
     'pytest-runner>=2.11.1',
 ]
 
-test_requirements = [
+test_require = [
     'pytest>=3.4.2',
     'pytest-cov>=2.6.0',
 ]
@@ -52,6 +52,11 @@ development_requirements = [
     'wheel>=0.30.0',
 ]
 
+extras_require = {
+    'test': test_require,
+    'dev': development_requirements + test_require,
+}
+
 setup(
     author="MIT Data To AI Lab",
     author_email='dailabmit@gmail.com',
@@ -61,18 +66,14 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
     ],
     description="Generative adversarial training for synthesizing tabular data",
-    extras_require={
-        'test': test_requirements,
-        'dev': development_requirements + test_requirements,
-    },
+    extras_require=extras_require,
     install_package_data=True,
-    install_requires=requirements,
+    install_requires=install_requires,
     license="MIT license",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
@@ -80,10 +81,10 @@ setup(
     keywords='tgan',
     name='tgan',
     packages=find_packages(include=['tgan', 'tgan.*']),
-    python_requires='>=3.4',
-    setup_requires=setup_requirements,
+    python_requires='>=3.5',
+    setup_requires=setup_requires,
     test_suite='tests',
-    tests_require=test_requirements,
+    tests_require=test_require,
     url='https://github.com/DAI-Lab/TGAN',
     version='0.1.0',
     zip_safe=False,

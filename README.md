@@ -1,14 +1,9 @@
 # TGAN
 
-Generative adversarial training for synthesizing tabular data
+[![PyPi Shield](https://img.shields.io/pypi/v/TGAN.svg)](https://pypi.python.org/pypi/TGAN)
+[![Travis CI Shield](https://travis-ci.org/DAI-Lab/TGAN.svg?branch=master)](https://travis-ci.org/DAI-Lab/TGAN)
 
-[![PyPi][pypi-img]][pypi-url]
-[![Travis][travis-img]][travis-url]
-
-[pypi-img]: https://img.shields.io/pypi/v/tgan.svg
-[pypi-url]: https://pypi.python.org/pypi/tgan
-[travis-img]: https://travis-ci.org/HDI-Project/TGAN.svg?branch=master
-[travis-url]: https://travis-ci.org/HDI-Project/TGAN
+Generative adversarial training for synthesizing tabular data.
 
 * Free software: MIT license
 * Documentation: https://DAI-Lab.github.io/tgan
@@ -57,7 +52,7 @@ This demo runs around 20 hours on our server which has 2 GTX 1080 GPUs.
 
 The input to this software is a csv file and a json config.
 
-* csv file should not have header or index. It should only contain numerical columns and categorical columns.  It should not contain any missing value.
+* csv file should not have header or index. It should only contain numerical columns and categorical columns. It should not contain any missing value.
 * json file specifies a list of experiments. Each experiment includes
   * **name**: the name of an experiment. We will create a folder in this name.
   * **num\_random\_search**: iterations of random hyper parameter search.
@@ -70,7 +65,7 @@ The input to this software is a csv file and a json config.
 
 Example JSON
 
-```json
+```python
 [{
     'name': 'census',
     'num_random_search': 10,
