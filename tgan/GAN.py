@@ -1,3 +1,5 @@
+"""GAN Models."""
+
 import numpy as np
 import tensorflow as tf
 from tensorpack import DataFlow, ModelDescBase, StagingInput, TowerTrainer
@@ -8,24 +10,46 @@ from tensorpack.utils.argtools import memoized
 
 
 class GANModelDesc(ModelDescBase):
+    """Gan Model.
+
+    Attributes:
+        g_vars(list): Generator variables.
+        d_vars(list): Discriminator variables.
+
+    """
+
     def collect_variables(self, g_scope='gen', d_scope='discrim'):
-        """
-        Assign self.g_vars to the parameters under scope `g_scope`,
-        and same with self.d_vars.
-        """
-        self.g_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, g_scope)
-        assert self.g_vars
-        self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, d_scope)
-        assert self.d_vars
-
-    def build_losses(self, logits_real, logits_fake, extra_g=0, l2_norm=0.00001):
-        """D and G play two-player minimax game with value function V(G,D)
-
-          min_G max _D V(D, G) = IE_{x ~ p_data} [log D(x)] + IE_{z ~ p_fake} [log (1 - D(G(z)))]
+        """Assign generator and discriminator variables from their scopes.
 
         Args:
-            logits_real (tf.Tensor): discrim logits from real samples
-            logits_fake (tf.Tensor): discrim logits from fake samples produced by generator
+            g_scope(str): Scope for the generator.
+            d_scope(str): Scope for the discriminator.
+
+        Raises:
+            ValueError: If any of the assignments fails or the collections are empty.
+
+        """
+        self.g_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, g_scope)
+        self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, d_scope)
+
+        if not (self.g_vars and self.d_vars):
+            raise ValueError('There are no variables defined in ')
+
+    def build_losses(self, logits_real, logits_fake, extra_g=0, l2_norm=0.00001):
+        r"""D and G play two-player minimax game with value function V(G,D).
+
+        .. math:: min_G max _D V(D, G) = IE_{x \sim p_data} [log D(x)] +
+            IE_{z \sim p_fake}[log (1 - D(G(z)))]
+
+        Args:
+            logits_real (tf.Tensor): discrim logits from real samples.
+            logits_fake (tf.Tensor): discrim logits from fake samples produced by generator.
+            extra_g(float):
+            l2_norm(float):
+
+        Returns:
+            None
+
         """
         with tf.name_scope("GAN_loss"):
             score_real = tf.sigmoid(logits_real)
@@ -37,7 +61,7 @@ class GANModelDesc(ModelDescBase):
                 d_loss_pos = tf.reduce_mean(
                     tf.nn.sigmoid_cross_entropy_with_logits(
                         logits=logits_real,
-                        labels=tf.ones_like(logits_real)) * .7 + tf.random_uniform(
+                        labels=tf.ones_like(logits_real)) * 0.7 + tf.random_uniform(
                             tf.shape(logits_real),
                             maxval=0.3
                     ),
@@ -53,7 +77,7 @@ class GANModelDesc(ModelDescBase):
                 d_neg_acc = tf.reduce_mean(
                     tf.cast(score_fake < 0.5, tf.float32), name='accuracy_fake')
 
-                d_loss = .5 * d_loss_pos + .5 * d_loss_neg + \
+                d_loss = 0.5 * d_loss_pos + 0.5 * d_loss_neg + \
                     tf.contrib.layers.apply_regularization(
                         tf.contrib.layers.l2_regularizer(l2_norm),
                         tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "discrim"))
@@ -76,40 +100,59 @@ class GANModelDesc(ModelDescBase):
 
     @memoized
     def get_optimizer(self):
+        """Return optimizer of base class."""
         return self._get_optimizer()
 
 
 class GANTrainer(TowerTrainer):
+    """GanTrainer model.
+
+    We need to set tower_func because it's a TowerTrainer, and only TowerTrainer supports
+    automatic graph creation for inference during training.
+
+    If we don't care about inference during training, using tower_func is not needed.
+    Just calling model.build_graph directly is OK.
+
+        Args:
+            input():
+            model():
+
+    """
+
     def __init__(self, input, model):
+        if not isinstance(model, GANModelDesc):
+            raise ValueError('Model argument is expected to be an instance of GanModelDesc.')
+
         super(GANTrainer, self).__init__()
-        assert isinstance(model, GANModelDesc), model
         inputs_desc = model.get_inputs_desc()
+
         # Setup input
         cbs = input.setup(inputs_desc)
         self.register_callback(cbs)
         self.model = model
-        """
-        We need to set tower_func because it's a TowerTrainer,
-        and only TowerTrainer supports automatic graph creation for inference during training.
 
-        If we don't care about inference during training, using tower_func is
-        not needed. Just calling model.build_graph directly is OK.
-        """
         # Build the graph
         self.tower_func = TowerFuncWrapper(model.build_graph, inputs_desc)
         with TowerContext('', is_training=True):
             self.tower_func(*input.get_input_tensors())
+
         opt = model.get_optimizer()
-        # Define the training iteration
-        # by default, run one d_min after one g_min
+
+        # Define the training iteration by default, run one d_min after one g_min
         with tf.name_scope('optimize'):
             g_min_grad = opt.compute_gradients(model.g_loss, var_list=model.g_vars)
-            g_min_grad_clip = [(tf.clip_by_value(grad, -5., 5.), var) for grad, var in g_min_grad]
+            g_min_grad_clip = [
+                (tf.clip_by_value(grad, -5.0, 5.0), var)
+                for grad, var in g_min_grad
+            ]
+
             g_min_train_op = opt.apply_gradients(g_min_grad_clip, name='g_op')
             with tf.control_dependencies([g_min_train_op]):
                 d_min_grad = opt.compute_gradients(model.d_loss, var_list=model.d_vars)
                 d_min_grad_clip = [
-                    (tf.clip_by_value(grad, -5., 5.), var) for grad, var in d_min_grad]
+                    (tf.clip_by_value(grad, -5.0, 5.0), var)
+                    for grad, var in d_min_grad
+                ]
 
                 d_min_train_op = opt.apply_gradients(d_min_grad_clip, name='d_op')
 
@@ -117,10 +160,11 @@ class GANTrainer(TowerTrainer):
 
 
 class SeparateGANTrainer(TowerTrainer):
-    """ A GAN trainer which runs two optimization ops with a certain ratio."""
+    """A GAN trainer which runs two optimization ops with a certain ratio."""
 
     def __init__(self, input, model, d_period=1, g_period=1):
-        """
+        """Initialize object.
+
         Args:
             d_period(int): period of each d_opt run
             g_period(int): period of each g_opt run
@@ -147,7 +191,7 @@ class SeparateGANTrainer(TowerTrainer):
                 model.g_loss, var_list=model.g_vars, name='g_min')
 
     def run_step(self):
-        # Define the training iteration
+        """Define the training iteration."""
         if self.global_step % (self._d_period) == 0:
             self.hooked_sess.run(self.d_min)
         if self.global_step % (self._g_period) == 0:
@@ -155,11 +199,17 @@ class SeparateGANTrainer(TowerTrainer):
 
 
 class MultiGPUGANTrainer(TowerTrainer):
-    """
-    A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support.
-    """
+    """A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support."""
 
     def __init__(self, nr_gpu, input, model):
+        """Initialize object.
+
+        Args:
+            nr_gpu(int):
+            input(str):
+            model(): Instance of model.
+
+        """
         super(MultiGPUGANTrainer, self).__init__()
         assert nr_gpu > 1
         raw_devices = ['/gpu:{}'.format(k) for k in range(nr_gpu)]
@@ -173,12 +223,15 @@ class MultiGPUGANTrainer(TowerTrainer):
         def get_cost(*inputs):
             model.build_graph(*inputs)
             return [model.d_loss, model.g_loss]
+
         self.tower_func = TowerFuncWrapper(get_cost, model.get_inputs_desc())
         devices = [LeastLoadedDeviceSetter(d, raw_devices) for d in raw_devices]
+
         cost_list = DataParallelBuilder.build_on_towers(
             list(range(nr_gpu)),
             lambda: self.tower_func(*input.get_input_tensors()),
             devices)
+
         # Simply average the cost here. It might be faster to average the gradients
         with tf.name_scope('optimize'):
             d_loss = tf.add_n([x[0] for x in cost_list]) * (1.0 / nr_gpu)
@@ -188,18 +241,29 @@ class MultiGPUGANTrainer(TowerTrainer):
             # run one d_min after one g_min
             g_min = opt.minimize(g_loss, var_list=model.g_vars,
                                  colocate_gradients_with_ops=True, name='g_op')
+
             with tf.control_dependencies([g_min]):
                 d_min = opt.minimize(d_loss, var_list=model.d_vars,
                                      colocate_gradients_with_ops=True, name='d_op')
+
         # Define the training iteration
         self.train_op = d_min
 
 
 class RandomZData(DataFlow):
+    """Random dataflow."""
+
     def __init__(self, shape):
+        """Initialize object.
+
+        Args:
+            shape(tuple): Shape of the array to return on :meth:`get_data`
+
+        """
         super(RandomZData, self).__init__()
         self.shape = shape
 
     def get_data(self):
+        """Yield random normal vectors of :attr:`shape`."""
         while True:
             yield [np.random.normal(0, 1, size=self.shape)]

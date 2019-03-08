@@ -262,10 +262,10 @@ def sample(n, model, model_path, output_name='gen/gen', output_filename=None):
         model=model,
         input_names=['z'],
         output_names=[output_name, 'z'])
-    
+
     pred = SimpleDatasetPredictor(
         pred, RandomZData((opt.batch_size, opt.z_dim)))
-    
+
     max_iters = n // opt.batch_size
     if output_filename is None:
         output_filename = opt.exp_name if opt.exp_name else 'generate'

@@ -1,3 +1,5 @@
+"""This module contains a wrapper of RNGDataFlow."""
+
 import json
 
 import numpy as np
@@ -5,7 +7,28 @@ from tensorpack import BatchData, RNGDataFlow
 
 
 class NpDataFlow(RNGDataFlow):
+    """Subclass of :class:`tensorpack.RNGDataFlow` prepared to work with :class:`numpy.ndarray`.
+
+    Attributes:
+        shuffle(bool): Wheter or not to shuffle the data.
+        info(dict): Metadata for the given :attr:`data`.
+        num_features(int): Number of features in given data.
+        data(list): Prepared data from :attr:`filename`.
+        distribution(list): DepecrationWarning?
+
+    """
+
     def __init__(self, filename, shuffle=True):
+        """Initialize object.
+
+        Args:
+            filename(str): Path to the json file containing the metadata.
+            shuffle(bool): Wheter or not to shuffle the data.
+
+        Raises:
+            ValueError: If any col_info['type'] is not supported
+
+        """
         self.shuffle = shuffle
         data = np.load(filename)
 
@@ -27,14 +50,29 @@ class NpDataFlow(RNGDataFlow):
                 self.data.append(col_data)
 
             else:
-                assert 0
+                raise ValueError(
+                    "col_info['type'] must be either 'category' or 'value'."
+                    "Instead it was '{}'.".format(col_info['type'])
+                )
 
         self.data = list(zip(*self.data))
 
     def size(self):
+        """Return the number of rows in data.
+
+        Returns:
+            int: Number of rows in :attr:`data`.
+
+        """
         return len(self.data)
 
     def get_data(self):
+        """Yield the rows from :attr:`data`.
+
+        Yields:
+            tuple: Row of data.
+
+        """
         idxs = np.arange(len(self.data))
         if self.shuffle:
             self.rng.shuffle(idxs)
