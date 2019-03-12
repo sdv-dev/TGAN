@@ -16,7 +16,7 @@ install_requires = [
     'pandas>=0.23.4',
     'scikit-learn>=0.20.2',
     'tensorflow>=1.12.0',
-    'tensorpack>=0.9.0.1',
+    'tensorpack==0.8.9', # https://github.com/DAI-Lab/TGAN/issues/5
 ]
 
 setup_requires = [

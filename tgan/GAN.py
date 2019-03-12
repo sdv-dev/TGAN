@@ -32,8 +32,8 @@ class GANModelDesc(ModelDescBase):
         self.g_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, g_scope)
         self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, d_scope)
 
-        if not (self.g_vars and self.d_vars):
-            raise ValueError('There are no variables defined in ')
+        if not (self.g_vars or self.d_vars):
+            raise ValueError('There are no variables defined in some of the given scopes')
 
     def build_losses(self, logits_real, logits_fake, extra_g=0, l2_norm=0.00001):
         r"""D and G play two-player minimax game with value function V(G,D).
@@ -45,7 +45,7 @@ class GANModelDesc(ModelDescBase):
             logits_real (tf.Tensor): discrim logits from real samples.
             logits_fake (tf.Tensor): discrim logits from fake samples produced by generator.
             extra_g(float):
-            l2_norm(float):
+            l2_norm(float): scale to apply L2 regularization.
 
         Returns:
             None
@@ -114,12 +114,13 @@ class GANTrainer(TowerTrainer):
     Just calling model.build_graph directly is OK.
 
         Args:
-            input():
-            model():
+            input(tensorpack.input_source.InputSource): Data input.
+            model(tgan.GAN.GANModelDesc): Model to train.
 
     """
 
     def __init__(self, input, model):
+        """Initialize object."""
         if not isinstance(model, GANModelDesc):
             raise ValueError('Model argument is expected to be an instance of GanModelDesc.')
 
@@ -166,13 +167,16 @@ class SeparateGANTrainer(TowerTrainer):
         """Initialize object.
 
         Args:
+            input(tensorpack.input_source.InputSource): Data input.
+            model(tgan.GAN.GANModelDesc): Model to train.
             d_period(int): period of each d_opt run
             g_period(int): period of each g_opt run
         """
         super(SeparateGANTrainer, self).__init__()
         self._d_period = int(d_period)
         self._g_period = int(g_period)
-        assert min(d_period, g_period) == 1
+        if not min(d_period, g_period) == 1:
+            raise ValueError('The minimum between d_period and g_period must be 1.')
 
         # Setup input
         cbs = input.setup(model.get_inputs_desc())
@@ -206,12 +210,14 @@ class MultiGPUGANTrainer(TowerTrainer):
 
         Args:
             nr_gpu(int):
-            input(str):
-            model(): Instance of model.
+            input(tensorpack.input_source.InputSource): Data input.
+            model(tgan.GAN.GANModelDesc): Model to train.
 
         """
         super(MultiGPUGANTrainer, self).__init__()
-        assert nr_gpu > 1
+        if nr_gpu <= 1:
+            raise ValueError('nr_gpu must be strictly greater than 1.')
+
         raw_devices = ['/gpu:{}'.format(k) for k in range(nr_gpu)]
 
         # Setup input

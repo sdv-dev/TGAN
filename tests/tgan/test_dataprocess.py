@@ -136,7 +136,7 @@ class TestDataProcess(TestCase):
         savez_mock.assert_called_once_with(
             'Path to save the numpy arrays.', info='string with a JSON', **data)
         json_mock.assert_called_once_with(expected_info)
-        value_mock.assert_not_called()
+        assert value_mock.call_args_list == []
 
     @patch('tgan.dataprocess.np.savez', autospec=True)
     @patch('tgan.dataprocess.json.dumps', autospec=True)

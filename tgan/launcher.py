@@ -1,5 +1,8 @@
+"""Multiprocessing utilities."""
+
 import argparse
 import json
+import logging
 import multiprocessing
 import os
 import subprocess
@@ -11,9 +14,19 @@ from tgan.evaluation import evaluate_classification
 from tgan.TGAN_synthesizer import tunable_variables
 
 test_dir = 'expdir'
+LOGGER = logging.getLogger(__name__)
 
 
 def worker(task_tuple):
+    """Invoke subprocess for each element in task_tuple.
+
+    Args:
+        task_tuple(list[list[str]]): List calls using the subprocess syntax.
+
+    Returns:
+        None
+
+    """
     worker_id = multiprocessing.current_process()._identity[0]
     gpu_id = worker_id % 2
 
@@ -22,6 +35,19 @@ def worker(task_tuple):
 
 
 def evaluate_worker(task_tuple):
+    """Evaluate the performance of the model trained in a worker.
+
+    Args:
+        task_tuple(tuple[str]): Parameters of the task (model_id, model_args, epoch_id, epoch_t,
+           working_dir, test_csv, continous_cols).
+
+    Returns:
+        tuple[str, str, float]: :attr:`model_id`, :attr:`epoch_id` and the score .
+
+    Note:
+        If there is an error while evaluating the model, will return an score of **-1**
+
+    """
     model_id, model_arg, epoch_id, epoch_t, working_dir, test_csv, continuous_cols = task_tuple
 
     syn_path = os.path.join(working_dir, 'synthetic{}_{}.npz'.format(model_id, epoch_t))
@@ -38,6 +64,18 @@ def evaluate_worker(task_tuple):
 
 
 def run_experiment(task):
+    """Run an experiment using the given values.
+
+    Args:
+        task(dict): Parameters for the experiment.
+
+    Returns:
+        None
+
+    Note:
+        The results of the experiment are stored in :attr:`expdir/task['name']/exp-result.csv`.
+
+    """
     name = task['name']
     epoch = task['epoch']
     steps = task['steps_per_epoch']
@@ -51,7 +89,7 @@ def run_experiment(task):
         os.mkdir(working_dir)
 
     except Exception:
-        print("skip {}, folder exist.".format(name))
+        LOGGER.error('skip %s, folder exist.', name)
         return
 
     train_csv_part1 = os.path.join(working_dir, 'data_I.csv')

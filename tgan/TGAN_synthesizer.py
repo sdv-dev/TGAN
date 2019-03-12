@@ -3,6 +3,9 @@
 # File: DCGAN.py
 # Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
+"""TGAN_synthesizer."""
+
+
 import argparse
 import json
 import os
@@ -32,7 +35,22 @@ tunable_variables = {
 
 
 class Model(GANModelDesc):
+    """Main model for TGAN.
+
+    Args:
+        None
+
+    Attributes:
+
+    """
+
     def _get_inputs(self):
+        """Return metadata about entry data.
+
+        Returns:
+            list[tensorpack.InputDesc]
+
+        """
         inputs = []
         for col_id, col_info in enumerate(opt.DATA_INFO['details']):
             if col_info['type'] == 'value':
@@ -57,6 +75,58 @@ class Model(GANModelDesc):
         return inputs
 
     def generator(self, z):
+        r"""Build generator graph.
+
+        We generate a numerical variable in 2 steps. We first generate the value scalar
+        :math:`v_i`, then generate the cluster vector :math:`u_i`. We generate categorical
+        feature in 1 step as a probability distribution over all possible labels.
+
+        The output and hidden state size of LSTM is :math:`n_h`. The input to the LSTM in each
+        step :math:`t` is the random variable :math:`z`, the previous hidden vector :math:`f_{t−1}`
+        or an embedding vector :math:`f^{\prime}_{t−1}` depending on the type of previous output,
+        and the weighted context vector :math:`a_{t−1}`. The random variable :math:`z` has
+        :math:`n_z` dimensions.
+        Each dimension is sampled from :math:`\mathcal{N}(0, 1)`. The attention-based context
+        vector at is a weighted average over all the previous LSTM outputs :math:`h_{1:t}`.
+        So :math:`a_t` is a :math:`n_h`-dimensional vector.
+        We learn a attention weight vector :math:`α_t \in \mathbb{R}^t` and compute context as
+
+        .. math::
+            a_t = \sum_{k=1}^{t} \frac{\textrm{exp}  {\alpha}_{t, j}}
+                {\sum_{j} \textrm{exp}  \alpha_{t,j}} h_k.
+
+        We set :math: `a_0` = 0. The output of LSTM is :math:`h_t` and we project the output to
+        a hidden vector :math:`f_t = \textrm{tanh}(W_h h_t)`, where :math:`W_h` is a learned
+        parameter in the network. The size of :math:`f_t` is :math:`n_f` .
+        We further convert the hidden vector to an output variable.
+
+        * If the output is the value part of a continuous variable, we compute the output as
+          :math:`v_i = \textrm{tanh}(W_t f_t)`. The hidden vector for :math:`t + 1` step is
+          :math:`f_t`.
+
+        * If the output is the cluster part of a continuous variable, we compute the output as
+          :math:`u_i = \textrm{softmax}(W_t f_t)`. The feature vector for :math:`t + 1` step is
+          :math:`f_t`.
+
+        * If the output is a discrete variable, we compute the output as
+          :math:`d_i = \textrm{softmax}(W_t f_t)`. The hidden vector for :math:`t + 1` step is
+          :math:`f^{\prime}_{t} = E_i [arg_k \hspace{0.25em} \textrm{max} \hspace{0.25em} d_i ]`,
+          where :math:`E \in R^{|D_i|×n_f}` is an embedding matrix for discrete variable
+          :math:`D_i`.
+
+        * :math:`f_0` is a special vector :math:`\texttt{<GO>}` and we learn it during the
+          training.
+
+        Args:
+            z:
+
+        Returns:
+            list[]
+
+        Raises:
+
+
+        """
         with tf.variable_scope('LSTM'):
             cell = tf.nn.rnn_cell.LSTMCell(opt.num_gen_rnn)
 
@@ -122,6 +192,34 @@ class Model(GANModelDesc):
 
     @auto_reuse_variable_scope
     def discriminator(self, vecs):
+        r"""Build discriminator.
+
+        We use a :math:`l`-layer fully connected neural network as the discriminator.
+        We concatenate :math:`v_{1:n_c}` , :math:`u_{1:n_c}` and :math:`d_{1:n_d}` together as the
+        input. We compute the internal layers as
+
+        .. math::
+            f^{(D)}_{1} = \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{1}(v_{1:n_c} \oplus u_{1:n_c}
+                \oplus d_{1:n_d})
+
+            f^{(D)}_{1} = \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{i}(f^{(D)}_{i−1} \oplus
+                \textrm{diversity}(f^{(D)}_{i−1})))), i = 2:l
+
+        where :math:`\oplus` is the concatenation operation. :math:`\textrm{diversity}(·)` is the
+        mini-batch discrimination vector [42]. Each dimension of the diversity vector is the total
+        distance between one sample and all other samples in the mini-batch using some learned
+        distance metric. :math:`\textrm{BN}(·)` is batch normalization, and
+        :math:`\textrm{LeakyReLU}(·)` is the leaky reflect linear activation function. We further
+        compute the output of discriminator as :math:`W^{(D)}(f^{(D)}_{l} \oplus \textrm{diversity}
+        (f^{(D)}_{l}))` which is a scalar.
+
+        Args:
+            vecs()
+
+        Returns:
+            tensorpack.FullyConected
+
+        """
         def batch_diversity(l, n_kernel=10, kernel_dim=10):
             M = FullyConnected('fc_diversity', l, n_kernel * kernel_dim, nl=tf.identity)
             M = tf.reshape(M, [-1, n_kernel, kernel_dim])
@@ -250,13 +348,14 @@ class Model(GANModelDesc):
 
 
 def get_data(datafile):
+    """Return a valid InputSource from a numpy.array file."""
     ds = NpDataFlow(datafile, shuffle=True)
     opt.distribution = ds.distribution
-    ds = BatchData(ds, opt.batch_size)
-    return ds
+    return BatchData(ds, opt.batch_size)
 
 
 def sample(n, model, model_path, output_name='gen/gen', output_filename=None):
+    """Generate samples from model."""
     pred = PredictConfig(
         session_init=get_model_loader(model_path),
         model=model,
@@ -302,6 +401,7 @@ def sample(n, model, model_path, output_name='gen/gen', output_filename=None):
 
 
 def get_args():
+    """CLI argument parser."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', help='comma separated list of GPU(s) to use.')
     parser.add_argument('--load', help='load model')
@@ -353,10 +453,9 @@ if __name__ == '__main__':
         logger.auto_set_dir(name=args.exp_name)
         GANTrainer(
             input=QueueInput(get_data(args.data)),
-            model=Model()).train_with_defaults(
-            callbacks=[
-                ModelSaver(),
-            ],
+            model=Model()
+        ).train_with_defaults(
+            callbacks=[ModelSaver(), ],
             steps_per_epoch=args.steps_per_epoch,
             max_epoch=args.max_epoch,
             session_init=SaverRestore(args.load) if args.load else None
