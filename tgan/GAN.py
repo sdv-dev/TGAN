@@ -36,14 +36,16 @@ class GANModelDesc(ModelDescBase):
             raise ValueError('There are no variables defined in some of the given scopes')
 
     def build_losses(self, logits_real, logits_fake, extra_g=0, l2_norm=0.00001):
-        r"""D and G play two-player minimax game with value function V(G,D).
+        r"""D and G play two-player minimax game with value function :math:`V(G,D)`.
 
-        .. math:: min_G max _D V(D, G) = IE_{x \sim p_data} [log D(x)] +
-            IE_{z \sim p_fake}[log (1 - D(G(z)))]
+        .. math::
+
+            min_G max_D V(D, G) = IE_{x \sim p_{data}} [log D(x)] + IE_{z \sim p_{fake}}
+                [log (1 - D(G(z)))]
 
         Args:
-            logits_real (tf.Tensor): discrim logits from real samples.
-            logits_fake (tf.Tensor): discrim logits from fake samples produced by generator.
+            logits_real (tensorflow.Tensor): discrim logits from real samples.
+            logits_fake (tensorflow.Tensor): discrim logits from fake samples from generator.
             extra_g(float):
             l2_norm(float): scale to apply L2 regularization.
 
@@ -107,15 +109,15 @@ class GANModelDesc(ModelDescBase):
 class GANTrainer(TowerTrainer):
     """GanTrainer model.
 
-    We need to set tower_func because it's a TowerTrainer, and only TowerTrainer supports
-    automatic graph creation for inference during training.
+    We need to set :meth:`tower_func` because it's a :class:`TowerTrainer`, and only
+    :class:`TowerTrainer` supports automatic graph creation for inference during training.
 
-    If we don't care about inference during training, using tower_func is not needed.
-    Just calling model.build_graph directly is OK.
+    If we don't care about inference during training, using :meth:`tower_func` is not needed.
+    Just calling :meth:`model.build_graph` directly is OK.
 
-        Args:
-            input(tensorpack.input_source.InputSource): Data input.
-            model(tgan.GAN.GANModelDesc): Model to train.
+    Args:
+        input(tensorpack.input_source.InputSource): Data input.
+        model(tgan.GAN.GANModelDesc): Model to train.
 
     """
 
@@ -161,17 +163,18 @@ class GANTrainer(TowerTrainer):
 
 
 class SeparateGANTrainer(TowerTrainer):
-    """A GAN trainer which runs two optimization ops with a certain ratio."""
+    """A GAN trainer which runs two optimization ops with a certain ratio.
+
+    Args:
+        input(tensorpack.input_source.InputSource): Data input.
+        model(tgan.GAN.GANModelDesc): Model to train.
+        d_period(int): period of each d_opt run
+        g_period(int): period of each g_opt run
+
+    """
 
     def __init__(self, input, model, d_period=1, g_period=1):
-        """Initialize object.
-
-        Args:
-            input(tensorpack.input_source.InputSource): Data input.
-            model(tgan.GAN.GANModelDesc): Model to train.
-            d_period(int): period of each d_opt run
-            g_period(int): period of each g_opt run
-        """
+        """Initialize object."""
         super(SeparateGANTrainer, self).__init__()
         self._d_period = int(d_period)
         self._g_period = int(g_period)
@@ -203,17 +206,17 @@ class SeparateGANTrainer(TowerTrainer):
 
 
 class MultiGPUGANTrainer(TowerTrainer):
-    """A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support."""
+    """A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support.
+
+    Args:
+        nr_gpu(int):
+        input(tensorpack.input_source.InputSource): Data input.
+        model(tgan.GAN.GANModelDesc): Model to train.
+
+    """
 
     def __init__(self, nr_gpu, input, model):
-        """Initialize object.
-
-        Args:
-            nr_gpu(int):
-            input(tensorpack.input_source.InputSource): Data input.
-            model(tgan.GAN.GANModelDesc): Model to train.
-
-        """
+        """Initialize object."""
         super(MultiGPUGANTrainer, self).__init__()
         if nr_gpu <= 1:
             raise ValueError('nr_gpu must be strictly greater than 1.')
@@ -257,19 +260,19 @@ class MultiGPUGANTrainer(TowerTrainer):
 
 
 class RandomZData(DataFlow):
-    """Random dataflow."""
+    """Random dataflow.
+
+    Args:
+        shape(tuple): Shape of the array to return on :meth:`get_data`
+
+    """
 
     def __init__(self, shape):
-        """Initialize object.
-
-        Args:
-            shape(tuple): Shape of the array to return on :meth:`get_data`
-
-        """
+        """Initialize object."""
         super(RandomZData, self).__init__()
         self.shape = shape
 
     def get_data(self):
-        """Yield random normal vectors of :attr:`shape`."""
+        """Yield random normal vectors of shape :attr:`shape`."""
         while True:
             yield [np.random.normal(0, 1, size=self.shape)]

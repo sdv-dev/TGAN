@@ -37,7 +37,7 @@ class TestGanModelDesc(TensorFlowTestCase):
 
         assert collection_mock.call_args_list == expected_collection_mock_call_args_list
 
-    def tets_collect_variables_raises_value_error(self):
+    def test_collect_variables_raises_value_error(self):
         """If no variables are found on one scope, a ValueError is raised."""
         # Setup
         g_scope = 'first_scope'
@@ -147,7 +147,7 @@ class TestGanTrainer(TensorFlowTestCase):
         control_mock.assert_called_once_with(['applied gradients'])
 
     def test___init__raises_value_error(self):
-        """ """
+        """If model argument is not a GanModelDesc instance, an error is raised."""
         # Setup
         input_values = 'input'
         model = 'model'

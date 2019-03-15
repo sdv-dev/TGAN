@@ -50,6 +50,10 @@ class Model(GANModelDesc):
         Returns:
             list[tensorpack.InputDesc]
 
+        Raises:
+            ValueError: If any of the elements in opt.DATA_INFO['details'] has an unsupported
+                        value in the `type` key.
+
         """
         inputs = []
         for col_id, col_info in enumerate(opt.DATA_INFO['details']):
@@ -70,7 +74,10 @@ class Model(GANModelDesc):
                 inputs.append(InputDesc(tf.int32, (opt.batch_size, 1), 'input%02d' % col_id))
 
             else:
-                assert 0
+                raise ValueError(
+                    "opt.DATA_INFO['details'][{}]['type'] must be either `category` or `values`. "
+                    "Instead it was {}.".format(col_id, col_info['type'])
+                )
 
         return inputs
 
@@ -121,10 +128,11 @@ class Model(GANModelDesc):
             z:
 
         Returns:
-            list[]
+            list[tensorflow.Tensor]: Outpu
 
         Raises:
-
+            ValueError: If any of the elements in opt.DATA_INFO['details'] has an unsupported
+                        value in the `type` key.
 
         """
         with tf.variable_scope('LSTM'):
@@ -150,7 +158,7 @@ class Model(GANModelDesc):
                         outputs.append(FullyConnected('FC2', h, 1, nl=tf.tanh))
                         input = tf.concat([h, z], axis=1)
                         attw = tf.get_variable("attw", shape=(len(states), 1, 1))
-                        attw = tf.nn.softmax(attw, dim=0)
+                        attw = tf.nn.softmax(attw, axis=0)
                         attention = tf.reduce_sum(tf.stack(states, axis=0) * attw, axis=0)
 
                     ptr += 1
@@ -164,7 +172,7 @@ class Model(GANModelDesc):
                         input = FullyConnected('FC3', w, opt.num_gen_feature, nl=tf.identity)
                         input = tf.concat([input, z], axis=1)
                         attw = tf.get_variable("attw", shape=(len(states), 1, 1))
-                        attw = tf.nn.softmax(attw, dim=0)
+                        attw = tf.nn.softmax(attw, axis=0)
                         attention = tf.reduce_sum(tf.stack(states, axis=0) * attw, axis=0)
 
                     ptr += 1
@@ -180,15 +188,69 @@ class Model(GANModelDesc):
                         input = FullyConnected('FC3', one_hot, opt.num_gen_feature, nl=tf.identity)
                         input = tf.concat([input, z], axis=1)
                         attw = tf.get_variable("attw", shape=(len(states), 1, 1))
-                        attw = tf.nn.softmax(attw, dim=0)
+                        attw = tf.nn.softmax(attw, axis=0)
                         attention = tf.reduce_sum(tf.stack(states, axis=0) * attw, axis=0)
 
                     ptr += 1
 
                 else:
-                    assert 0
+                    raise ValueError(
+                        "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                        "`values`. Instead it was {}.".format(col_id, col_info['type'])
+                    )
 
         return outputs
+
+    @staticmethod
+    def batch_diversity(layer, n_kernel=10, kernel_dim=10):
+        r"""Return the minibatch discrimination vector.
+
+        Let :math:`f(x_i) \in \mathbb{R}^A` denote a vector of features for input :math:`x_i`,
+        produced by some intermediate layer in the discriminator. We then multiply the vector
+        :math:`f(x_i)` by a tensor :math:`T \in \mathbb{R}^{A×B×C}`, which results in a matrix
+        :math:`M_i \in \mathbb{R}^{B×C}`. We then compute the :math:`L_1`-distance between the
+        rows of the resulting matrix :math:`M_i` across samples :math:`i \in {1, 2, ... , n}`
+        and apply a negative exponential:
+
+        .. math::
+
+            cb(x_i, x_j) = exp(−||M_{i,b} − M_{j,b}||_{L_1} ) \in \mathbb{R}.
+
+        The output :math:`o(x_i)` for this *minibatch layer* for a sample :math:`x_i` is then
+        defined as the sum of the cb(xi, xj )’s to all other samples:
+
+        .. math::
+            :nowrap:
+
+            \begin{aligned}
+
+            &o(x_i)_b = \sum^{n}_{j=1} cb(x_i , x_j) \in \mathbb{R}\\
+            &o(x_i) = \Big[ o(x_i)_1, o(x_i)_2, . . . , o(x_i)_B \Big] \in \mathbb{R}^B\\
+            &o(X) ∈ R^{n×B}\\
+
+            \end{aligned}
+
+        Note:
+            This is extracted from `Improved techniques for training GANs`_. by  Tim Salimans,
+            Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and Xi Chen.
+
+        .. _Improved techniques for training GANs: https://arxiv.org/pdf/1606.03498.pdf
+
+        Args:
+            layer(tf.Tensor)
+            n_kernel(int)
+            kernel_dim(int)
+
+        Returns:
+            tensorflow.Tensor
+
+        """
+        M = FullyConnected('fc_diversity', layer, n_kernel * kernel_dim, nl=tf.identity)
+        M = tf.reshape(M, [-1, n_kernel, kernel_dim])
+        M1 = tf.reshape(M, [-1, 1, n_kernel, kernel_dim])
+        M2 = tf.reshape(M, [1, -1, n_kernel, kernel_dim])
+        diff = tf.exp(-tf.reduce_sum(tf.abs(M1 - M2), axis=3))
+        return tf.reduce_sum(diff, axis=0)
 
     @auto_reuse_variable_scope
     def discriminator(self, vecs):
@@ -199,11 +261,15 @@ class Model(GANModelDesc):
         input. We compute the internal layers as
 
         .. math::
-            f^{(D)}_{1} = \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{1}(v_{1:n_c} \oplus u_{1:n_c}
+            \begin{aligned}
+
+            f^{(D)}_{1} &= \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{1}(v_{1:n_c} \oplus u_{1:n_c}
                 \oplus d_{1:n_d})
 
-            f^{(D)}_{1} = \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{i}(f^{(D)}_{i−1} \oplus
+            f^{(D)}_{1} &= \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{i}(f^{(D)}_{i−1} \oplus
                 \textrm{diversity}(f^{(D)}_{i−1})))), i = 2:l
+
+            \end{aligned}
 
         where :math:`\oplus` is the concatenation operation. :math:`\textrm{diversity}(·)` is the
         mini-batch discrimination vector [42]. Each dimension of the diversity vector is the total
@@ -214,22 +280,12 @@ class Model(GANModelDesc):
         (f^{(D)}_{l}))` which is a scalar.
 
         Args:
-            vecs()
+            vecs(list[tensorflow.Tensor]): List of tensors matching the spec of :meth:`_get_inputs`
 
         Returns:
-            tensorpack.FullyConected
+            tensorpack.FullyConected: a (b, 1) logits
 
         """
-        def batch_diversity(l, n_kernel=10, kernel_dim=10):
-            M = FullyConnected('fc_diversity', l, n_kernel * kernel_dim, nl=tf.identity)
-            M = tf.reshape(M, [-1, n_kernel, kernel_dim])
-            M1 = tf.reshape(M, [-1, 1, n_kernel, kernel_dim])
-            M2 = tf.reshape(M, [1, -1, n_kernel, kernel_dim])
-            diff = tf.exp(-tf.reduce_sum(tf.abs(M1 - M2), axis=3))
-            diversity = tf.reduce_sum(diff, axis=0)
-            return diversity
-
-        """ return a (b, 1) logits"""
         logits = tf.concat(vecs, axis=1)
         for i in range(opt.num_dis_layers):
             with tf.variable_scope('dis_fc{}'.format(i)):
@@ -242,14 +298,37 @@ class Model(GANModelDesc):
                 else:
                     logits = FullyConnected('fc', logits, opt.num_dis_hidden, nl=tf.identity)
 
-                logits = tf.concat([logits, batch_diversity(logits)], axis=1)
+                logits = tf.concat([logits, self.batch_diversity(logits)], axis=1)
                 logits = BatchNorm('bn', logits, center=True, scale=False)
                 logits = Dropout(logits)
                 logits = tf.nn.leaky_relu(logits)
 
         return FullyConnected('dis_fc_top', logits, 1, nl=tf.identity)
 
+    @staticmethod
+    def compute_kl(real, pred):
+        r"""Compute the Kullback–Leibler divergence, :math:`D_{KL}(\textrm{pred} || \textrm{real})`.
+
+        Args:
+            real(tensorflow.Tensor): Real values.
+            pred(tensorflow.Tensor): Predicted values.
+
+        Returns:
+            float: Computed divergence for the given values.
+
+        """
+        return tf.reduce_sum((tf.log(pred + 1e-4) - tf.log(real + 1e-4)) * pred)
+
     def _build_graph(self, inputs):
+        """Build graph.
+
+        Args:
+            inputs(list[tensorflow.Tensor]):
+
+        Returns:
+            None
+
+        """
         z = tf.random_normal(
             [opt.batch_size, opt.z_dim], name='z_train')
 
@@ -300,9 +379,6 @@ class Model(GANModelDesc):
             else:
                 assert 0
 
-        def compute_kl(real, pred):
-            return tf.reduce_sum((tf.log(pred + 1e-4) - tf.log(real + 1e-4)) * pred)
-
         KL = 0.
         ptr = 0
         if opt.sample == 0:
@@ -313,7 +389,7 @@ class Model(GANModelDesc):
 
                     real = tf.reduce_sum(vecs_pos[ptr], axis=0)
                     real = real / tf.reduce_sum(real)
-                    KL += compute_kl(real, dist)
+                    KL += self.compute_kl(real, dist)
                     ptr += 1
 
                 elif col_info['type'] == 'value':
@@ -322,7 +398,7 @@ class Model(GANModelDesc):
                     dist = dist / tf.reduce_sum(dist)
                     real = tf.reduce_sum(vecs_pos[ptr], axis=0)
                     real = real / tf.reduce_sum(real)
-                    KL += compute_kl(real, dist)
+                    KL += self.compute_kl(real, dist)
 
                     ptr += 1
 

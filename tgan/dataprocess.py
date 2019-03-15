@@ -97,9 +97,7 @@ def csv_to_npz(csv_filename, npz_filename, continuous_cols):
         else:
             df[i] = df[i].astype(str)
             vset = list(df[i].unique())
-            vdict = {}
-            for idx, v in enumerate(vset):
-                vdict[v] = idx
+            vdict = {value: index for index, value in enumerate(vset)}
 
             v = df[i].values
             v = list(map(lambda x: vdict[x], v))

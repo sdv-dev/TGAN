@@ -13,7 +13,7 @@ from tgan.dataprocess import csv_to_npz, npz_to_csv, split_csv
 from tgan.evaluation import evaluate_classification
 from tgan.TGAN_synthesizer import tunable_variables
 
-test_dir = 'expdir'
+TEST_DIR = 'expdir'
 LOGGER = logging.getLogger(__name__)
 
 
@@ -84,7 +84,7 @@ def run_experiment(task):
     train_csv = task['train_csv']
     continuous_cols = task['continuous_cols']
 
-    working_dir = os.path.join(test_dir, name)
+    working_dir = os.path.join(TEST_DIR, name)
     try:
         os.mkdir(working_dir)
 
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     print(config)
 
     try:
-        os.mkdir(test_dir)
+        os.mkdir(TEST_DIR)
     except Exception:
         pass
 

@@ -19,7 +19,7 @@ def _proc_data(df, continuous_cols):
 
     """
     features = []
-    num_cols = len(list(df))
+    num_cols = df.shape[1]
 
     for i in range(num_cols - 1):
 
