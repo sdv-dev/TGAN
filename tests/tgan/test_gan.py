@@ -5,12 +5,12 @@ import tensorflow as tf
 from tensorflow.test import TestCase as TensorFlowTestCase
 from tensorpack.tfutils.tower import TowerFuncWrapper
 
-from tgan.GAN import GANModelDesc, GANTrainer, MultiGPUGANTrainer, RandomZData, SeparateGANTrainer
+from tgan.gan import GANModelDesc, GANTrainer, MultiGPUGANTrainer, RandomZData, SeparateGANTrainer
 
 
 class TestGanModelDesc(TensorFlowTestCase):
 
-    @patch('tgan.GAN.tf.get_collection', autospec=True)
+    @patch('tgan.gan.tf.get_collection', autospec=True)
     def test_collect_variables(self, collection_mock):
         """collect_variable assign the collected variables defined in the given scopes."""
         # Setup
@@ -75,11 +75,11 @@ class TestGanModelDesc(TensorFlowTestCase):
 
 class TestGanTrainer(TensorFlowTestCase):
 
-    @patch('tgan.GAN.tf.control_dependencies', autospec=True)
-    @patch('tgan.GAN.tf.clip_by_value', autospec=True)
-    @patch('tgan.GAN.TowerContext', autospec=True)
-    @patch('tgan.GAN.GANTrainer.register_callback', autospec=True)
-    @patch('tgan.GAN.TowerFuncWrapper', autospec=True)
+    @patch('tgan.gan.tf.control_dependencies', autospec=True)
+    @patch('tgan.gan.tf.clip_by_value', autospec=True)
+    @patch('tgan.gan.TowerContext', autospec=True)
+    @patch('tgan.gan.GANTrainer.register_callback', autospec=True)
+    @patch('tgan.gan.TowerFuncWrapper', autospec=True)
     def test___init__(self, funcwrapper_mock, register_mock, ctx_mock, clip_mock, control_mock):
         """On init, the model is check, callbacks registered and training iteration defined."""
         # Setup
@@ -164,9 +164,9 @@ class TestGanTrainer(TensorFlowTestCase):
 
 class TestSeparateGanTrainer(TensorFlowTestCase):
 
-    @patch('tgan.GAN.TowerContext', autospec=True)
-    @patch('tgan.GAN.SeparateGANTrainer.register_callback', autospec=True)
-    @patch('tgan.GAN.TowerFuncWrapper', autospec=True)
+    @patch('tgan.gan.TowerContext', autospec=True)
+    @patch('tgan.gan.SeparateGANTrainer.register_callback', autospec=True)
+    @patch('tgan.gan.TowerFuncWrapper', autospec=True)
     def test___init__(self, funcwrapper_mock, register_mock, ctx_mock):
         """On init, callbacks are set and the training iteration defined."""
         # Setup
@@ -291,7 +291,7 @@ class TestMultiGpuGanTrainer(TensorFlowTestCase):
 
 class TestRandomZData(TestCase):
 
-    @patch('tgan.GAN.DataFlow.__init__', autospec=True)
+    @patch('tgan.gan.DataFlow.__init__', autospec=True)
     def test___init__(self, dataflow_mock):
         """On init, shape is set as attribute and super is called."""
         # Setup
@@ -304,7 +304,7 @@ class TestRandomZData(TestCase):
         assert instance.shape == (10, 2)
         dataflow_mock.assert_called_once_with()
 
-    @patch('tgan.GAN.np.random.normal', autospec=True)
+    @patch('tgan.gan.np.random.normal', autospec=True)
     def test_get_data(self, normal_mock):
         """get_data return an infinite generator of normal vectors of the given shape."""
         # Setup

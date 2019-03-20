@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -7,27 +7,56 @@ from numpy.testing import assert_equal
 from tensorflow.test import TestCase as TensorFlowTestCase
 from tensorpack.tfutils.tower import TowerContext
 
-from tgan.TGAN_synthesizer import Model, get_data
+from tgan.tgan_synthesizer import Model, get_data, sample
+
+
+def configure_opt(opt_mock):
+    """Set the required opt attributes."""
+    opt_mock.batch_size = 50
+    opt_mock.z_dim = 50
+    opt_mock.sample = 1
+    opt_mock.noise = 0.1
+    opt_mock.l2norm = 0.001
+    opt_mock.num_gen_rnn = 100
+    opt_mock.num_gen_feature = 100
+    opt_mock.num_dis_layers = 1
+    opt_mock.num_dis_hidden = 100
+
+    return opt_mock
 
 
 class TestModel(TensorFlowTestCase):
 
-    def configure_opt(self, opt_mock):
-        """Set the required opt attributes."""
-        opt_mock.batch_size = 50
-        opt_mock.z_dim = 50
-        opt_mock.sample = 1
-        opt_mock.noise = 0.1
-        opt_mock.l2norm = 0.001
-        opt_mock.num_gen_rnn = 100
-        opt_mock.num_gen_feature = 100
-        opt_mock.num_dis_layers = 1
-        opt_mock.num_dis_hidden = 100
+    @staticmethod
+    def check_operation_nodes(graph, name, node_type, dtype, shape, consumers):
+        """Test a graph node parameters.
 
-        return opt_mock
+        Args:
+            graph(tf): Graph object the node belongs to.
+            name(str): Name of the node.
+            node_type(str): Operation type of the node.
+            dtype(tf.Dtype): Dtype of the output tensor.
+            shape(tuple[int]): Shape of the output tensor.
+            consumers(list[str]): List of names of nodes consuming the node's output.
 
-    @patch('tgan.TGAN_synthesizer.InputDesc', autospec=True)
-    @patch('tgan.TGAN_synthesizer.opt', autospec=True)
+        Returns:
+            None.
+
+        Raises:
+            AssertionError: If any check fail.
+
+        """
+        operation = graph.get_operation_by_name(name)
+        assert len(operation.outputs) == 1
+        output = operation.outputs[0]
+
+        assert operation.type == node_type
+        assert output.dtype == dtype
+        assert output.shape.as_list() == shape
+        assert output.consumers() == [graph.get_operation_by_name(cons) for cons in consumers]
+
+    @patch('tgan.tgan_synthesizer.InputDesc', autospec=True)
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test__get_inputs(self, opt_mock, input_mock):
         """_get_inputs return a list of all the metadat for input entries in the graph."""
         # Setup
@@ -66,7 +95,7 @@ class TestModel(TensorFlowTestCase):
         assert opt_mock.call_args_list == []
         assert input_mock.call_args_list == expected_input_mock_call_args_list
 
-    @patch('tgan.TGAN_synthesizer.opt', autospec=True)
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test__get_inputs_raises(self, opt_mock):
         """_get_inputs raises a ValueError if an invalid column type is found."""
         # Setup
@@ -105,14 +134,14 @@ class TestModel(TensorFlowTestCase):
         # Check
         assert_equal(result, expected_result)
 
-    @patch('tgan.TGAN_synthesizer.opt')
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test_generator_category_column(self, opt_mock):
-        """build the graph for the generator model."""
+        """build the graph for the generator model with a single categorical column."""
         # Setup
         instance = Model()
         z = np.zeros((50, 100))
 
-        opt_mock = self.configure_opt(opt_mock)
+        opt_mock = configure_opt(opt_mock)
         opt_mock.DATA_INFO = {
             'details': [
                 {
@@ -136,14 +165,14 @@ class TestModel(TensorFlowTestCase):
         assert opt_mock.call_args_list == []
         assert opt_mock.method_calls == []
 
-    @patch('tgan.TGAN_synthesizer.opt')
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test_generator_value_column(self, opt_mock):
-        """build the graph for the generator model."""
+        """build the graph for the generator model with a single value column."""
         # Setup
         instance = Model()
         z = np.zeros((50, 100))
 
-        opt_mock = self.configure_opt(opt_mock)
+        opt_mock = configure_opt(opt_mock)
         opt_mock.DATA_INFO = {
             'details': [
                 {
@@ -171,14 +200,14 @@ class TestModel(TensorFlowTestCase):
         assert opt_mock.call_args_list == []
         assert opt_mock.method_calls == []
 
-    @patch('tgan.TGAN_synthesizer.opt')
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test_generator_raises(self, opt_mock):
-        """ """
+        """If the metadata is has invalid values, an exception is raised."""
         # Setup
         instance = Model()
         z = np.zeros((50, 100))
 
-        opt_mock = self.configure_opt(opt_mock)
+        opt_mock = configure_opt(opt_mock)
         opt_mock.DATA_INFO = {
             'details': [
                 {
@@ -211,53 +240,28 @@ class TestModel(TensorFlowTestCase):
         # Run
         result = Model.batch_diversity(layer, n_kernel, kernel_dim)
 
-        # Check
+        # Check - Output properties
         assert result.name == 'Sum_1:0'
         assert result.dtype == tf.float64
         assert result.shape.as_list() == [15, 20]
 
-        import ipdb; ipdb.set_trace()
-        print('')
+        graph = result.graph
 
-        ops = ["""
-            <tf.Operation 'Variable/initial_value' type=Const>
-            <tf.Operation 'Variable' type=VariableV2>
-            <tf.Operation 'Variable/Assign' type=Assign>
-            <tf.Operation 'Variable/read' type=Identity>
-            <tf.Operation 'fc_diversity/Reshape/shape' type=Const>
-            <tf.Operation 'fc_diversity/Reshape' type=Reshape>
-            <tf.Operation 'fc_diversity/W/Initializer/truncated_normal/shape' type=Const>
-            <tf.Operation 'fc_diversity/W/Initializer/truncated_normal/mean' type=Const>
-            <tf.Operation 'fc_diversity/W/Initializer/truncated_normal/stddev' type=Const>
-            <tf.Operation 'fc_diversity/W/Initializer/truncated_normal/TruncatedNormal' type=TruncatedNormal>
-            <tf.Operation 'fc_diversity/W/Initializer/truncated_normal/mul' type=Mul>
-            <tf.Operation 'fc_diversity/W/Initializer/truncated_normal' type=Add>
-            <tf.Operation 'fc_diversity/W' type=VariableV2>
-            <tf.Operation 'fc_diversity/W/Assign' type=Assign>
-            <tf.Operation 'fc_diversity/W/read' type=Identity>
-            <tf.Operation 'fc_diversity/b/Initializer/zeros' type=Const>
-            <tf.Operation 'fc_diversity/b' type=VariableV2>
-            <tf.Operation 'fc_diversity/b/Assign' type=Assign>
-            <tf.Operation 'fc_diversity/b/read' type=Identity>
-            <tf.Operation 'fc_diversity/MatMul' type=MatMul>
-            <tf.Operation 'fc_diversity/BiasAdd' type=BiasAdd>
-            <tf.Operation 'fc_diversity/Identity' type=Identity>
-            <tf.Operation 'fc_diversity/output' type=Identity>
-            <tf.Operation 'Reshape/shape' type=Const>
-            <tf.Operation 'Reshape' type=Reshape>
-            <tf.Operation 'Reshape_1/shape' type=Const>
-            <tf.Operation 'Reshape_1' type=Reshape>
-            <tf.Operation 'Reshape_2/shape' type=Const>
-            <tf.Operation 'Reshape_2' type=Reshape>
-            <tf.Operation 'sub' type=Sub>
-            <tf.Operation 'Abs' type=Abs>
-            <tf.Operation 'Sum/reduction_indices' type=Const>
-            <tf.Operation 'Sum' type=Sum>
-            <tf.Operation 'Neg' type=Neg>
-            <tf.Operation 'Exp' type=Exp>
-            <tf.Operation 'Sum_1/reduction_indices' type=Const>
-            <tf.Operation 'Sum_1' type=Sum>"""
-        ]
+        # Check - Nodes
+        self.check_operation_nodes(
+            graph, 'fc_diversity/output', 'Identity', tf.float64, [15, 600], ['Reshape'])
+        self.check_operation_nodes(
+            graph, 'Reshape', 'Reshape', tf.float64, [15, 20, 30], ['Reshape_1', 'Reshape_2'])
+        self.check_operation_nodes(
+            graph, 'Reshape_1', 'Reshape', tf.float64, [15, 1, 20, 30], ['sub'])
+        self.check_operation_nodes(
+            graph, 'Reshape_2', 'Reshape', tf.float64, [1, 15, 20, 30], ['sub'])
+        self.check_operation_nodes(graph, 'sub', 'Sub', tf.float64, [15, 15, 20, 30], ['Abs'])
+        self.check_operation_nodes(graph, 'Abs', 'Abs', tf.float64, [15, 15, 20, 30], ['Sum'])
+        self.check_operation_nodes(graph, 'Sum', 'Sum', tf.float64, [15, 15, 20], ['Neg'])
+        self.check_operation_nodes(graph, 'Neg', 'Neg', tf.float64, [15, 15, 20], ['Exp'])
+        self.check_operation_nodes(graph, 'Exp', 'Exp', tf.float64, [15, 15, 20], ['Sum_1'])
+        self.check_operation_nodes(graph, 'Sum_1', 'Sum', tf.float64, [15, 20], [])
 
         with self.test_session():
             with TowerContext('', is_training=False):
@@ -266,11 +270,11 @@ class TestModel(TensorFlowTestCase):
 
         assert_equal(result, expected_result)
 
-    @patch('tgan.TGAN_synthesizer.opt')
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test_discriminator(self, opt_mock):
         """ """
         # Setup
-        opt_mock = self.configure_opt(opt_mock)
+        opt_mock = configure_opt(opt_mock)
         opt_mock.num_dis_layers = 1
         instance = Model()
         vecs = [
@@ -288,104 +292,75 @@ class TestModel(TensorFlowTestCase):
         assert result.dtype == tf.float64
 
         graph = result.graph
-        
-        concat_op = graph.get_operation_by_name('concat')
-        assert concat_op.type == 'ConcatV2'
-        concat_output = concat_op.outputs
-        assert len(concat_output) == 1
-        assert concat_output[0].name == 'concat:0'
-        assert concat_output[0].dtype == tf.float64
-        assert concat_output[0].shape.as_list() == [7, 20]
 
-        fully_connected_op = graph.get_operation_by_name('dis_fc0/fc/output')
-        assert fully_connected_op.type == 'Identity'
-        fully_connected_output = fully_connected_op.outputs
-        assert len(fully_connected_output) == 1
-        assert fully_connected_output[0].name == 'dis_fc0/fc/output:0'
-        assert fully_connected_output[0].dtype == tf.float64
-        # The shape came from vecs shape[1] and opt_mock.num_dis_hidden
-        assert fully_connected_output[0].shape.as_list() == [7, 100] 
+        self.check_operation_nodes(
+            graph, 'concat', 'ConcatV2', tf.float64, [7, 20], ['dis_fc0/fc/Reshape'])
 
-        diversity_op = graph.get_operation_by_name('dis_fc0/fc_diversity/output')
-        assert diversity_op.type == 'Identity'
-        diversity_output = diversity_op.outputs
-        assert len(diversity_output) == 1
-        assert diversity_output[0].name == 'dis_fc0/fc_diversity/output:0'
-        assert diversity_output[0].dtype == tf.float64
-        assert diversity_output[0].shape.as_list() == [7, 100]
+        self.check_operation_nodes(
+            graph, 'dis_fc0/fc/output', 'Identity', tf.float64, [7, 100],
+            ['dis_fc0/fc_diversity/Reshape', 'dis_fc0/concat']
+        )
+        self.check_operation_nodes(
+            graph, 'dis_fc0/fc_diversity/output', 'Identity', tf.float64, [7, 100],
+            ['dis_fc0/Reshape']
+        )
+        self.check_operation_nodes(
+            graph, 'dis_fc0/concat', 'ConcatV2', tf.float64, [7, 110],
+            ['dis_fc0/bn/batchnorm/mul']
+        )
+        self.check_operation_nodes(
+            graph, 'dis_fc0/dropout/Identity', 'Identity', tf.float64, [7, 110],
+            ['dis_fc0/LeakyRelu/mul', 'dis_fc0/LeakyRelu']
+        )
 
+    @skip
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
+    def test__build_graph(self, opt_mock):
+        """ """
+        # Setup
+        opt_mock = configure_opt(opt_mock)
+        opt_mock.DATA_INFO = {
+            'details': [
+                {
+                    'type': 'value',
+                    'n': 5
+                }
+            ]
+        }
+        instance = Model()
+        inputs = [np.full((50, 10), 0.0), np.full((50, 5), 1.0)]
 
+        # Run
+        with TowerContext('', is_training=False):
+            result = instance._build_graph(inputs)
 
-        #assert graph.get_operations() == 
-        """[
+        # Check
+        assert result is None
 
-            <tf.Operation 'dis_fc0/Reshape/shape' type=Const>,
-            <tf.Operation 'dis_fc0/Reshape' type=Reshape>,
-            <tf.Operation 'dis_fc0/Reshape_1/shape' type=Const>,
-            <tf.Operation 'dis_fc0/Reshape_1' type=Reshape>,
-            <tf.Operation 'dis_fc0/Reshape_2/shape' type=Const>,
-            <tf.Operation 'dis_fc0/Reshape_2' type=Reshape>,
-            <tf.Operation 'dis_fc0/sub' type=Sub>,
-            <tf.Operation 'dis_fc0/Abs' type=Abs>,
-            <tf.Operation 'dis_fc0/Sum/reduction_indices' type=Const>,
-            <tf.Operation 'dis_fc0/Sum' type=Sum>,
-            <tf.Operation 'dis_fc0/Neg' type=Neg>,
-            <tf.Operation 'dis_fc0/Exp' type=Exp>,
-            <tf.Operation 'dis_fc0/Sum_1/reduction_indices' type=Const>,
-            <tf.Operation 'dis_fc0/Sum_1' type=Sum>,
-            <tf.Operation 'dis_fc0/concat/axis' type=Const>,
-            <tf.Operation 'dis_fc0/concat' type=ConcatV2>,
-            <tf.Operation 'dis_fc0/bn/beta/Initializer/zeros' type=Const>,
-            <tf.Operation 'dis_fc0/bn/beta' type=VariableV2>,
-            <tf.Operation 'dis_fc0/bn/beta/Assign' type=Assign>,
-            <tf.Operation 'dis_fc0/bn/beta/read' type=Identity>,
-            <tf.Operation 'dis_fc0/bn/mean/EMA/Initializer/zeros' type=Const>,
-            <tf.Operation 'dis_fc0/bn/mean/EMA' type=VariableV2>,
-            <tf.Operation 'dis_fc0/bn/mean/EMA/Assign' type=Assign>,
-            <tf.Operation 'dis_fc0/bn/mean/EMA/read' type=Identity>,
-            <tf.Operation 'dis_fc0/bn/variance/EMA/Initializer/ones' type=Const>,
-            <tf.Operation 'dis_fc0/bn/variance/EMA' type=VariableV2>,
-            <tf.Operation 'dis_fc0/bn/variance/EMA/Assign' type=Assign>,
-            <tf.Operation 'dis_fc0/bn/variance/EMA/read' type=Identity>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/add/y' type=Const>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/add' type=Add>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/Rsqrt' type=Rsqrt>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/mul' type=Mul>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/mul_1' type=Mul>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/sub' type=Sub>,
-            <tf.Operation 'dis_fc0/bn/batchnorm/add_1' type=Add>,
-            <tf.Operation 'dis_fc0/bn/output' type=Identity>,
-            <tf.Operation 'dis_fc0/dropout/Identity' type=Identity>,
-            <tf.Operation 'dis_fc0/LeakyRelu/alpha' type=Const>,
-            <tf.Operation 'dis_fc0/LeakyRelu/mul' type=Mul>,
-            <tf.Operation 'dis_fc0/LeakyRelu' type=Maximum>,
-            <tf.Operation 'dis_fc_top/Reshape/shape' type=Const>,
-            <tf.Operation 'dis_fc_top/Reshape' type=Reshape>,
-            <tf.Operation 'dis_fc_top/W/Initializer/truncated_normal/shape' type=Const>,
-            <tf.Operation 'dis_fc_top/W/Initializer/truncated_normal/mean' type=Const>,
-            <tf.Operation 'dis_fc_top/W/Initializer/truncated_normal/stddev' type=Const>,
-            <tf.Operation 'dis_fc_top/W/Initializer/truncated_normal/TruncatedNormal' type=TruncatedNormal>,
-            <tf.Operation 'dis_fc_top/W/Initializer/truncated_normal/mul' type=Mul>,
-            <tf.Operation 'dis_fc_top/W/Initializer/truncated_normal' type=Add>,
-            <tf.Operation 'dis_fc_top/W' type=VariableV2>,
-            <tf.Operation 'dis_fc_top/W/Assign' type=Assign>,
-            <tf.Operation 'dis_fc_top/W/read' type=Identity>,
-            <tf.Operation 'dis_fc_top/b/Initializer/zeros' type=Const>,
-            <tf.Operation 'dis_fc_top/b' type=VariableV2>,
-            <tf.Operation 'dis_fc_top/b/Assign' type=Assign>,
-            <tf.Operation 'dis_fc_top/b/read' type=Identity>,
-            <tf.Operation 'dis_fc_top/MatMul' type=MatMul>,
-            <tf.Operation 'dis_fc_top/BiasAdd' type=BiasAdd>,
-            <tf.Operation 'dis_fc_top/Identity' type=Identity>,
-            <tf.Operation 'dis_fc_top/output' type=Identity>
-        ]"""
+    @skip
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
+    def test_build_losses(self, opt_mock):
+        """ """
+        # Setup
+        opt_mock = configure_opt(opt_mock)
+        logits_real = np.zeros((10, 10), dtype=np.float32)
+        logits_fake = np.zeros((10, 10), dtype=np.float32)
+        extra_g = 1
+        l2_norm = 0.001
+        instance = Model()
+
+        # Run
+        result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
+
+        # Check
+        assert result is None
 
 
 class TestGetData(TestCase):
 
-    @patch('tgan.TGAN_synthesizer.opt', autospec=True)
-    @patch('tgan.TGAN_synthesizer.BatchData', autospec=True)
-    @patch('tgan.TGAN_synthesizer.NpDataFlow', autospec=True)
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
+    @patch('tgan.tgan_synthesizer.BatchData', autospec=True)
+    @patch('tgan.tgan_synthesizer.NpDataFlow', autospec=True)
     def test_get_data(self, np_mock, batch_mock, opt_mock):
         """get_data returns a Batchdata, but set global opt with NpdataFlow.distribution."""
         # Setup
@@ -407,3 +382,81 @@ class TestGetData(TestCase):
         assert opt_mock.distribution == 'distribution'
         assert data_mock.call_args_list == []
         assert opt_mock.call_args_list == []
+
+
+class TestSample(TestCase):
+
+    @patch('tgan.tgan_synthesizer.np.savez', autospec=True)
+    @patch('tgan.tgan_synthesizer.json.dumps', autospec=True)
+    @patch('tgan.tgan_synthesizer.np.concatenate', autospec=True)
+    @patch('tgan.tgan_synthesizer.SimpleDatasetPredictor', autospec=True)
+    @patch('tgan.tgan_synthesizer.RandomZData', autospec=True)
+    @patch('tgan.tgan_synthesizer.PredictConfig', autospec=True)
+    @patch('tgan.tgan_synthesizer.get_model_loader', autospec=True)
+    @patch('tgan.tgan_synthesizer.opt', autospec=True)
+    def test_sample_value_column(
+        self, opt_mock, get_model_mock, predict_mock, random_mock,
+        simple_mock, concat_mock, json_mock, save_mock
+    ):
+        """ """
+        # Setup
+        n = 50
+        model = 'Model instance'
+        model_path = 'model path'
+        output_name = 'output name'
+        output_filename = 'output filename'
+
+        opt_mock = configure_opt(opt_mock)
+        opt_mock.DATA_INFO = {
+            'details': [
+                {
+                    'type': 'value',
+                    'n': 5
+                },
+                {
+                    'type': 'category',
+                    'n': 5
+                }
+            ]
+        }
+        get_model_mock.return_value = 'restored model'
+        predict_mock.return_value = 'predict config object'
+        simple_instance = MagicMock(**{'get_result.return_value': [[0], [1]]})
+        simple_mock.return_value = simple_instance
+        random_mock.return_value = 'random z data'
+        json_mock.return_value = 'metadata'
+        concat_mock.side_effect = [np.zeros((5, 10)), 'concatenated results']
+
+        expected_concat_first_call_args = (([0],), {'axis': 0})
+
+        # Run
+        result = sample(n, model, model_path, output_name, output_filename)
+
+        # Check
+        assert result is None
+
+        assert opt_mock.call_args_list == []
+        get_model_mock.assert_called_once_with('model path')
+        predict_mock.assert_called_once_with(
+            session_init='restored model',
+            model='Model instance',
+            input_names=['z'],
+            output_names=['output name', 'z']
+        )
+        random_mock.assert_called_once_with((50, 50))
+        simple_mock.assert_called_once_with('predict config object', 'random z data')
+
+        assert len(concat_mock.call_args_list) == 2
+        first_call, second_call = concat_mock.call_args_list
+        assert first_call == expected_concat_first_call_args
+        assert len(second_call[0]) == 1
+        assert_equal(second_call[0][0][0], np.zeros((5, 1)))
+        assert_equal(second_call[0][0][1], np.zeros((5, 5)))
+        second_call[1] == {'axis': 1}
+
+        assert len(save_mock.call_args_list) == 1
+        call_args = save_mock.call_args_list[0]
+        assert call_args[0] == (output_filename, )
+        assert call_args[1]['info'] == 'metadata'
+        assert call_args[1]['f00'] == 'concatenated results'
+        assert_equal(call_args[1]['f01'], np.zeros((5, 1)))

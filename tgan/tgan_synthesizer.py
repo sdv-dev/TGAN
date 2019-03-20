@@ -19,7 +19,7 @@ from tensorpack import (
 from tensorpack.tfutils.scope_utils import auto_reuse_variable_scope
 from tensorpack.utils.globvars import globalns as opt
 
-from tgan.GAN import GANModelDesc, GANTrainer, RandomZData
+from tgan.gan import GANModelDesc, GANTrainer, RandomZData
 from tgan.np_data_flow import NpDataFlow
 
 tunable_variables = {
@@ -202,7 +202,7 @@ class Model(GANModelDesc):
         return outputs
 
     @staticmethod
-    def batch_diversity(layer, n_kernel=10, kernel_dim=10):
+    def batch_diversity(l, n_kernel=10, kernel_dim=10):
         r"""Return the minibatch discrimination vector.
 
         Let :math:`f(x_i) \in \mathbb{R}^A` denote a vector of features for input :math:`x_i`,
@@ -231,13 +231,14 @@ class Model(GANModelDesc):
             \end{aligned}
 
         Note:
-            This is extracted from `Improved techniques for training GANs`_. by  Tim Salimans,
-            Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and Xi Chen.
+            This is extracted from `Improved techniques for training GANs`_ (Section 3.2) by
+            Tim Salimans, Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and
+            Xi Chen.
 
         .. _Improved techniques for training GANs: https://arxiv.org/pdf/1606.03498.pdf
 
         Args:
-            layer(tf.Tensor)
+            l(tf.Tensor)
             n_kernel(int)
             kernel_dim(int)
 
@@ -245,7 +246,7 @@ class Model(GANModelDesc):
             tensorflow.Tensor
 
         """
-        M = FullyConnected('fc_diversity', layer, n_kernel * kernel_dim, nl=tf.identity)
+        M = FullyConnected('fc_diversity', l, n_kernel * kernel_dim, nl=tf.identity)
         M = tf.reshape(M, [-1, n_kernel, kernel_dim])
         M1 = tf.reshape(M, [-1, 1, n_kernel, kernel_dim])
         M2 = tf.reshape(M, [1, -1, n_kernel, kernel_dim])
@@ -257,7 +258,7 @@ class Model(GANModelDesc):
         r"""Build discriminator.
 
         We use a :math:`l`-layer fully connected neural network as the discriminator.
-        We concatenate :math:`v_{1:n_c}` , :math:`u_{1:n_c}` and :math:`d_{1:n_d}` together as the
+        We concatenate :math:`v_{1:n_c}`, :math:`u_{1:n_c}` and :math:`d_{1:n_d}` together as the
         input. We compute the internal layers as
 
         .. math::
@@ -320,7 +321,7 @@ class Model(GANModelDesc):
         return tf.reduce_sum((tf.log(pred + 1e-4) - tf.log(real + 1e-4)) * pred)
 
     def _build_graph(self, inputs):
-        """Build graph.
+        """Build the whole graph.
 
         Args:
             inputs(list[tensorflow.Tensor]):
@@ -353,7 +354,10 @@ class Model(GANModelDesc):
                     ptr += 1
 
                 else:
-                    assert 0
+                    raise ValueError(
+                        "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                        "`values`. Instead it was {}.".format(col_id, col_info['type'])
+                    )
 
         vecs_pos = []
         ptr = 0
@@ -377,7 +381,10 @@ class Model(GANModelDesc):
                 ptr += 1
 
             else:
-                assert 0
+                raise ValueError(
+                    "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                    "`values`. Instead it was {}.".format(col_id, col_info['type'])
+                )
 
         KL = 0.
         ptr = 0
@@ -403,7 +410,10 @@ class Model(GANModelDesc):
                     ptr += 1
 
                 else:
-                    assert 0
+                    raise ValueError(
+                        "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                        "`values`. Instead it was {}.".format(col_id, col_info['type'])
+                    )
 
         with tf.variable_scope('discrim'):
             discrim_pos = self.discriminator(vecs_pos)
@@ -424,14 +434,37 @@ class Model(GANModelDesc):
 
 
 def get_data(datafile):
-    """Return a valid InputSource from a numpy.array file."""
+    """Return a valid InputSource from a numpy.array file.
+
+    Args:
+        datafile(str): Path to the file containing data.
+
+    Returns:
+        BatchData. Object containing the data from the file.
+
+    """
     ds = NpDataFlow(datafile, shuffle=True)
     opt.distribution = ds.distribution
     return BatchData(ds, opt.batch_size)
 
 
 def sample(n, model, model_path, output_name='gen/gen', output_filename=None):
-    """Generate samples from model."""
+    """Generate samples from model.
+
+    Args:
+        n(int)
+        model(str)
+        model_path(str):
+        output_name(str):
+        output_filename(str):
+
+    Returns:
+        None
+
+    Raises:
+        ValueError
+
+    """
     pred = PredictConfig(
         session_init=get_model_loader(model_path),
         model=model,
@@ -471,7 +504,10 @@ def sample(n, model, model_path, output_name='gen/gen', output_filename=None):
             features['f%02d' % col_id] = np.concatenate([val, pro], axis=1)
 
         else:
-            assert 0
+            raise ValueError(
+                "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                "`values`. Instead it was {}.".format(col_id, col_info['type'])
+            )
 
     np.savez(output_filename, info=json.dumps(opt.DATA_INFO), **features)
 
@@ -483,7 +519,7 @@ def get_args():
     parser.add_argument('--load', help='load model')
     parser.add_argument('--sample', type=int, default=0,
                         help='the number of samples in the synthetic output.')
-    parser.add_argument('--data', help='a npz file')
+    parser.add_argument('--data', required=True, help='a npz file')
     parser.add_argument('--output', type=str)
     parser.add_argument('--exp_name', type=str, default=None)
 
@@ -519,7 +555,6 @@ def get_args():
 if __name__ == '__main__':
     args = get_args()
 
-    assert args.data
     opt.DATA_INFO = json.loads(str(np.load(args.data)['info']))
 
     if args.sample > 0:
