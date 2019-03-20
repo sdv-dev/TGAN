@@ -19,8 +19,8 @@ from tensorpack import (
 from tensorpack.tfutils.scope_utils import auto_reuse_variable_scope
 from tensorpack.utils.globvars import globalns as opt
 
-from tgan.gan import GANModelDesc, GANTrainer, RandomZData
-from tgan.np_data_flow import NpDataFlow
+from tgan.dataflows import NpDataFlow, RandomZData
+from tgan.gan import GANModelDesc, GANTrainer
 
 tunable_variables = {
     "--batch_size": [50, 100, 200],

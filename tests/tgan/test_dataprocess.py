@@ -204,7 +204,7 @@ class TestDataProcess(TestCase):
 
         # Check CategoricalTransformer mock
         transformer_mock.assert_called_once_with()
-        
+
         # Check CategoricalTransformer instance mock
         assert len(instance_mock.transform.call_args_list) == 1
         call_args, call_kwargs = instance_mock.transform.call_args_list[0]

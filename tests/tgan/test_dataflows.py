@@ -4,7 +4,7 @@ from unittest.mock import patch
 import numpy as np
 from numpy.testing import assert_equal
 
-from tgan.np_data_flow import NpDataFlow
+from tgan.dataflows import NpDataFlow, RandomZData
 
 
 class TestNPDataFlow(TestCase):
@@ -145,3 +145,35 @@ class TestNPDataFlow(TestCase):
         json_mock.assert_called_once_with('Metadata')
 
         assert result == [2, 0, 1, 3, 4]
+
+
+class TestRandomZData(TestCase):
+
+    @patch('tgan.gan.DataFlow.__init__', autospec=True)
+    def test___init__(self, dataflow_mock):
+        """On init, shape is set as attribute and super is called."""
+        # Setup
+        shape = (10, 2)
+
+        # Run
+        instance = RandomZData(shape)
+
+        # Check
+        assert instance.shape == (10, 2)
+        dataflow_mock.assert_called_once_with()
+
+    @patch('tgan.gan.np.random.normal', autospec=True)
+    def test_get_data(self, normal_mock):
+        """get_data return an infinite generator of normal vectors of the given shape."""
+        # Setup
+        shape = (2, 1)
+        instance = RandomZData(shape)
+        normal_mock.return_value = [[0.5], [0.5]]
+
+        # Run
+        generator = instance.get_data()
+        result = next(generator)
+
+        # Check
+        assert result == [normal_mock.return_value]
+        normal_mock.assert_called_once_with(0, 1, size=(2, 1))

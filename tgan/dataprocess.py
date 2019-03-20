@@ -172,11 +172,11 @@ class CategoricalTransformer:
         """Reverse the transform.
 
         Args:
-            data(np.ndarray):
+            data(np.ndarray): Transformed data to restore as categorical.
             info(dict): Metadata for the given column.
 
         Returns:
-            list
+            list: Values in the original space.
 
         """
         id2str = dict(enumerate(info['mapping']))

@@ -69,8 +69,3 @@ def evaluate_classification(
     pred = classifier.predict(test_set[0])
 
     return metric(test_set[1], pred)
-
-
-if __name__ == "__main__":
-    print(
-        evaluate_classification('reconstruct.csv', 'census-test.csv', [0, 5, 16, 17, 18, 29, 38]))

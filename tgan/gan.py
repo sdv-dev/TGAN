@@ -1,8 +1,7 @@
 """GAN Models."""
 
-import numpy as np
 import tensorflow as tf
-from tensorpack import DataFlow, ModelDescBase, StagingInput, TowerTrainer
+from tensorpack import ModelDescBase, StagingInput, TowerTrainer
 from tensorpack.graph_builder import DataParallelBuilder, LeastLoadedDeviceSetter
 from tensorpack.tfutils.summary import add_moving_summary
 from tensorpack.tfutils.tower import TowerContext, TowerFuncWrapper
@@ -257,22 +256,3 @@ class MultiGPUGANTrainer(TowerTrainer):
 
         # Define the training iteration
         self.train_op = d_min
-
-
-class RandomZData(DataFlow):
-    """Random dataflow.
-
-    Args:
-        shape(tuple): Shape of the array to return on :meth:`get_data`
-
-    """
-
-    def __init__(self, shape):
-        """Initialize object."""
-        super(RandomZData, self).__init__()
-        self.shape = shape
-
-    def get_data(self):
-        """Yield random normal vectors of shape :attr:`shape`."""
-        while True:
-            yield [np.random.normal(0, 1, size=self.shape)]

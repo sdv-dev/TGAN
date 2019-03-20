@@ -3,7 +3,7 @@
 import json
 
 import numpy as np
-from tensorpack import BatchData, RNGDataFlow
+from tensorpack import DataFlow, RNGDataFlow
 
 
 class NpDataFlow(RNGDataFlow):
@@ -81,12 +81,20 @@ class NpDataFlow(RNGDataFlow):
             yield self.data[k]
 
 
-if __name__ == '__main__':
-    ds = NpDataFlow('census-2c.npz', shuffle=False)
-    print(ds.distribution)
-    ds = BatchData(ds, 3)
+class RandomZData(DataFlow):
+    """Random dataflow.
 
-    for i in ds.get_data():
-        print(i[0], i[2])
-        print(len(i))
-        break
+    Args:
+        shape(tuple): Shape of the array to return on :meth:`get_data`
+
+    """
+
+    def __init__(self, shape):
+        """Initialize object."""
+        super(RandomZData, self).__init__()
+        self.shape = shape
+
+    def get_data(self):
+        """Yield random normal vectors of shape :attr:`shape`."""
+        while True:
+            yield [np.random.normal(0, 1, size=self.shape)]
