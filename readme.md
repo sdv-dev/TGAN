@@ -54,11 +54,11 @@ In order to be able to sample new synthetic data, **TGAN** needs to first be *fi
 
 The input data for this *fitting* process has to be a single table that:
 
-* Should not have any missing values.
-* Can have columns of types `int`, `float`, `str` or `bool`.
-* Each column has to contain only data of one type.
+* Has no missing values.
+* Has columns of types `int`, `float`, `str` or `bool`.
+* Each column contains data of only one type.
 
-The following is an example of a table with 4 columns, `str_column`, `float_column`,`int_column`,
+The following is a simple example of a table with 4 columns, `str_column`, `float_column`,`int_column`,
 `bool_column`, each one being an example of one of the supported value types.
 
 | str_column | float_column | int_column | bool_column |
@@ -68,13 +68,12 @@ The following is an example of a table with 4 columns, `str_column`, `float_colu
 |      'red' |        10.00 |          1 |       False |
 |   'yellow' |         5.50 |         17 |        True |
 
-It's important to be able to identify which of the columns are numerical, which represent a magnitude,
-and which ones are categorical, as during the preprocessing of the data, numerical and categorical
+**NOTE**: It's important have properly identifed which of the columns are numerical, which means that they represent a magnitude, and which ones are categorical, as during the preprocessing of the data, numerical and categorical
 columns will be processed differently.
 
 #### Output
 
-The output of **TGAN** is a table of sampled data, with the same columns as the input table.
+The output of **TGAN** is a table of sampled data with the same columns as the input table and as many rows as requested.
 
 #### Demo Datasets
 
@@ -82,8 +81,8 @@ The output of **TGAN** is a table of sampled data, with the same columns as the 
 come from the [UCI Machine Learning repository](http://archive.ics.uci.edu/ml), but have been
 preprocessed to be ready to use with **TGAN**, following the requirements specified in the `Input` section.
 
-You can browse the datasets directly on the
-[DAI-Lab AWS S3 Bucket](https://s3.amazonaws.com/hdi-demos/tgan-demo/)
+These datasets can be browsed and directly downloaded from the
+[tgan-demo AWS S3 Bucket](https://s3.amazonaws.com/hdi-demos/tgan-demo/)
 
 ##### Census dataset
 
@@ -100,27 +99,38 @@ forrest cover types. It's a single csv file, containing 465588 rows and 55 colum
 
 ## Basic Usage
 
+**NOTE**: All the examples of this tutorial are run in an [IPython Shell](https://ipython.org/),
+which you can install by running the following commands inside your *virtualenv*:
+
+```
+pip install ipython
+ipython
+```
+
 ### 1. Load the data
 
 The first step is to load the data wich we will use to fit TGAN. In order to do so, we will first
-import the function `tgan.data.load_data` and call it with the name of our dataset, `census`,
-which will load the corresponding demo dataset (as mentioned above).
+import the function `tgan.data.load_data` and call it with the name the dataset that we want to load.
 
-``` python
-from tgan.data import load_data
+In this case, we will load the `census` dataset, which we will use during the subsequent steps.
 
-data = load_data('census')
+```
+In [1]: from tgan.data import load_data
+
+In [2]: data = load_data('census')
+
+In [3]: data
+Out[3]:
+
+   age   Federal government   Local government   Never worked   Not in universe   Private  ...
+0   73                    0                  0              0                 1         0  ...
+1   58                    1                  0              0                 0         0  ...
+2   18                    0                  0              0                 1         0  ...
+
+
 ```
 
-Optionally we can split the data when loading it, by using the argument `test_size`.
-
-``` python
-fit_data, test_data = load_data('census', test_size=0.25)
-```
-
-Our dataset is split in two, `fit_data`  contains the datathat will be used to **fit** the model,
-while `test_data` contains the data that will be used to **evaluate** the model performance after we have
-fitted it.
+`data` will contain a `pandas.DataFrame` with the table of data from the `census` dataset ready to be used to fit the model.
 
 ### 2. Create a TGAN instance
 
@@ -128,10 +138,10 @@ The next step is to import TGAN and create an instance of the model.
 
 To do so, we need to import the `tgan.model.TGANModel` class and call it.
 
-``` python
-from tgan.model import TGANModel
+```
+In [4]: from tgan.model import TGANModel
 
-tgan = TGANModel()
+In [5]: tgan = TGANModel()
 ```
 
 This will create a TGAN instance with the default parameters.
@@ -141,99 +151,102 @@ This will create a TGAN instance with the default parameters.
 The third step is to pass the data that we have loaded previously to the `TGANModel.fit` method to
 start the fitting.
 
-``` python
-tgan.fit(fit_data)
+```
+In [6]: tgan.fit(data)
 ```
 
-This process will not return anything, but will store the required fitting artifacts in the folder
-specified in the `output` argument, during step 1. Once `TGANModel.fit` is called, the progress of
-the fitting will be printed into screen.
+This process will not return anything, however, the progress of the fitting will be printed into screen.
 
 **NOTE** Depending on the performance of the system you are running, and the parameters selected
 for the model, this step can take up to a few hours.
 
 ### 4. Sample new data
 
-After the model has been fit, we are able to generate new samples by calling `TGANModel.sample`
-with the desired amount of samples as unique argument.
+After the model has been fit, we are ready to generate new samples by calling the `TGANModel.sample`
+method passing it the desired amount of samples:
 
-``` python
-num_samples = 1000
-samples = tgan.sample(num_samples)
+```
+In [7]: num_samples = 1000
+In [8]: samples = tgan.sample(num_samples)
+In [9]: samples
+Out[9]:
+
+   age   Federal government   Local government   Never worked   Not in universe   Private  ...
+0   59                    0                  0              0                 1         0  ...
+1   37                    0                  0              0                 0         1  ...
+2   18                    0                  0              1                 0         0  ...
+
 ```
 
-Now in samples we have a `pandas.DataFrame` containing our generated samples.
+The returned object, `samples`, is a `pandas.DataFrame` containing a table of synthetic data with
+the same format as the input data and 1000 rows as we requested.
 
 ### 5. Save and Load a model
+
+In the steps above we saw that the fitting process is slow, so we probably would like to avoid having to fit every we want to generate samples. Instead we can fit a model once, save it, and load it every time we want to sample new data.
 
 If we have a fitted model, we can save it by calling the `TGANModel.save` method, that only takes
 as argument the path to store the model into. Similarly, the `TGANModel.load` allows to load a model stored on disk by passing as argument a path where the model is stored.
 
-``` python
-model_path = 'models/mymodel'
-tgan.save(model_path)
-new_tgan = TGAN.load(model_path)
+```
+In [10]: model_path = 'models/mymodel'
+In [11]: tgan.save(model_path)
+In [12]: new_tgan = TGAN.load(model_path)
+In [13]: new_tgan.sample(num_samples)
+Out[13]:
+
+   age   Federal government   Local government   Never worked   Not in universe   Private  ...
+0   59                    0                  0              0                 1         0  ...
+1   37                    0                  0              0                 0         1  ...
+2   18                    0                  0              1                 0         0  ...
 ```
 
 At this point we could use this model instance to generate more samples.
 
-## Advanced usage
+**TODO**: Show it.
 
-### Loading custom datasets
+## Loading custom datasets
 
-If we want, we can use `load_data` in different ways, by passing different arguments:
+In the previous steps we used some demonstration data but we did not show how to load your own dataset.
 
-* name (`str`, **required**): Dataset to load, it can be intrepreted as one of the following:
+In order to do so you can use the same funciton as before, `load_data`, by passing it the path
+to the CSV file that you want to load.
 
-  * **S3 Dataset**: If `name` is one of the example datasets, `load_data` will download it from S3.
-    Further calls for the same dataset will not be downloaded, and the stored dataset will be
-    returned.
+Additionally, there are a couple of arguments that allow customizing the preprocessing to your data:
 
-  * **Path**: Local path to a dataset.
-
-* preprocessing (`bool`, default:`True`): Whether or not preprocess the dataset after fetching it.
+* `preprocessing` - (`bool`, default:`True`): Whether or not preprocess the dataset after fetching it.
   This will one-hot encode categorical columns and transform continuous columns in a way that are
   easier for the model to interpret.
-* continuous_columns(`list`, default=`[]`): 0-indexed list of columns positions to be considered
+* `continuous_columns` - (`list`, default=`[]`): 0-indexed list of columns positions to be considered
   continuous during preprocessing. This argument is **required** if we want to preprocess a local
   dataset.
-* test_size(`float`, default=`None`): It must be between 0.0 and 1.0, it's the proportion of the
-  original dataset to be included in the fit split.
 
-If we wanted to use a local dataset, we will use `load_data` like this:
+For example, if we want to load a local CSV file, `path/to/my.csv`, that has as continuous columns
+their first 4 columns, that is, indices [0,1,2,3], we would do it like this
 
-``` python
-name = '/path/to/dataset.csv'
-preprocessing = True
-continuous_columns = [0,1,2,3] # The first 4 columns of our dataset will be considered continuous.
-test_size = 0.25
-fit_data, test_data = load_data(
-    name,
-    preprocessing=preprocessing,
-    continuous_columns=continuous_columns,
-    test_size=test_size
-)
+```
+In [14]: data = load_data('path/to/my.csv', continuous_columns=[0,1,2,3])
 ```
 
-### Model Parameters
+## Model Parameters
 
 If you want to change the default behavior of TGANModel, such as as different `batch_size` or
 `num_epochs`, you can do so by passing different arguments when creating the instance. Have b
 
-#### Model general behavior
+### Model general behavior
 
 * output (`str`, default=`output`): Path to store the model and its artifacts.
 * gpu (`list[str]`, default=`[]`): Comma separated list of GPU(s) to use.
 * workers (`int`, default=1): Number of workers to run parallelism on.
 
-#### Neural network definition and fitting
+### Neural network definition and fitting
 
 * batch_size (`int`, default=`200`): Size of the batch to feed the model at each step.
 * z_dim (`int`, default=`100`): Number of labels in the data.
-* num_gen_rnn (`int`, default=`400`): 
+* num_gen_rnn (`int`, default=`400`):
 * num_gen_feature (`int`, default=`100`): Number of features of in the generator.
-* num_dis_layers (`int`, default=`2`): 
-* num_dis_hidden (`int`, default=`200`): 
+* num_dis_layers (`int`, default=`2`):
+* num_dis_hidden (`int`, default=`200`):
 * noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
 * max_epoch (`int`, default=`100`): Number of epochs to use during training.
 * steps_per_epoch (`int`, default=`10000`): Number of steps to run on each epoch.
@@ -244,7 +257,7 @@ If you want to change the default behavior of TGANModel, such as as different `b
 
 If we wanted to create an identical instance to the one created on step 2, but passing the arguments in a explicit way we will do something like this:
 
-```python
+```
 tgan = TGANModel(
     output='output',
     gpu=[],
@@ -264,14 +277,6 @@ tgan = TGANModel(
     l2norm=0.00001
 )
 ```
-
-## Training artifacts
-
-On the folder specified in the Model parameter `output`, after a succesfull training, one can find:
-
-* **Training logs**: Logs generated by `Tensorflow` / `Tensorpack`, that can be used with
-  [Tensorboard](https://www.tensorflow.org/guide/summaries_and_tensorboard).
-* **Models**: Binary files for the model.
 
 ## Citation
 
