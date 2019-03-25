@@ -68,8 +68,9 @@ The following is a simple example of a table with 4 columns, `str_column`, `floa
 |      'red' |        10.00 |          1 |       False |
 |   'yellow' |         5.50 |         17 |        True |
 
-**NOTE**: It's important have properly identifed which of the columns are numerical, which means that they represent a magnitude, and which ones are categorical, as during the preprocessing of the data, numerical and categorical
-columns will be processed differently.
+**NOTE**: It's important to have properly identifed which of the columns are numerical, which means
+that they represent a magnitude, and which ones are categorical, as during the preprocessing of
+the data, numerical and categorical columns will be processed differently.
 
 #### Output
 
@@ -97,7 +98,10 @@ This dataset contains a single table with cartographic information labeled with 
 forrest cover types. It's a single csv file, containing 465588 rows and 55 columns. From these
 55 columns, 10 are identified as continuous. In **TGAN** this dataset is called `covertype`.
 
-## Basic Usage
+## Quickstart
+
+In this section we will show the most basic usage of **TGAN** in order to generate samples from a
+given dataset.
 
 **NOTE**: All the examples of this tutorial are run in an [IPython Shell](https://ipython.org/),
 which you can install by running the following commands inside your *virtualenv*:
@@ -119,7 +123,7 @@ In [1]: from tgan.data import load_data
 
 In [2]: data = load_data('census')
 
-In [3]: data
+In [3]: data.head(3)
 Out[3]:
 
    age   Federal government   Local government   Never worked   Not in universe   Private  ...
@@ -167,8 +171,10 @@ method passing it the desired amount of samples:
 
 ```
 In [7]: num_samples = 1000
+
 In [8]: samples = tgan.sample(num_samples)
-In [9]: samples
+
+In [9]: samples.head(3)
 Out[9]:
 
    age   Federal government   Local government   Never worked   Not in universe   Private  ...
@@ -190,10 +196,15 @@ as argument the path to store the model into. Similarly, the `TGANModel.load` al
 
 ```
 In [10]: model_path = 'models/mymodel'
+
 In [11]: tgan.save(model_path)
+
 In [12]: new_tgan = TGAN.load(model_path)
-In [13]: new_tgan.sample(num_samples)
-Out[13]:
+
+In [13]: new_samples = new_tgan.sample(num_samples)
+
+In [14]: new_samples.head(3)
+Out[14]:
 
    age   Federal government   Local government   Never worked   Not in universe   Private  ...
 0   59                    0                  0              0                 1         0  ...
@@ -202,8 +213,6 @@ Out[13]:
 ```
 
 At this point we could use this model instance to generate more samples.
-
-**TODO**: Show it.
 
 ## Loading custom datasets
 
@@ -225,7 +234,7 @@ For example, if we want to load a local CSV file, `path/to/my.csv`, that has as 
 their first 4 columns, that is, indices [0,1,2,3], we would do it like this
 
 ```
-In [14]: data = load_data('path/to/my.csv', continuous_columns=[0,1,2,3])
+In [15]: data = load_data('path/to/my.csv', continuous_columns=[0,1,2,3])
 ```
 
 ## Model Parameters
@@ -258,24 +267,24 @@ If you want to change the default behavior of TGANModel, such as as different `b
 If we wanted to create an identical instance to the one created on step 2, but passing the arguments in a explicit way we will do something like this:
 
 ```
-tgan = TGANModel(
-    output='output',
-    gpu=[],
-    load=None,
-    workers=1,
-    batch_size=200,
-    z_dim=100,
-    num_gen_rnn=400,
-    num_gen_feature=100
-    num_dis_layers=2,
-    num_dis_hidden=200,
-    noise=0.2,
-    max_epoch=100,
-    steps_per_epoch=10000,
-    optimizer='AdamOptimizer',
-    learning_rate=0.001,
-    l2norm=0.00001
-)
+In [16]: tgan = TGANModel(
+    ...:     output='output',
+    ...:     gpu=[],
+    ...:     load=None,
+    ...:     workers=1,
+    ...:     batch_size=200,
+    ...:     z_dim=100,
+    ...:     num_gen_rnn=400,
+    ...:     num_gen_feature=100
+    ...:     num_dis_layers=2,
+    ...:     num_dis_hidden=200,
+    ...:     noise=0.2,
+    ...:     max_epoch=100,
+    ...:     steps_per_epoch=10000,
+    ...:     optimizer='AdamOptimizer',
+    ...:     learning_rate=0.001,
+    ...:     l2norm=0.00001
+    ...:)
 ```
 
 ## Citation
