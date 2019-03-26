@@ -9,8 +9,8 @@ from tgan.dataflows import NpDataFlow, RandomZData
 
 class TestNPDataFlow(TestCase):
 
-    @patch('tgan.np_data_flow.json.loads', autospec=True)
-    @patch('tgan.np_data_flow.np.load', autospec=True)
+    @patch('tgan.dataflows.json.loads', autospec=True)
+    @patch('tgan.dataflows.np.load', autospec=True)
     def test___init__(self, load_mock, json_mock):
         """ """
         # Setup
@@ -53,8 +53,8 @@ class TestNPDataFlow(TestCase):
         load_mock.assert_called_once_with('path to data for the model')
         json_mock.assert_called_once_with('Metadata')
 
-    @patch('tgan.np_data_flow.json.loads', autospec=True)
-    @patch('tgan.np_data_flow.np.load', autospec=True)
+    @patch('tgan.dataflows.json.loads', autospec=True)
+    @patch('tgan.dataflows.np.load', autospec=True)
     def test_size(self, load_mock, json_mock):
         """size return the size of self.data."""
         # Setup
@@ -81,8 +81,8 @@ class TestNPDataFlow(TestCase):
         load_mock.assert_called_once_with('path to data for the model')
         json_mock.assert_called_once_with('Metadata')
 
-    @patch('tgan.np_data_flow.json.loads', autospec=True)
-    @patch('tgan.np_data_flow.np.load', autospec=True)
+    @patch('tgan.dataflows.json.loads', autospec=True)
+    @patch('tgan.dataflows.np.load', autospec=True)
     def test_get_data(self, load_mock, json_mock):
         """get_data return a generator yielding the contents of self.data."""
         # Setup
@@ -111,8 +111,8 @@ class TestNPDataFlow(TestCase):
         load_mock.assert_called_once_with('path to data for the model')
         json_mock.assert_called_once_with('Metadata')
 
-    @patch('tgan.np_data_flow.json.loads', autospec=True)
-    @patch('tgan.np_data_flow.np.load', autospec=True)
+    @patch('tgan.dataflows.json.loads', autospec=True)
+    @patch('tgan.dataflows.np.load', autospec=True)
     def test_get_data_shuffle(self, load_mock, json_mock):
         """get_data shuffles data when self.suffle is True.
 
@@ -149,7 +149,7 @@ class TestNPDataFlow(TestCase):
 
 class TestRandomZData(TestCase):
 
-    @patch('tgan.gan.DataFlow.__init__', autospec=True)
+    @patch('tgan.dataflows.DataFlow.__init__', autospec=True)
     def test___init__(self, dataflow_mock):
         """On init, shape is set as attribute and super is called."""
         # Setup
@@ -162,7 +162,7 @@ class TestRandomZData(TestCase):
         assert instance.shape == (10, 2)
         dataflow_mock.assert_called_once_with()
 
-    @patch('tgan.gan.np.random.normal', autospec=True)
+    @patch('tgan.dataflows.np.random.normal', autospec=True)
     def test_get_data(self, normal_mock):
         """get_data return an infinite generator of normal vectors of the given shape."""
         # Setup
