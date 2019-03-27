@@ -8,19 +8,18 @@
 
 import argparse
 import json
-import os
 from datetime import datetime
 
 import numpy as np
 import tensorflow as tf
 from tensorpack import (
-    BatchData, BatchNorm, Dropout, FullyConnected, InputDesc, ModelSaver, PredictConfig,
-    QueueInput, SaverRestore, SimpleDatasetPredictor, get_model_loader, logger)
+    BatchNorm, Dropout, FullyConnected, InputDesc, ModelDescBase, PredictConfig,
+    SimpleDatasetPredictor, get_model_loader)
 from tensorpack.tfutils.scope_utils import auto_reuse_variable_scope
-from tensorpack.utils.globvars import globalns as opt
+from tensorpack.tfutils.summary import add_moving_summary
+from tensorpack.utils.argtools import memoized
 
-from tgan.dataflows import NpDataFlow, RandomZData
-from tgan.gan import GANModelDesc, GANTrainer
+from tgan.dataflows import RandomZData
 
 tunable_variables = {
     "--batch_size": [50, 100, 200],
@@ -34,7 +33,7 @@ tunable_variables = {
 }
 
 
-class Model(GANModelDesc):
+class TGANModel(ModelDescBase):
     """Main model for TGAN.
 
     Args:
@@ -44,6 +43,107 @@ class Model(GANModelDesc):
 
     """
 
+    def __init__(
+        self, metadata, batch_size=200, z_dim=200, noise=0.2, l2norm=0.001, num_gen_rnn=100,
+        num_gen_feature=100, num_dis_layers=1, num_dis_hidden=100
+    ):
+        self.metadata = metadata
+        self.batch_size = batch_size
+        self.z_dim = z_dim
+        self.noise = 0.1
+        self.l2norm = 0.001
+        self.num_gen_rnn = 100
+        self.num_gen_feature = 100
+        self.num_dis_layers = 1
+        self.num_dis_hidden = 100
+
+    def collect_variables(self, g_scope='gen', d_scope='discrim'):
+        """Assign generator and discriminator variables from their scopes.
+
+        Args:
+            g_scope(str): Scope for the generator.
+            d_scope(str): Scope for the discriminator.
+
+        Raises:
+            ValueError: If any of the assignments fails or the collections are empty.
+
+        """
+        self.g_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, g_scope)
+        self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, d_scope)
+
+        if not (self.g_vars or self.d_vars):
+            raise ValueError('There are no variables defined in some of the given scopes')
+
+    def build_losses(self, logits_real, logits_fake, extra_g=0, l2_norm=0.00001):
+        r"""D and G play two-player minimax game with value function :math:`V(G,D)`.
+
+        .. math::
+
+            min_G max_D V(D, G) = IE_{x \sim p_{data}} [log D(x)] + IE_{z \sim p_{fake}}
+                [log (1 - D(G(z)))]
+
+        Args:
+            logits_real (tensorflow.Tensor): discrim logits from real samples.
+            logits_fake (tensorflow.Tensor): discrim logits from fake samples from generator.
+            extra_g(float):
+            l2_norm(float): scale to apply L2 regularization.
+
+        Returns:
+            None
+
+        """
+        with tf.name_scope("GAN_loss"):
+            score_real = tf.sigmoid(logits_real)
+            score_fake = tf.sigmoid(logits_fake)
+            tf.summary.histogram('score-real', score_real)
+            tf.summary.histogram('score-fake', score_fake)
+
+            with tf.name_scope("discrim"):
+                d_loss_pos = tf.reduce_mean(
+                    tf.nn.sigmoid_cross_entropy_with_logits(
+                        logits=logits_real,
+                        labels=tf.ones_like(logits_real)) * 0.7 + tf.random_uniform(
+                            tf.shape(logits_real),
+                            maxval=0.3
+                    ),
+                    name='loss_real'
+                )
+
+                d_loss_neg = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
+                    logits=logits_fake, labels=tf.zeros_like(logits_fake)), name='loss_fake')
+
+                d_pos_acc = tf.reduce_mean(
+                    tf.cast(score_real > 0.5, tf.float32), name='accuracy_real')
+
+                d_neg_acc = tf.reduce_mean(
+                    tf.cast(score_fake < 0.5, tf.float32), name='accuracy_fake')
+
+                d_loss = 0.5 * d_loss_pos + 0.5 * d_loss_neg + \
+                    tf.contrib.layers.apply_regularization(
+                        tf.contrib.layers.l2_regularizer(l2_norm),
+                        tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "discrim"))
+
+                self.d_loss = tf.identity(d_loss, name='loss')
+
+            with tf.name_scope("gen"):
+                g_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
+                    logits=logits_fake, labels=tf.ones_like(logits_fake))) + \
+                    tf.contrib.layers.apply_regularization(
+                        tf.contrib.layers.l2_regularizer(l2_norm),
+                        tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'gen'))
+
+                g_loss = tf.identity(g_loss, name='loss')
+                extra_g = tf.identity(extra_g, name='klloss')
+                self.g_loss = tf.identity(g_loss + extra_g, name='final-g-loss')
+
+            add_moving_summary(
+                g_loss, extra_g, self.g_loss, self.d_loss, d_pos_acc, d_neg_acc, decay=0.)
+
+    @memoized
+    def get_optimizer(self):
+        """Return optimizer of base class."""
+        return self._get_optimizer()
+
     def _get_inputs(self):
         """Return metadata about entry data.
 
@@ -51,32 +151,32 @@ class Model(GANModelDesc):
             list[tensorpack.InputDesc]
 
         Raises:
-            ValueError: If any of the elements in opt.DATA_INFO['details'] has an unsupported
+            ValueError: If any of the elements in self.metadata['details'] has an unsupported
                         value in the `type` key.
 
         """
         inputs = []
-        for col_id, col_info in enumerate(opt.DATA_INFO['details']):
+        for col_id, col_info in enumerate(self.metadata['details']):
             if col_info['type'] == 'value':
                 gaussian_components = col_info['n']
                 inputs.append(
-                    InputDesc(tf.float32, (opt.batch_size, 1), 'input%02dvalue' % col_id))
+                    InputDesc(tf.float32, (self.batch_size, 1), 'input%02dvalue' % col_id))
 
                 inputs.append(
                     InputDesc(
                         tf.float32,
-                        (opt.batch_size, gaussian_components),
+                        (self.batch_size, gaussian_components),
                         'input%02dcluster' % col_id
                     )
                 )
 
             elif col_info['type'] == 'category':
-                inputs.append(InputDesc(tf.int32, (opt.batch_size, 1), 'input%02d' % col_id))
+                inputs.append(InputDesc(tf.int32, (self.batch_size, 1), 'input%02d' % col_id))
 
             else:
                 raise ValueError(
-                    "opt.DATA_INFO['details'][{}]['type'] must be either `category` or `values`. "
-                    "Instead it was {}.".format(col_id, col_info['type'])
+                    "self.metadata['details'][{}]['type'] must be either `category` or "
+                    "`values`. Instead it was {}.".format(col_id, col_info['type'])
                 )
 
         return inputs
@@ -131,30 +231,31 @@ class Model(GANModelDesc):
             list[tensorflow.Tensor]: Outpu
 
         Raises:
-            ValueError: If any of the elements in opt.DATA_INFO['details'] has an unsupported
+            ValueError: If any of the elements in self.metadata['details'] has an unsupported
                         value in the `type` key.
 
         """
         with tf.variable_scope('LSTM'):
-            cell = tf.nn.rnn_cell.LSTMCell(opt.num_gen_rnn)
+            cell = tf.nn.rnn_cell.LSTMCell(self.num_gen_rnn)
 
-            state = cell.zero_state(opt.batch_size, dtype='float32')
-            attention = tf.zeros(shape=(opt.batch_size, opt.num_gen_rnn), dtype='float32')
-            input = tf.get_variable(name='go', shape=(1, opt.num_gen_feature))  # <GO>
-            input = tf.tile(input, [opt.batch_size, 1])
+            state = cell.zero_state(self.batch_size, dtype='float32')
+            attention = tf.zeros(
+                shape=(self.batch_size, self.num_gen_rnn), dtype='float32')
+            input = tf.get_variable(name='go', shape=(1, self.num_gen_feature))  # <GO>
+            input = tf.tile(input, [self.batch_size, 1])
             input = tf.concat([input, z], axis=1)
 
             ptr = 0
             outputs = []
             states = []
-            for col_id, col_info in enumerate(opt.DATA_INFO['details']):
+            for col_id, col_info in enumerate(self.metadata['details']):
                 if col_info['type'] == 'value':
                     output, state = cell(tf.concat([input, attention], axis=1), state)
                     states.append(state[1])
 
                     gaussian_components = col_info['n']
                     with tf.variable_scope("%02d" % ptr):
-                        h = FullyConnected('FC', output, opt.num_gen_feature, nl=tf.tanh)
+                        h = FullyConnected('FC', output, self.num_gen_feature, nl=tf.tanh)
                         outputs.append(FullyConnected('FC2', h, 1, nl=tf.tanh))
                         input = tf.concat([h, z], axis=1)
                         attw = tf.get_variable("attw", shape=(len(states), 1, 1))
@@ -166,10 +267,10 @@ class Model(GANModelDesc):
                     output, state = cell(tf.concat([input, attention], axis=1), state)
                     states.append(state[1])
                     with tf.variable_scope("%02d" % ptr):
-                        h = FullyConnected('FC', output, opt.num_gen_feature, nl=tf.tanh)
+                        h = FullyConnected('FC', output, self.num_gen_feature, nl=tf.tanh)
                         w = FullyConnected('FC2', h, gaussian_components, nl=tf.nn.softmax)
                         outputs.append(w)
-                        input = FullyConnected('FC3', w, opt.num_gen_feature, nl=tf.identity)
+                        input = FullyConnected('FC3', w, self.num_gen_feature, nl=tf.identity)
                         input = tf.concat([input, z], axis=1)
                         attw = tf.get_variable("attw", shape=(len(states), 1, 1))
                         attw = tf.nn.softmax(attw, axis=0)
@@ -181,11 +282,12 @@ class Model(GANModelDesc):
                     output, state = cell(tf.concat([input, attention], axis=1), state)
                     states.append(state[1])
                     with tf.variable_scope("%02d" % ptr):
-                        h = FullyConnected('FC', output, opt.num_gen_feature, nl=tf.tanh)
+                        h = FullyConnected('FC', output, self.num_gen_feature, nl=tf.tanh)
                         w = FullyConnected('FC2', h, col_info['n'], nl=tf.nn.softmax)
                         outputs.append(w)
                         one_hot = tf.one_hot(tf.argmax(w, axis=1), col_info['n'])
-                        input = FullyConnected('FC3', one_hot, opt.num_gen_feature, nl=tf.identity)
+                        input = FullyConnected(
+                            'FC3', one_hot, self.num_gen_feature, nl=tf.identity)
                         input = tf.concat([input, z], axis=1)
                         attw = tf.get_variable("attw", shape=(len(states), 1, 1))
                         attw = tf.nn.softmax(attw, axis=0)
@@ -195,7 +297,7 @@ class Model(GANModelDesc):
 
                 else:
                     raise ValueError(
-                        "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                        "self.metadata['details'][{}]['type'] must be either `category` or "
                         "`values`. Instead it was {}.".format(col_id, col_info['type'])
                     )
 
@@ -288,16 +390,16 @@ class Model(GANModelDesc):
 
         """
         logits = tf.concat(vecs, axis=1)
-        for i in range(opt.num_dis_layers):
+        for i in range(self.num_dis_layers):
             with tf.variable_scope('dis_fc{}'.format(i)):
                 if i == 0:
                     logits = FullyConnected(
-                        'fc', logits, opt.num_dis_hidden, nl=tf.identity,
+                        'fc', logits, self.num_dis_hidden, nl=tf.identity,
                         kernel_initializer=tf.truncated_normal_initializer(stddev=0.1)
                     )
 
                 else:
-                    logits = FullyConnected('fc', logits, opt.num_dis_hidden, nl=tf.identity)
+                    logits = FullyConnected('fc', logits, self.num_dis_hidden, nl=tf.identity)
 
                 logits = tf.concat([logits, self.batch_diversity(logits)], axis=1)
                 logits = BatchNorm('bn', logits, center=True, scale=False)
@@ -331,16 +433,16 @@ class Model(GANModelDesc):
 
         """
         z = tf.random_normal(
-            [opt.batch_size, opt.z_dim], name='z_train')
+            [self.batch_size, self.z_dim], name='z_train')
 
-        z = tf.placeholder_with_default(z, [None, opt.z_dim], name='z')
+        z = tf.placeholder_with_default(z, [None, self.z_dim], name='z')
 
         with tf.variable_scope('gen'):
             vecs_gen = self.generator(z)
 
             vecs_denorm = []
             ptr = 0
-            for col_id, col_info in enumerate(opt.DATA_INFO['details']):
+            for col_id, col_info in enumerate(self.metadata['details']):
                 if col_info['type'] == 'category':
                     t = tf.argmax(vecs_gen[ptr], axis=1)
                     t = tf.cast(tf.reshape(t, [-1, 1]), 'float32')
@@ -355,19 +457,19 @@ class Model(GANModelDesc):
 
                 else:
                     raise ValueError(
-                        "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                        "self.metadata['details'][{}]['type'] must be either `category` or "
                         "`values`. Instead it was {}.".format(col_id, col_info['type'])
                     )
 
         vecs_pos = []
         ptr = 0
-        for col_id, col_info in enumerate(opt.DATA_INFO['details']):
+        for col_id, col_info in enumerate(self.metadata['details']):
             if col_info['type'] == 'category':
                 one_hot = tf.one_hot(tf.reshape(inputs[ptr], [-1]), col_info['n'])
                 noise_input = one_hot
 
-                if opt.sample == 0:
-                    noise = tf.random_uniform(tf.shape(one_hot), minval=0, maxval=opt.noise)
+                if self.sample == 0:
+                    noise = tf.random_uniform(tf.shape(one_hot), minval=0, maxval=self.noise)
                     noise_input = (one_hot + noise) / tf.reduce_sum(
                         one_hot + noise, keep_dims=True, axis=1)
 
@@ -382,14 +484,14 @@ class Model(GANModelDesc):
 
             else:
                 raise ValueError(
-                    "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                    "self.metadata['details'][{}]['type'] must be either `category` or "
                     "`values`. Instead it was {}.".format(col_id, col_info['type'])
                 )
 
         KL = 0.
         ptr = 0
-        if opt.sample == 0:
-            for col_id, col_info in enumerate(opt.DATA_INFO['details']):
+        if self.sample == 0:
+            for col_id, col_info in enumerate(self.metadata['details']):
                 if col_info['type'] == 'category':
                     dist = tf.reduce_sum(vecs_gen[ptr], axis=0)
                     dist = dist / tf.reduce_sum(dist)
@@ -411,7 +513,7 @@ class Model(GANModelDesc):
 
                 else:
                     raise ValueError(
-                        "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
+                        "self.metadata['details'][{}]['type'] must be either `category` or "
                         "`values`. Instead it was {}.".format(col_id, col_info['type'])
                     )
 
@@ -419,101 +521,84 @@ class Model(GANModelDesc):
             discrim_pos = self.discriminator(vecs_pos)
             discrim_neg = self.discriminator(vecs_gen)
 
-        self.build_losses(discrim_pos, discrim_neg, extra_g=KL, l2_norm=opt.l2norm)
+        self.build_losses(discrim_pos, discrim_neg, extra_g=KL, l2_norm=self.l2norm)
         self.collect_variables()
 
     def _get_optimizer(self):
-        if opt.optimizer == 'AdamOptimizer':
-            return tf.train.AdamOptimizer(opt.learning_rate, 0.5)
+        if self.optimizer == 'AdamOptimizer':
+            return tf.train.AdamOptimizer(self.learning_rate, 0.5)
 
-        elif opt.optimizer == 'AdadeltaOptimizer':
-            return tf.train.AdadeltaOptimizer(opt.learning_rate, 0.95)
-
-        else:
-            return tf.train.GradientDescentOptimizer(opt.learning_rate)
-
-
-def get_data(datafile):
-    """Return a valid InputSource from a numpy.array file.
-
-    Args:
-        datafile(str): Path to the file containing data.
-
-    Returns:
-        BatchData. Object containing the data from the file.
-
-    """
-    ds = NpDataFlow(datafile, shuffle=True)
-    opt.distribution = ds.distribution
-    return BatchData(ds, opt.batch_size)
-
-
-def sample(n, model, model_path, output_name='gen/gen', output_filename=None):
-    """Generate samples from model.
-
-    Args:
-        n(int)
-        model(str)
-        model_path(str):
-        output_name(str):
-        output_filename(str):
-
-    Returns:
-        None
-
-    Raises:
-        ValueError
-
-    """
-    pred = PredictConfig(
-        session_init=get_model_loader(model_path),
-        model=model,
-        input_names=['z'],
-        output_names=[output_name, 'z'])
-
-    pred = SimpleDatasetPredictor(
-        pred, RandomZData((opt.batch_size, opt.z_dim)))
-
-    max_iters = n // opt.batch_size
-    if output_filename is None:
-        output_filename = opt.exp_name if opt.exp_name else 'generate'
-        timestamp = datetime.now().strftime('%m%d_%H%M%S')
-        output_filename += '_{}'.format(timestamp)
-
-    results = []
-    for idx, o in enumerate(pred.get_result()):
-        results.append(o[0])
-        if idx + 1 == max_iters:
-            break
-
-    results = np.concatenate(results, axis=0)
-
-    ptr = 0
-    features = {}
-    for col_id, col_info in enumerate(opt.DATA_INFO['details']):
-        if col_info['type'] == 'category':
-            features['f%02d' % col_id] = results[:, ptr:ptr + 1]
-            ptr += 1
-
-        elif col_info['type'] == 'value':
-            gaussian_components = col_info['n']
-            val = results[:, ptr:ptr + 1]
-            ptr += 1
-            pro = results[:, ptr:ptr + gaussian_components]
-            ptr += gaussian_components
-            features['f%02d' % col_id] = np.concatenate([val, pro], axis=1)
+        elif self.optimizer == 'AdadeltaOptimizer':
+            return tf.train.AdadeltaOptimizer(self.learning_rate, 0.95)
 
         else:
-            raise ValueError(
-                "opt.DATA_INFO['details'][{}]['type'] must be either `category` or "
-                "`values`. Instead it was {}.".format(col_id, col_info['type'])
-            )
+            return tf.train.GradientDescentOptimizer(self.learning_rate)
 
-    np.savez(output_filename, info=json.dumps(opt.DATA_INFO), **features)
+    def sample(self, n, model_path, output_name='gen/gen', output_filename=None):
+        """Generate samples from model.
+
+        Args:
+            n(int)
+            model_path(str):
+            output_name(str):
+            output_filename(str):
+
+        Returns:
+            None
+
+        Raises:
+            ValueError
+
+        """
+        pred = PredictConfig(
+            session_init=get_model_loader(model_path),
+            model=self,
+            input_names=['z'],
+            output_names=[output_name, 'z'])
+
+        pred = SimpleDatasetPredictor(
+            pred, RandomZData((self.batch_size, self.z_dim)))
+
+        max_iters = n // self.batch_size
+        if output_filename is None:
+            output_filename = self.exp_name if self.exp_name else 'generate'
+            timestamp = datetime.now().strftime('%m%d_%H%M%S')
+            output_filename += '_{}'.format(timestamp)
+
+        results = []
+        for idx, o in enumerate(pred.get_result()):
+            results.append(o[0])
+            if idx + 1 == max_iters:
+                break
+
+        results = np.concatenate(results, axis=0)
+
+        ptr = 0
+        features = {}
+        for col_id, col_info in enumerate(self.metadata['details']):
+            if col_info['type'] == 'category':
+                features['f%02d' % col_id] = results[:, ptr:ptr + 1]
+                ptr += 1
+
+            elif col_info['type'] == 'value':
+                gaussian_components = col_info['n']
+                val = results[:, ptr:ptr + 1]
+                ptr += 1
+                pro = results[:, ptr:ptr + gaussian_components]
+                ptr += gaussian_components
+                features['f%02d' % col_id] = np.concatenate([val, pro], axis=1)
+
+            else:
+                raise ValueError(
+                    "self.metadata['details'][{}]['type'] must be either `category` or "
+                    "`values`. Instead it was {}.".format(col_id, col_info['type'])
+                )
+
+        np.savez(output_filename, info=json.dumps(self.metadata), **features)
 
 
-def get_args():
-    """CLI argument parser."""
+def get_parser():
+    """Build the ArgumentParser for CLI."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', help='comma separated list of GPU(s) to use.')
     parser.add_argument('--load', help='load model')
@@ -543,31 +628,38 @@ def get_args():
 
     parser.add_argument('--l2norm', type=float, default=0.00001)
 
-    args = parser.parse_args()
-    opt.use_argument(args)
-
-    if args.gpu:
-        os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-
-    return args
+    return parser
 
 
-if __name__ == '__main__':
-    args = get_args()
-
-    opt.DATA_INFO = json.loads(str(np.load(args.data)['info']))
-
-    if args.sample > 0:
-        sample(args.sample, Model(), args.load, output_filename=args.output)
-
-    else:
-        logger.auto_set_dir(name=args.exp_name)
-        GANTrainer(
-            input=QueueInput(get_data(args.data)),
-            model=Model()
-        ).train_with_defaults(
-            callbacks=[ModelSaver(), ],
-            steps_per_epoch=args.steps_per_epoch,
-            max_epoch=args.max_epoch,
-            session_init=SaverRestore(args.load) if args.load else None
-        )
+# def get_args():
+#     """Preprocess the CLI arguments."""
+#     parser = get_parser()
+#
+#     args = parser.parse_args()
+#     opt.use_argument(args)
+#
+#     if args.gpu:
+#         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+#
+#     return args
+#
+#
+# if __name__ == '__main__':
+#     args = get_args()
+#
+#     opt.DATA_INFO = json.loads(str(np.load(args.data)['info']))
+#
+#     if args.sample > 0:
+#         sample(args.sample, Model(), args.load, output_filename=args.output)
+#
+#     else:
+#         logger.auto_set_dir(name=args.exp_name)
+#         GANTrainer(
+#             input=QueueInput(get_data(args.data)),
+#             model=Model()
+#         ).train_with_defaults(
+#             callbacks=[ModelSaver(), ],
+#             steps_per_epoch=args.steps_per_epoch,
+#             max_epoch=args.max_epoch,
+#             session_init=SaverRestore(args.load) if args.load else None
+#         )

@@ -1,108 +1,11 @@
 """GAN Models."""
 
 import tensorflow as tf
-from tensorpack import ModelDescBase, StagingInput, TowerTrainer
+from tensorpack import BatchData, QueueInput, StagingInput, TowerTrainer
 from tensorpack.graph_builder import DataParallelBuilder, LeastLoadedDeviceSetter
-from tensorpack.tfutils.summary import add_moving_summary
 from tensorpack.tfutils.tower import TowerContext, TowerFuncWrapper
-from tensorpack.utils.argtools import memoized
 
-
-class GANModelDesc(ModelDescBase):
-    """Gan Model.
-
-    Attributes:
-        g_vars(list): Generator variables.
-        d_vars(list): Discriminator variables.
-
-    """
-
-    def collect_variables(self, g_scope='gen', d_scope='discrim'):
-        """Assign generator and discriminator variables from their scopes.
-
-        Args:
-            g_scope(str): Scope for the generator.
-            d_scope(str): Scope for the discriminator.
-
-        Raises:
-            ValueError: If any of the assignments fails or the collections are empty.
-
-        """
-        self.g_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, g_scope)
-        self.d_vars = tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, d_scope)
-
-        if not (self.g_vars or self.d_vars):
-            raise ValueError('There are no variables defined in some of the given scopes')
-
-    def build_losses(self, logits_real, logits_fake, extra_g=0, l2_norm=0.00001):
-        r"""D and G play two-player minimax game with value function :math:`V(G,D)`.
-
-        .. math::
-
-            min_G max_D V(D, G) = IE_{x \sim p_{data}} [log D(x)] + IE_{z \sim p_{fake}}
-                [log (1 - D(G(z)))]
-
-        Args:
-            logits_real (tensorflow.Tensor): discrim logits from real samples.
-            logits_fake (tensorflow.Tensor): discrim logits from fake samples from generator.
-            extra_g(float):
-            l2_norm(float): scale to apply L2 regularization.
-
-        Returns:
-            None
-
-        """
-        with tf.name_scope("GAN_loss"):
-            score_real = tf.sigmoid(logits_real)
-            score_fake = tf.sigmoid(logits_fake)
-            tf.summary.histogram('score-real', score_real)
-            tf.summary.histogram('score-fake', score_fake)
-
-            with tf.name_scope("discrim"):
-                d_loss_pos = tf.reduce_mean(
-                    tf.nn.sigmoid_cross_entropy_with_logits(
-                        logits=logits_real,
-                        labels=tf.ones_like(logits_real)) * 0.7 + tf.random_uniform(
-                            tf.shape(logits_real),
-                            maxval=0.3
-                    ),
-                    name='loss_real'
-                )
-
-                d_loss_neg = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-                    logits=logits_fake, labels=tf.zeros_like(logits_fake)), name='loss_fake')
-
-                d_pos_acc = tf.reduce_mean(
-                    tf.cast(score_real > 0.5, tf.float32), name='accuracy_real')
-
-                d_neg_acc = tf.reduce_mean(
-                    tf.cast(score_fake < 0.5, tf.float32), name='accuracy_fake')
-
-                d_loss = 0.5 * d_loss_pos + 0.5 * d_loss_neg + \
-                    tf.contrib.layers.apply_regularization(
-                        tf.contrib.layers.l2_regularizer(l2_norm),
-                        tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, "discrim"))
-
-                self.d_loss = tf.identity(d_loss, name='loss')
-
-            with tf.name_scope("gen"):
-                g_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(
-                    logits=logits_fake, labels=tf.ones_like(logits_fake))) + \
-                    tf.contrib.layers.apply_regularization(
-                        tf.contrib.layers.l2_regularizer(l2_norm),
-                        tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, 'gen'))
-
-                g_loss = tf.identity(g_loss, name='loss')
-                extra_g = tf.identity(extra_g, name='klloss')
-                self.g_loss = tf.identity(g_loss + extra_g, name='final-g-loss')
-
-            add_moving_summary(
-                g_loss, extra_g, self.g_loss, self.d_loss, d_pos_acc, d_neg_acc, decay=0.)
-
-    @memoized
-    def get_optimizer(self):
-        """Return optimizer of base class."""
-        return self._get_optimizer()
+from tgan.dataflows import NpDataFlow
 
 
 class GANTrainer(TowerTrainer):
@@ -120,12 +23,14 @@ class GANTrainer(TowerTrainer):
 
     """
 
-    def __init__(self, input, model):
-        """Initialize object."""
-        if not isinstance(model, GANModelDesc):
-            raise ValueError('Model argument is expected to be an instance of GanModelDesc.')
+    def __init__(self, model_class, data, metadata, **model_kwargs):
+        model = model_class(metadata, **model_kwargs)
 
-        super(GANTrainer, self).__init__()
+        ds = NpDataFlow(data, shuffle=True)
+        batch_data = BatchData(ds, model.batch_size)
+
+        input = QueueInput(batch_data)
+        super().__init__()
         inputs_desc = model.get_inputs_desc()
 
         # Setup input

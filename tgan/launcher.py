@@ -178,12 +178,10 @@ if __name__ == "__main__":
     with open(args.config) as f:
         config = json.load(f)
 
-    print(config)
+    LOGGER.info(config)
 
-    try:
+    if not os.path.isdir(TEST_DIR):
         os.mkdir(TEST_DIR)
-    except Exception:
-        pass
 
     for task in config:
         run_experiment(task)

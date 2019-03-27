@@ -1,4 +1,4 @@
-from unittest import TestCase, skip
+from unittest import expectedFailure, skip
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -7,25 +7,25 @@ from numpy.testing import assert_equal
 from tensorflow.test import TestCase as TensorFlowTestCase
 from tensorpack.tfutils.tower import TowerContext
 
-from tgan.tgan_synthesizer import Model, get_data, sample
+from tgan.tgan_synthesizer import TGANModel
 
 
-def configure_opt(opt_mock):
+def configure_opt(opt):
     """Set the required opt attributes."""
-    opt_mock.batch_size = 50
-    opt_mock.z_dim = 50
-    opt_mock.sample = 1
-    opt_mock.noise = 0.1
-    opt_mock.l2norm = 0.001
-    opt_mock.num_gen_rnn = 100
-    opt_mock.num_gen_feature = 100
-    opt_mock.num_dis_layers = 1
-    opt_mock.num_dis_hidden = 100
+    opt.z_dim = 50
+    opt.batch_size = 50
+    opt.sample = 1
+    opt.noise = 0.1
+    opt.l2norm = 0.001
+    opt.num_gen_rnn = 100
+    opt.num_gen_feature = 100
+    opt.num_dis_layers = 1
+    opt.num_dis_hidden = 100
 
-    return opt_mock
+    return opt
 
 
-class TestModel(TensorFlowTestCase):
+class TestTGANModel(TensorFlowTestCase):
 
     @staticmethod
     def check_operation_nodes(graph, name, node_type, dtype, shape, consumers):
@@ -56,14 +56,10 @@ class TestModel(TensorFlowTestCase):
         assert output.consumers() == [graph.get_operation_by_name(cons) for cons in consumers]
 
     @patch('tgan.tgan_synthesizer.InputDesc', autospec=True)
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test__get_inputs(self, opt_mock, input_mock):
+    def test__get_inputs(self, input_mock):
         """_get_inputs return a list of all the metadat for input entries in the graph."""
         # Setup
-        instance = MagicMock()
-
-        opt_mock.batch_size = 10
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [
                 {
                     'type': 'value',
@@ -74,44 +70,41 @@ class TestModel(TensorFlowTestCase):
                 }
             ]
         }
+        instance = TGANModel(metadata)
         input_mock.side_effect = ['value_input', 'cluster_input', 'category_input']
 
         expected_input_mock_call_args_list = [
-            ((tf.float32, (10, 1), 'input00value'), {}),
-            ((tf.float32, (10, 5), 'input00cluster'), {}),
-            ((tf.int32, (10, 1), 'input01'), {}),
+            ((tf.float32, (200, 1), 'input00value'), {}),
+            ((tf.float32, (200, 5), 'input00cluster'), {}),
+            ((tf.int32, (200, 1), 'input01'), {}),
         ]
 
         expected_result = ['value_input', 'cluster_input', 'category_input']
 
         # Run
-        result = Model._get_inputs(instance)
+        result = instance._get_inputs()
 
         # Check
         assert result == expected_result
-
-        assert instance.call_args_list == []
-        assert instance.method_calls == []
-        assert opt_mock.call_args_list == []
         assert input_mock.call_args_list == expected_input_mock_call_args_list
 
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test__get_inputs_raises(self, opt_mock):
+    def test__get_inputs_raises(self):
         """_get_inputs raises a ValueError if an invalid column type is found."""
         # Setup
-        instance = MagicMock()
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [{'type': 'some invalid type'}]
         }
 
+        instance = TGANModel(metadata)
+
         expected_message = (
-            "opt.DATA_INFO['details'][0]['type'] must be either `category` or `values`. "
+            "self.metadata['details'][0]['type'] must be either `category` or `values`. "
             "Instead it was some invalid type."
         )
 
         try:
             # Run
-            Model._get_inputs(instance)
+            instance._get_inputs()
 
         except ValueError as error:
             # Check
@@ -129,20 +122,15 @@ class TestModel(TensorFlowTestCase):
         # Run
         with self.test_session():
             with TowerContext('', is_training=False):
-                result = Model.compute_kl(real, pred).eval()
+                result = TGANModel.compute_kl(real, pred).eval()
 
         # Check
         assert_equal(result, expected_result)
 
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test_generator_category_column(self, opt_mock):
-        """build the graph for the generator model with a single categorical column."""
+    def test_generator_category_column(self):
+        """build the graph for the generator TGANModel with a single categorical column."""
         # Setup
-        instance = Model()
-        z = np.zeros((50, 100))
-
-        opt_mock = configure_opt(opt_mock)
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [
                 {
                     'type': 'category',
@@ -150,6 +138,9 @@ class TestModel(TensorFlowTestCase):
                 }
             ]
         }
+
+        instance = TGANModel(metadata)
+        z = np.zeros((instance.batch_size, 100))
 
         # Run
         result = instance.generator(z)
@@ -160,20 +151,12 @@ class TestModel(TensorFlowTestCase):
 
         assert tensor.name == 'LSTM/00/FC2/output:0'
         assert tensor.dtype == tf.float32
-        assert tensor.shape.as_list() == [50, 5]
+        assert tensor.shape.as_list() == [200, 5]
 
-        assert opt_mock.call_args_list == []
-        assert opt_mock.method_calls == []
-
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test_generator_value_column(self, opt_mock):
-        """build the graph for the generator model with a single value column."""
+    def test_generator_value_column(self):
+        """build the graph for the generator TGANModel with a single value column."""
         # Setup
-        instance = Model()
-        z = np.zeros((50, 100))
-
-        opt_mock = configure_opt(opt_mock)
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [
                 {
                     'type': 'value',
@@ -181,6 +164,9 @@ class TestModel(TensorFlowTestCase):
                 }
             ]
         }
+
+        instance = TGANModel(metadata)
+        z = np.zeros((instance.batch_size, 100))
 
         # Run
         result = instance.generator(z)
@@ -191,24 +177,16 @@ class TestModel(TensorFlowTestCase):
 
         assert first_tensor.name == 'LSTM/00/FC2/output:0'
         assert first_tensor.dtype == tf.float32
-        assert first_tensor.shape.as_list() == [50, 1]
+        assert first_tensor.shape.as_list() == [200, 1]
 
         assert second_tensor.name == 'LSTM/01/FC2/output:0'
         assert second_tensor.dtype == tf.float32
-        assert second_tensor.shape.as_list() == [50, 5]
+        assert second_tensor.shape.as_list() == [200, 5]
 
-        assert opt_mock.call_args_list == []
-        assert opt_mock.method_calls == []
-
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test_generator_raises(self, opt_mock):
+    def test_generator_raises(self):
         """If the metadata is has invalid values, an exception is raised."""
         # Setup
-        instance = Model()
-        z = np.zeros((50, 100))
-
-        opt_mock = configure_opt(opt_mock)
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [
                 {
                     'type': 'some invalid type',
@@ -216,8 +194,12 @@ class TestModel(TensorFlowTestCase):
                 }
             ]
         }
+
+        instance = TGANModel(metadata)
+        z = np.zeros((instance.batch_size, 100))
+
         expected_message = (
-            "opt.DATA_INFO['details'][0]['type'] must be either `category` or `values`. "
+            "self.metadata['details'][0]['type'] must be either `category` or `values`. "
             "Instead it was some invalid type."
         )
 
@@ -238,7 +220,7 @@ class TestModel(TensorFlowTestCase):
         expected_result = np.full((15, 20), 15.0)
 
         # Run
-        result = Model.batch_diversity(layer, n_kernel, kernel_dim)
+        result = TGANModel.batch_diversity(layer, n_kernel, kernel_dim)
 
         # Check - Output properties
         assert result.name == 'Sum_1:0'
@@ -270,13 +252,11 @@ class TestModel(TensorFlowTestCase):
 
         assert_equal(result, expected_result)
 
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test_discriminator(self, opt_mock):
+    def test_discriminator(self):
         """ """
         # Setup
-        opt_mock = configure_opt(opt_mock)
-        opt_mock.num_dis_layers = 1
-        instance = Model()
+        metadata = {}
+        instance = TGANModel(metadata, num_dis_layers=1)
         vecs = [
             np.zeros((7, 10)),
             np.ones((7, 10))
@@ -327,7 +307,7 @@ class TestModel(TensorFlowTestCase):
                 }
             ]
         }
-        instance = Model()
+        instance = TGANModel()
         inputs = [np.full((50, 10), 0.0), np.full((50, 5), 1.0)]
 
         # Run
@@ -347,7 +327,7 @@ class TestModel(TensorFlowTestCase):
         logits_fake = np.zeros((10, 10), dtype=np.float32)
         extra_g = 1
         l2_norm = 0.001
-        instance = Model()
+        instance = TGANModel()
 
         # Run
         result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
@@ -355,36 +335,69 @@ class TestModel(TensorFlowTestCase):
         # Check
         assert result is None
 
-
-class TestGetData(TestCase):
-
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    @patch('tgan.tgan_synthesizer.BatchData', autospec=True)
-    @patch('tgan.tgan_synthesizer.NpDataFlow', autospec=True)
-    def test_get_data(self, np_mock, batch_mock, opt_mock):
-        """get_data returns a Batchdata, but set global opt with NpdataFlow.distribution."""
+    @expectedFailure
+    def test_build_losses2(self):
+        """ """
         # Setup
-        datafile = 'path to data'
-
-        data_mock = MagicMock(distribution='distribution')
-        np_mock.return_value = data_mock
-        batch_mock.return_value = 'batch data'
-        opt_mock.batch_size = 10
+        instance = TGANModel()
+        logits_real = 0.1
+        logits_fake = 0.01
+        extra_g = 0.2
+        l2_norm = 0.00001
 
         # Run
-        result = get_data(datafile)
+        result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
 
         # Check
-        assert result == 'batch data'
+        assert result
 
-        np_mock.assert_called_once_with('path to data', shuffle=True)
-        batch_mock.assert_called_once_with(data_mock, 10)
-        assert opt_mock.distribution == 'distribution'
-        assert data_mock.call_args_list == []
-        assert opt_mock.call_args_list == []
+    @patch('tgan.tgan_synthesizer.tf.get_collection', autospec=True)
+    def test_collect_variables(self, collection_mock):
+        """collect_variable assign the collected variables defined in the given scopes."""
+        # Setup
+        g_scope = 'first_scope'
+        d_scope = 'second_scope'
 
+        opt = None
+        instance = TGANModel(opt)
 
-class TestSample(TestCase):
+        collection_mock.side_effect = [['variables for g_scope'], ['variables for d_scope']]
+
+        expected_g_vars = ['variables for g_scope']
+        expected_d_vars = ['variables for d_scope']
+        expected_collection_mock_call_args_list = [
+            ((tf.GraphKeys.TRAINABLE_VARIABLES, 'first_scope'), {}),
+            ((tf.GraphKeys.TRAINABLE_VARIABLES, 'second_scope'), {})
+        ]
+
+        # Run
+        instance.collect_variables(g_scope, d_scope)
+
+        # Check
+        assert instance.g_vars == expected_g_vars
+        assert instance.d_vars == expected_d_vars
+
+        assert collection_mock.call_args_list == expected_collection_mock_call_args_list
+
+    def test_collect_variables_raises_value_error(self):
+        """If no variables are found on one scope, a ValueError is raised."""
+        # Setup
+        g_scope = 'first_scope'
+        d_scope = 'second_scope'
+
+        metadata = None
+        instance = TGANModel(metadata)
+
+        expected_error_message = 'There are no variables defined in some of the given scopes'
+
+        # Run
+        try:
+            instance.collect_variables(g_scope, d_scope)
+
+        # Check
+        except ValueError as error:
+            assert len(error.args) == 1
+            assert error.args[0] == expected_error_message
 
     @patch('tgan.tgan_synthesizer.np.savez', autospec=True)
     @patch('tgan.tgan_synthesizer.json.dumps', autospec=True)
@@ -393,21 +406,18 @@ class TestSample(TestCase):
     @patch('tgan.tgan_synthesizer.RandomZData', autospec=True)
     @patch('tgan.tgan_synthesizer.PredictConfig', autospec=True)
     @patch('tgan.tgan_synthesizer.get_model_loader', autospec=True)
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
     def test_sample_value_column(
-        self, opt_mock, get_model_mock, predict_mock, random_mock,
+        self, get_model_mock, predict_mock, random_mock,
         simple_mock, concat_mock, json_mock, save_mock
     ):
         """ """
         # Setup
-        n = 50
-        model = 'Model instance'
-        model_path = 'model path'
+        n = 200
+        TGANModel_path = 'model path'
         output_name = 'output name'
         output_filename = 'output filename'
 
-        opt_mock = configure_opt(opt_mock)
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [
                 {
                     'type': 'value',
@@ -419,6 +429,9 @@ class TestSample(TestCase):
                 }
             ]
         }
+
+        instance = TGANModel(metadata)
+
         get_model_mock.return_value = 'restored model'
         predict_mock.return_value = 'predict config object'
         simple_instance = MagicMock(**{'get_result.return_value': [[0], [1]]})
@@ -430,20 +443,19 @@ class TestSample(TestCase):
         expected_concat_first_call_args = (([0],), {'axis': 0})
 
         # Run
-        result = sample(n, model, model_path, output_name, output_filename)
+        result = instance.sample(n, TGANModel_path, output_name, output_filename)
 
         # Check
         assert result is None
 
-        assert opt_mock.call_args_list == []
         get_model_mock.assert_called_once_with('model path')
         predict_mock.assert_called_once_with(
             session_init='restored model',
-            model='Model instance',
+            model=instance,
             input_names=['z'],
             output_names=['output name', 'z']
         )
-        random_mock.assert_called_once_with((50, 50))
+        random_mock.assert_called_once_with((200, 200))
         simple_mock.assert_called_once_with('predict config object', 'random z data')
 
         assert len(concat_mock.call_args_list) == 2
