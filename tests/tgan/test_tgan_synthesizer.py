@@ -1,4 +1,3 @@
-from unittest import expectedFailure, skip
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -293,13 +292,10 @@ class TestTGANModel(TensorFlowTestCase):
             ['dis_fc0/LeakyRelu/mul', 'dis_fc0/LeakyRelu']
         )
 
-    @skip
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test__build_graph(self, opt_mock):
+    def test__build_graph(self):
         """ """
         # Setup
-        opt_mock = configure_opt(opt_mock)
-        opt_mock.DATA_INFO = {
+        metadata = {
             'details': [
                 {
                     'type': 'value',
@@ -307,8 +303,11 @@ class TestTGANModel(TensorFlowTestCase):
                 }
             ]
         }
-        instance = TGANModel()
-        inputs = [np.full((50, 10), 0.0), np.full((50, 5), 1.0)]
+        instance = TGANModel(metadata)
+        inputs = [
+            np.full((50, 5), 0.0, dtype=np.float32),
+            np.full((50, 1), 1.0, dtype=np.float32)
+        ]
 
         # Run
         with TowerContext('', is_training=False):
@@ -317,39 +316,41 @@ class TestTGANModel(TensorFlowTestCase):
         # Check
         assert result is None
 
-    @skip
-    @patch('tgan.tgan_synthesizer.opt', autospec=True)
-    def test_build_losses(self, opt_mock):
-        """ """
+    def test_build_losses(self):
+        """build_losses generates the loss function for both components."""
         # Setup
-        opt_mock = configure_opt(opt_mock)
+        metadata = {
+            'details': [
+                {
+                    'type': 'value',
+                    'n': 5,
+                },
+                {
+                    'type': 'category',
+                    'n': 2
+                }
+            ],
+            'num_columns': 2
+        }
+        instance = TGANModel(metadata)
         logits_real = np.zeros((10, 10), dtype=np.float32)
         logits_fake = np.zeros((10, 10), dtype=np.float32)
-        extra_g = 1
+        extra_g = 1.0
         l2_norm = 0.001
-        instance = TGANModel()
 
-        # Run
-        result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
+        inputs = [
+            np.full((200, 1), 0.0),
+            np.full((200, 5), 1.0),
+            np.full((200, 1), 0)
+        ]
+        with TowerContext('', is_training=False):
+            instance._build_graph(inputs)
+
+            # Run
+            result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
 
         # Check
         assert result is None
-
-    @expectedFailure
-    def test_build_losses2(self):
-        """ """
-        # Setup
-        instance = TGANModel()
-        logits_real = 0.1
-        logits_fake = 0.01
-        extra_g = 0.2
-        l2_norm = 0.00001
-
-        # Run
-        result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
-
-        # Check
-        assert result
 
     @patch('tgan.tgan_synthesizer.tf.get_collection', autospec=True)
     def test_collect_variables(self, collection_mock):

@@ -16,7 +16,10 @@ class TestGanTrainer(TensorFlowTestCase):
     @patch('tgan.gan.QueueInput', autospec=True)
     @patch('tgan.gan.BatchData', autospec=True)
     @patch('tgan.gan.NpDataFlow', autospec=True)
-    def test___init__(self, np_mock, batch_mock, queue_mock, register_mock, funcwrapper_mock, ctx_mock, clip_mock, control_mock):
+    def test___init__(
+        self, np_mock, batch_mock, queue_mock, register_mock, funcwrapper_mock, ctx_mock,
+        clip_mock, control_mock
+    ):
         """On init, the model is check, callbacks registered and training iteration defined."""
         # Setup
         input_values = MagicMock(**{
@@ -73,7 +76,6 @@ class TestGanTrainer(TensorFlowTestCase):
         assert instance.model == model_instance
         assert instance.tower_func == tower_wrapped
         assert instance.train_op == 'applied gradients'
-
 
         np_mock.assert_called_once_with(data, shuffle=True)
         batch_mock.assert_called_once_with('NPDataFlow', 'batch_size_value')
