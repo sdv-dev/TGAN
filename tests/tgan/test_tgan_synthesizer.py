@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import numpy as np
 import tensorflow as tf
@@ -6,25 +6,10 @@ from numpy.testing import assert_equal
 from tensorflow.test import TestCase as TensorFlowTestCase
 from tensorpack.tfutils.tower import TowerContext
 
-from tgan.tgan_synthesizer import TGANModel
+from tgan.tgan_synthesizer import GraphBuilder, TGANModel
 
 
-def configure_opt(opt):
-    """Set the required opt attributes."""
-    opt.z_dim = 50
-    opt.batch_size = 50
-    opt.sample = 1
-    opt.noise = 0.1
-    opt.l2norm = 0.001
-    opt.num_gen_rnn = 100
-    opt.num_gen_feature = 100
-    opt.num_dis_layers = 1
-    opt.num_dis_hidden = 100
-
-    return opt
-
-
-class TestTGANModel(TensorFlowTestCase):
+class TestGraphBuilder(TensorFlowTestCase):
 
     @staticmethod
     def check_operation_nodes(graph, name, node_type, dtype, shape, consumers):
@@ -69,7 +54,7 @@ class TestTGANModel(TensorFlowTestCase):
                 }
             ]
         }
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
         input_mock.side_effect = ['value_input', 'cluster_input', 'category_input']
 
         expected_input_mock_call_args_list = [
@@ -94,7 +79,7 @@ class TestTGANModel(TensorFlowTestCase):
             'details': [{'type': 'some invalid type'}]
         }
 
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
 
         expected_message = (
             "self.metadata['details'][0]['type'] must be either `category` or `values`. "
@@ -121,13 +106,13 @@ class TestTGANModel(TensorFlowTestCase):
         # Run
         with self.test_session():
             with TowerContext('', is_training=False):
-                result = TGANModel.compute_kl(real, pred).eval()
+                result = GraphBuilder.compute_kl(real, pred).eval()
 
         # Check
         assert_equal(result, expected_result)
 
     def test_generator_category_column(self):
-        """build the graph for the generator TGANModel with a single categorical column."""
+        """build the graph for the generator GraphBuilder with a single categorical column."""
         # Setup
         metadata = {
             'details': [
@@ -138,7 +123,7 @@ class TestTGANModel(TensorFlowTestCase):
             ]
         }
 
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
         z = np.zeros((instance.batch_size, 100))
 
         # Run
@@ -153,7 +138,7 @@ class TestTGANModel(TensorFlowTestCase):
         assert tensor.shape.as_list() == [200, 5]
 
     def test_generator_value_column(self):
-        """build the graph for the generator TGANModel with a single value column."""
+        """build the graph for the generator GraphBuilder with a single value column."""
         # Setup
         metadata = {
             'details': [
@@ -164,7 +149,7 @@ class TestTGANModel(TensorFlowTestCase):
             ]
         }
 
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
         z = np.zeros((instance.batch_size, 100))
 
         # Run
@@ -194,7 +179,7 @@ class TestTGANModel(TensorFlowTestCase):
             ]
         }
 
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
         z = np.zeros((instance.batch_size, 100))
 
         expected_message = (
@@ -219,7 +204,7 @@ class TestTGANModel(TensorFlowTestCase):
         expected_result = np.full((15, 20), 15.0)
 
         # Run
-        result = TGANModel.batch_diversity(layer, n_kernel, kernel_dim)
+        result = GraphBuilder.batch_diversity(layer, n_kernel, kernel_dim)
 
         # Check - Output properties
         assert result.name == 'Sum_1:0'
@@ -255,7 +240,7 @@ class TestTGANModel(TensorFlowTestCase):
         """ """
         # Setup
         metadata = {}
-        instance = TGANModel(metadata, num_dis_layers=1)
+        instance = GraphBuilder(metadata, num_dis_layers=1)
         vecs = [
             np.zeros((7, 10)),
             np.ones((7, 10))
@@ -303,7 +288,7 @@ class TestTGANModel(TensorFlowTestCase):
                 }
             ]
         }
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
         inputs = [
             np.full((50, 5), 0.0, dtype=np.float32),
             np.full((50, 1), 1.0, dtype=np.float32)
@@ -332,15 +317,15 @@ class TestTGANModel(TensorFlowTestCase):
             ],
             'num_columns': 2
         }
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
         logits_real = np.zeros((10, 10), dtype=np.float32)
         logits_fake = np.zeros((10, 10), dtype=np.float32)
         extra_g = 1.0
         l2_norm = 0.001
 
         inputs = [
-            np.full((200, 1), 0.0),
-            np.full((200, 5), 1.0),
+            np.full((200, 1), 0.0, dtype=np.float32),
+            np.full((200, 5), 1.0, dtype=np.float32),
             np.full((200, 1), 0)
         ]
         with TowerContext('', is_training=False):
@@ -360,7 +345,7 @@ class TestTGANModel(TensorFlowTestCase):
         d_scope = 'second_scope'
 
         opt = None
-        instance = TGANModel(opt)
+        instance = GraphBuilder(opt)
 
         collection_mock.side_effect = [['variables for g_scope'], ['variables for d_scope']]
 
@@ -387,7 +372,7 @@ class TestTGANModel(TensorFlowTestCase):
         d_scope = 'second_scope'
 
         metadata = None
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
 
         expected_error_message = 'There are no variables defined in some of the given scopes'
 
@@ -399,6 +384,33 @@ class TestTGANModel(TensorFlowTestCase):
         except ValueError as error:
             assert len(error.args) == 1
             assert error.args[0] == expected_error_message
+
+
+class TestTGANModel(TensorFlowTestCase):
+
+    def test___init__(self):
+        """On init, arguments are set as attributes."""
+        # Setup
+        model_params = {
+            'some_key': 'some_value'
+        }
+
+        # Run
+        instance = TGANModel(model_params)
+
+        # Check
+        assert instance.model_params == model_params
+
+    def test_fit(self):
+        """ """
+        # Setup
+
+        # Run
+
+        # Check
+
+
+"""
 
     @patch('tgan.tgan_synthesizer.np.savez', autospec=True)
     @patch('tgan.tgan_synthesizer.json.dumps', autospec=True)
@@ -414,7 +426,6 @@ class TestTGANModel(TensorFlowTestCase):
         """ """
         # Setup
         n = 200
-        TGANModel_path = 'model path'
         output_name = 'output name'
         output_filename = 'output filename'
 
@@ -431,7 +442,8 @@ class TestTGANModel(TensorFlowTestCase):
             ]
         }
 
-        instance = TGANModel(metadata)
+        instance = GraphBuilder(metadata)
+        instance.model_dir = 'model path'
 
         get_model_mock.return_value = 'restored model'
         predict_mock.return_value = 'predict config object'
@@ -444,7 +456,7 @@ class TestTGANModel(TensorFlowTestCase):
         expected_concat_first_call_args = (([0],), {'axis': 0})
 
         # Run
-        result = instance.sample(n, TGANModel_path, output_name, output_filename)
+        result = instance.sample(n, output_name, output_filename)
 
         # Check
         assert result is None
@@ -473,3 +485,4 @@ class TestTGANModel(TensorFlowTestCase):
         assert call_args[1]['info'] == 'metadata'
         assert call_args[1]['f00'] == 'concatenated results'
         assert_equal(call_args[1]['f01'], np.zeros((5, 1)))
+"""

@@ -70,10 +70,9 @@ class TestGanTrainer(TensorFlowTestCase):
         ]
 
         # Run
-        instance = GANTrainer(model_class, data, {})
+        instance = GANTrainer(model_class, data)
 
         # Check
-        assert instance.model == model_instance
         assert instance.tower_func == tower_wrapped
         assert instance.train_op == 'applied gradients'
 

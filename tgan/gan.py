@@ -23,8 +23,9 @@ class GANTrainer(TowerTrainer):
 
     """
 
-    def __init__(self, model_class, data, metadata, **model_kwargs):
-        model = model_class(metadata, **model_kwargs)
+    def __init__(self, model_class, data, **model_kwargs):
+        """Initialize object."""
+        model = model_class(**model_kwargs)
 
         ds = NpDataFlow(data, shuffle=True)
         batch_data = BatchData(ds, model.batch_size)
@@ -36,7 +37,6 @@ class GANTrainer(TowerTrainer):
         # Setup input
         cbs = input.setup(inputs_desc)
         self.register_callback(cbs)
-        self.model = model
 
         # Build the graph
         self.tower_func = TowerFuncWrapper(model.build_graph, inputs_desc)

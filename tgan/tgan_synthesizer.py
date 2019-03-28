@@ -7,19 +7,19 @@
 
 
 import argparse
-import json
-from datetime import datetime
+import os
 
 import numpy as np
 import tensorflow as tf
 from tensorpack import (
-    BatchNorm, Dropout, FullyConnected, InputDesc, ModelDescBase, PredictConfig,
-    SimpleDatasetPredictor, get_model_loader)
+    BatchNorm, Dropout, FullyConnected, InputDesc, ModelDescBase, ModelSaver, PredictConfig,
+    SaverRestore, SimpleDatasetPredictor, logger)
 from tensorpack.tfutils.scope_utils import auto_reuse_variable_scope
 from tensorpack.tfutils.summary import add_moving_summary
 from tensorpack.utils.argtools import memoized
 
 from tgan.dataflows import RandomZData
+from tgan.gan import GANTrainer
 
 tunable_variables = {
     "--batch_size": [50, 100, 200],
@@ -33,7 +33,7 @@ tunable_variables = {
 }
 
 
-class TGANModel(ModelDescBase):
+class GraphBuilder(ModelDescBase):
     """Main model for TGAN.
 
     Args:
@@ -44,18 +44,33 @@ class TGANModel(ModelDescBase):
     """
 
     def __init__(
-        self, metadata, batch_size=200, z_dim=200, noise=0.2, l2norm=0.001, num_gen_rnn=100,
-        num_gen_feature=100, num_dis_layers=1, num_dis_hidden=100
+        self,
+        metadata,
+        batch_size=200,
+        z_dim=200,
+        noise=0.2,
+        l2norm=0.00001,
+        learning_rate=0.001,
+        num_gen_rnn=100,
+        num_gen_feature=100,
+        num_dis_layers=1,
+        num_dis_hidden=100,
+        optimizer='AdamOptimizer',
+        training=True
     ):
+        """Initialize the object, set arguments as attributes."""
         self.metadata = metadata
         self.batch_size = batch_size
         self.z_dim = z_dim
-        self.noise = 0.1
-        self.l2norm = 0.001
-        self.num_gen_rnn = 100
-        self.num_gen_feature = 100
-        self.num_dis_layers = 1
-        self.num_dis_hidden = 100
+        self.noise = noise
+        self.l2norm = l2norm
+        self.learning_rate = learning_rate
+        self.num_gen_rnn = num_gen_rnn
+        self.num_gen_feature = num_gen_feature
+        self.num_dis_layers = num_dis_layers
+        self.num_dis_hidden = num_dis_hidden
+        self.optimizer = optimizer,
+        self.training = training
 
     def collect_variables(self, g_scope='gen', d_scope='discrim'):
         """Assign generator and discriminator variables from their scopes.
@@ -383,7 +398,7 @@ class TGANModel(ModelDescBase):
         (f^{(D)}_{l}))` which is a scalar.
 
         Args:
-            vecs(list[tensorflow.Tensor]): List of tensors matching the spec of :meth:`_get_inputs`
+            vecs(list[tensorflow.Tensor]): List of tensors matching the spec of :meth:`inputs`
 
         Returns:
             tensorpack.FullyConected: a (b, 1) logits
@@ -461,6 +476,8 @@ class TGANModel(ModelDescBase):
                         "`values`. Instead it was {}.".format(col_id, col_info['type'])
                     )
 
+            tf.identity(tf.concat(vecs_denorm, axis=1), name='gen')
+
         vecs_pos = []
         ptr = 0
         for col_id, col_info in enumerate(self.metadata['details']):
@@ -468,10 +485,10 @@ class TGANModel(ModelDescBase):
                 one_hot = tf.one_hot(tf.reshape(inputs[ptr], [-1]), col_info['n'])
                 noise_input = one_hot
 
-                if self.sample == 0:
+                if self.training:
                     noise = tf.random_uniform(tf.shape(one_hot), minval=0, maxval=self.noise)
                     noise_input = (one_hot + noise) / tf.reduce_sum(
-                        one_hot + noise, keep_dims=True, axis=1)
+                        one_hot + noise, keepdims=True, axis=1)
 
                 vecs_pos.append(noise_input)
                 ptr += 1
@@ -490,7 +507,7 @@ class TGANModel(ModelDescBase):
 
         KL = 0.
         ptr = 0
-        if self.sample == 0:
+        if self.training:
             for col_id, col_info in enumerate(self.metadata['details']):
                 if col_info['type'] == 'category':
                     dist = tf.reduce_sum(vecs_gen[ptr], axis=0)
@@ -534,14 +551,52 @@ class TGANModel(ModelDescBase):
         else:
             return tf.train.GradientDescentOptimizer(self.learning_rate)
 
-    def sample(self, n, model_path, output_name='gen/gen', output_filename=None):
+
+class TGANModel:
+
+    def __init__(
+        self, model_params=None, log_dir='logs', model_dir='model', gpu=None, max_epoch=5,
+        steps_per_epoch=10000,
+    ):
+        self.log_dir = log_dir
+        self.model_dir = model_dir
+        self.model_params = model_params if model_params else {}
+        if gpu:
+            os.environ['CUDA_VISIBLE_DEVICES'] = gpu
+
+        self.gpu = gpu
+        self.max_epoch = max_epoch
+        self.steps_per_epoch = steps_per_epoch
+
+    def fit(self, data):
+        """Fit the model to the given data."""
+        data, metadata = data
+        self.model_params['metadata'] = metadata
+
+        if os.path.isdir(self.model_dir) and os.listdir(self.model_dir):
+                session_init = SaverRestore(self.model_dir)
+        else:
+            session_init = None
+
+        logger.set_logger_dir(self.log_dir)
+        trainer = GANTrainer(
+            model_class=GraphBuilder,
+            data=data,
+            **self.model_params
+        )
+        trainer.train_with_defaults(
+            callbacks=[ModelSaver(checkpoint_dir=self.model_dir), ],
+            steps_per_epoch=self.steps_per_epoch,
+            max_epoch=self.max_epoch,
+            session_init=session_init
+        )
+
+    def sample(self, n):
         """Generate samples from model.
 
         Args:
             n(int)
-            model_path(str):
             output_name(str):
-            output_filename(str):
 
         Returns:
             None
@@ -551,19 +606,19 @@ class TGANModel(ModelDescBase):
 
         """
         pred = PredictConfig(
-            session_init=get_model_loader(model_path),
-            model=self,
+            session_init=SaverRestore(self.model_dir),
+            model=GraphBuilder(**self.model_params, sampling=True),
             input_names=['z'],
-            output_names=[output_name, 'z'])
+            output_names=['gen/gen', 'z'],
+        )
+
+        batch_size = self.model_params.get('batch_size') or 200
+        z_dim = self.model_params.get('z_dim') or 200
 
         pred = SimpleDatasetPredictor(
-            pred, RandomZData((self.batch_size, self.z_dim)))
+            pred, RandomZData((batch_size, z_dim)))
 
-        max_iters = n // self.batch_size
-        if output_filename is None:
-            output_filename = self.exp_name if self.exp_name else 'generate'
-            timestamp = datetime.now().strftime('%m%d_%H%M%S')
-            output_filename += '_{}'.format(timestamp)
+        max_iters = n // batch_size
 
         results = []
         for idx, o in enumerate(pred.get_result()):
@@ -594,7 +649,7 @@ class TGANModel(ModelDescBase):
                     "`values`. Instead it was {}.".format(col_id, col_info['type'])
                 )
 
-        np.savez(output_filename, info=json.dumps(self.metadata), **features)
+        return features
 
 
 def get_parser():
@@ -631,18 +686,6 @@ def get_parser():
     return parser
 
 
-# def get_args():
-#     """Preprocess the CLI arguments."""
-#     parser = get_parser()
-#
-#     args = parser.parse_args()
-#     opt.use_argument(args)
-#
-#     if args.gpu:
-#         os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
-#
-#     return args
-#
 #
 # if __name__ == '__main__':
 #     args = get_args()
