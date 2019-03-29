@@ -3,18 +3,18 @@ from unittest.mock import MagicMock, patch
 from tensorflow.test import TestCase as TensorFlowTestCase
 from tensorpack.tfutils.tower import TowerFuncWrapper
 
-from tgan.gan import GANTrainer, MultiGPUGANTrainer, SeparateGANTrainer
+from tgan.trainer import GANTrainer, MultiGPUGANTrainer, SeparateGANTrainer
 
 
 class TestGanTrainer(TensorFlowTestCase):
 
-    @patch('tgan.gan.tf.control_dependencies', autospec=True)
-    @patch('tgan.gan.tf.clip_by_value', autospec=True)
-    @patch('tgan.gan.TowerContext', autospec=True)
-    @patch('tgan.gan.TowerFuncWrapper', autospec=True)
-    @patch('tgan.gan.GANTrainer.register_callback', autospec=True)
-    @patch('tgan.gan.QueueInput', autospec=True)
-    @patch('tgan.gan.BatchData', autospec=True)
+    @patch('tgan.trainer.tf.control_dependencies', autospec=True)
+    @patch('tgan.trainer.tf.clip_by_value', autospec=True)
+    @patch('tgan.trainer.TowerContext', autospec=True)
+    @patch('tgan.trainer.TowerFuncWrapper', autospec=True)
+    @patch('tgan.trainer.GANTrainer.register_callback', autospec=True)
+    @patch('tgan.trainer.QueueInput', autospec=True)
+    @patch('tgan.trainer.BatchData', autospec=True)
     def test___init__(
         self, batch_mock, queue_mock, register_mock, funcwrapper_mock, ctx_mock,
         clip_mock, control_mock
@@ -94,9 +94,9 @@ class TestGanTrainer(TensorFlowTestCase):
 
 class TestSeparateGanTrainer(TensorFlowTestCase):
 
-    @patch('tgan.gan.TowerContext', autospec=True)
-    @patch('tgan.gan.SeparateGANTrainer.register_callback', autospec=True)
-    @patch('tgan.gan.TowerFuncWrapper', autospec=True)
+    @patch('tgan.trainer.TowerContext', autospec=True)
+    @patch('tgan.trainer.SeparateGANTrainer.register_callback', autospec=True)
+    @patch('tgan.trainer.TowerFuncWrapper', autospec=True)
     def test___init__(self, funcwrapper_mock, register_mock, ctx_mock):
         """On init, callbacks are set and the training iteration defined."""
         # Setup

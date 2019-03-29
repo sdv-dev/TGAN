@@ -19,7 +19,7 @@ from tensorpack.tfutils.summary import add_moving_summary
 from tensorpack.utils.argtools import memoized
 
 from tgan.data import RandomZData
-from tgan.gan import GANTrainer
+from tgan.trainer import GANTrainer
 
 tunable_variables = {
     "--batch_size": [50, 100, 200],
