@@ -6,7 +6,7 @@ objects will be used to fit our models.
 The easiest way is to use the :attr:`load_data` function, that will return a TGANDataset object,
 that we can use to fit our model.
 
-
+You can pass
 
 """
 import json
@@ -410,10 +410,15 @@ def npz_to_csv(npfilename, csvfilename):
 
 
 class Preprocessor:
-    """Transform back and forth human-readable data into TGAN numerical features."""
+    """Transform back and forth human-readable data into TGAN numerical features.
+
+    Args:
+        continous_columns(list): List of columns to be considered continuous
+        metadata(dict): Metadata to initialize the object.
+    """
 
     def __init__(self, continuous_columns=None, metadata=None):
-
+        """Initialize object, set arguments as attributes, initialize transformers."""
         if continuous_columns is None:
             continuous_columns = []
 
@@ -423,7 +428,16 @@ class Preprocessor:
         self.categorical_transformer = CategoricalTransformer()
 
     def fit_transform(self, data, fitting=True):
-        """ """
+        """Transform human-readable data into TGAN numerical features.
+
+        Args:
+            data(pandas.DataFrame): Data to transform.
+            fitting(bool): Whether or not to update self.metadata.
+
+        Returns:
+            pandas.DataFrame: Model features
+
+        """
         num_cols = data.shape[1]
 
         transformed_data = {}
@@ -433,23 +447,27 @@ class Preprocessor:
             if i in self.continuous_columns:
                 column_data = data[i].values.reshape([-1, 1])
                 features, probs, means, stds = self.continous_transformer.transform(column_data)
-                details.append({
-                    "type": "value",
-                    "means": means,
-                    "stds": stds,
-                    "n": 5
-                })
                 transformed_data['f%02d' % i] = np.concatenate((features, probs), axis=1)
+
+                if fitting:
+                    details.append({
+                        "type": "value",
+                        "means": means,
+                        "stds": stds,
+                        "n": 5
+                    })
 
             else:
                 column_data = data[i].astype(str).values
                 features, mapping, n = self.categorical_transformer.transform(column_data)
                 transformed_data['f%02d' % i] = features
-                details.append({
-                    "type": "category",
-                    "mapping": mapping,
-                    "n": n
-                })
+
+                if fitting:
+                    details.append({
+                        "type": "category",
+                        "mapping": mapping,
+                        "n": n
+                    })
 
         if fitting:
             metadata = {
@@ -462,13 +480,34 @@ class Preprocessor:
         return transformed_data
 
     def transform(self, data):
+        """Transform the given dataframe without generating new metadata.
+
+        Args:
+            data(pandas.DataFrame): Data to fit the object.
+
+        """
         return self.fit_transform(data, fitting=False)
 
     def fit(self, data):
+        """Initialize the internal state of the object using :attr:`data`.
+
+        Args:
+            data(pandas.DataFrame): Data to fit the object.
+
+        """
         self.fit_transform(data)
 
     def reverse_transform(self, data):
+        """Transform TGAN numerical features back into human-readable data.
 
+        Args:
+            data(pandas.DataFrame): Data to transform.
+            fitting(bool): Whether or not to update self.metadata.
+
+        Returns:
+            pandas.DataFrame: Model features
+
+        """
         table = []
 
         for i in range(self.metadata['num_features']):
@@ -488,14 +527,25 @@ class Preprocessor:
 
 
 class TGANDataset:
+    """Dataset object.
+
+    This object contains everything that the model will need in order to be :attr:`fit` and
+    be able to sample afterwards.
+
+    Args:
+        data(dict): Preprocessed features.
+        preprocessor(tgan.data.Preprocessor): Preprocessor object used to prepare features.
+    """
 
     def __init__(self, data, preprocessor):
+        """Initialize object, set arguments as attributes, initialize DataFlow."""
         self.data = data
         self.preprocessor = preprocessor
         self.metadata = preprocessor.metadata
         self.dataflow = NpDataFlow(self.data, self.metadata)
 
     def get_items(self):
+        """Return dataflow, metadata and preprocessor."""
         return self.dataflow, self.metadata, self.preprocessor
 
 
@@ -517,11 +567,9 @@ def load_data(name, continuous_columns=None, header=None, preprocessing=True, me
         continuous_columns(list[int]):
         header():
         preprocessing(bool)
-        metadata
-
+        metadata(dict):
 
     """
-
     params = DEMO_DATASETS.get(name)
     if params:
         url, file_name, continuous_columns = params
@@ -531,8 +579,13 @@ def load_data(name, continuous_columns=None, header=None, preprocessing=True, me
 
     raw_dataset = pd.read_csv(name, header=header)
 
-    prep = Preprocessor(continuous_columns=continuous_columns)
+    prep = Preprocessor(continuous_columns=continuous_columns, metadata=metadata)
+
     if preprocessing:
+
+        if metadata is not None:
+            raise ValueError('Can\'t preprocess if metadata is being given')
+
         dataset = prep.fit_transform(raw_dataset)
 
     else:

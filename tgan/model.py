@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""TGAN_synthesizer."""
+"""Module with the model for TGAN.
 
+This module contains two classes:
 
-import argparse
+- :attr:`GraphBuilder`: That defines the graph and implements a Tensorpack compatible API.
+- :attr:`TGANModel`: The public API for the model, that offers a simplified interface for the
+  underlying operations with GraphBuilder and trainers in order to fit and sample data.
+"""
 import os
 
 import numpy as np
@@ -19,7 +23,7 @@ from tensorpack.utils.argtools import memoized
 from tgan.data import RandomZData
 from tgan.trainer import GANTrainer
 
-tunable_variables = {
+TUNABLE_VARIABLES = {
     "--batch_size": [50, 100, 200],
     "--z_dim": [50, 100, 200, 400],
     "--num_gen_rnn": [100, 200, 300, 400, 500, 600],
@@ -551,11 +555,13 @@ class GraphBuilder(ModelDescBase):
 
 
 class TGANModel:
+    """Main model."""
 
     def __init__(
         self, model_params=None, log_dir='logs', model_dir='model', gpu=None, max_epoch=5,
         steps_per_epoch=10000, batch_size=200, z_dim=200
     ):
+        """Initialize object."""
         self.log_dir = log_dir
         self.model_dir = model_dir
         self.max_epoch = max_epoch
@@ -656,59 +662,3 @@ class TGANModel:
                 )
 
         return self.preprocessor.reverse_transform(features)
-
-
-def get_parser():
-    """Build the ArgumentParser for CLI."""
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--gpu', help='comma separated list of GPU(s) to use.')
-    parser.add_argument('--load', help='load model')
-    parser.add_argument('--sample', type=int, default=0,
-                        help='the number of samples in the synthetic output.')
-    parser.add_argument('--data', required=True, help='a npz file')
-    parser.add_argument('--output', type=str)
-    parser.add_argument('--exp_name', type=str, default=None)
-
-    # parameters for model tuning.
-    parser.add_argument('--batch_size', type=int, default=200)
-    parser.add_argument('--z_dim', type=int, default=100)
-    parser.add_argument('--max_epoch', type=int, default=100)
-    parser.add_argument('--steps_per_epoch', type=int, default=1000)
-
-    parser.add_argument('--num_gen_rnn', type=int, default=400)
-    parser.add_argument('--num_gen_feature', type=int, default=100)
-
-    parser.add_argument('--num_dis_layers', type=int, default=2)
-    parser.add_argument('--num_dis_hidden', type=int, default=200)
-
-    parser.add_argument('--noise', type=float, default=0.2)
-
-    parser.add_argument('--optimizer', type=str, default='AdamOptimizer',
-                        choices=['GradientDescentOptimizer', 'AdamOptimizer', 'AdadeltaOptimizer'])
-    parser.add_argument('--learning_rate', type=float, default=0.001)
-
-    parser.add_argument('--l2norm', type=float, default=0.00001)
-
-    return parser
-
-
-#
-# if __name__ == '__main__':
-#     args = get_args()
-#
-#     opt.DATA_INFO = json.loads(str(np.load(args.data)['info']))
-#
-#     if args.sample > 0:
-#         sample(args.sample, Model(), args.load, output_filename=args.output)
-#
-#     else:
-#         logger.auto_set_dir(name=args.exp_name)
-#         GANTrainer(
-#             input=QueueInput(get_data(args.data)),
-#             model=Model()
-#         ).train_with_defaults(
-#             callbacks=[ModelSaver(), ],
-#             steps_per_epoch=args.steps_per_epoch,
-#             max_epoch=args.max_epoch,
-#             session_init=SaverRestore(args.load) if args.load else None
-#         )

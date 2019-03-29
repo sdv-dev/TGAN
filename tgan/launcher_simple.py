@@ -12,7 +12,7 @@ import numpy as np
 
 from tgan.data import csv_to_npz, npz_to_csv, split_csv
 from tgan.evaluation import evaluate_classification
-from tgan.model import tunable_variables
+from tgan.model import TUNABLE_VARIABLES
 
 test_dir = 'expdir'
 
@@ -103,7 +103,7 @@ def run_experiment(task):
     for i in range(task['num_random_search']):
         current_model = ['tgan/TGAN_synthesizer.py']
 
-        for key, choices in tunable_variables.items():
+        for key, choices in TUNABLE_VARIABLES.items():
             current_model.append(key)
             current_model.append(str(np.random.choice(choices)))
         models.append(current_model)
