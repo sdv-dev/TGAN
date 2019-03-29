@@ -11,11 +11,11 @@ Submodules
 
 .. toctree::
 
-   tgan.dataprocess
-   tgan.dataflows
+   tgan.data
    tgan.evaluation
-   tgan.gan
    tgan.launcher
    tgan.launcher_simple
-   tgan.tgan_synthesizer
+   tgan.model
+   tgan.tgan
+   tgan.trainer
 
