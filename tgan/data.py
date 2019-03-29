@@ -1,9 +1,24 @@
-"""Functions to help during the preprocess of data."""
+"""Data related functionalities.
+
+This modules contains the tools to preprare the data, from the raw csv files, to the DataFlow
+objects will be used to fit our models.
+
+The easiest way is to use the :attr:`load_data` function, that will return a TGANDataset object,
+that we can use to fit our model.
+
+
+
+
+
+"""
+
+
 import json
 
 import numpy as np
 import pandas as pd
 from sklearn.mixture import GaussianMixture
+from tensorpack import DataFlow, RNGDataFlow
 
 
 def check_metadata(metadata):
@@ -44,6 +59,98 @@ def check_inputs(function):
 
     decorated.__doc__ == function.__doc__
     return decorated
+
+
+class NpDataFlow(RNGDataFlow):
+    """Subclass of :class:`tensorpack.RNGDataFlow` prepared to work with :class:`numpy.ndarray`.
+
+    Attributes:
+        shuffle(bool): Wheter or not to shuffle the data.
+        info(dict): Metadata for the given :attr:`data`.
+        num_features(int): Number of features in given data.
+        data(list): Prepared data from :attr:`filename`.
+        distribution(list): DepecrationWarning?
+
+    """
+
+    def __init__(self, data, metadata, shuffle=True):
+        """Initialize object.
+
+        Args:
+            filename(str): Path to the json file containing the metadata.
+            shuffle(bool): Wheter or not to shuffle the data.
+
+        Raises:
+            ValueError: If any column_info['type'] is not supported
+
+        """
+        self.shuffle = shuffle
+
+        self.metadata = metadata
+        self.num_features = self.metadata['num_features']
+
+        self.data = []
+        self.distribution = []
+        for column_id, column_info in enumerate(self.metadata['details']):
+            if column_info['type'] == 'value':
+                col_data = data['f%02d' % column_id]
+                value = col_data[:, :1]
+                cluster = col_data[:, 1:]
+                self.data.append(value)
+                self.data.append(cluster)
+
+            elif column_info['type'] == 'category':
+                col_data = np.asarray(data['f%02d' % column_id], dtype='int32')
+                self.data.append(col_data)
+
+            else:
+                raise ValueError(
+                    "column_info['type'] must be either 'category' or 'value'."
+                    "Instead it was '{}'.".format(column_info['type'])
+                )
+
+        self.data = list(zip(*self.data))
+
+    def size(self):
+        """Return the number of rows in data.
+
+        Returns:
+            int: Number of rows in :attr:`data`.
+
+        """
+        return len(self.data)
+
+    def get_data(self):
+        """Yield the rows from :attr:`data`.
+
+        Yields:
+            tuple: Row of data.
+
+        """
+        idxs = np.arange(len(self.data))
+        if self.shuffle:
+            self.rng.shuffle(idxs)
+
+        for k in idxs:
+            yield self.data[k]
+
+class RandomZData(DataFlow):
+    """Random dataflow.
+
+    Args:
+        shape(tuple): Shape of the array to return on :meth:`get_data`
+
+    """
+
+    def __init__(self, shape):
+        """Initialize object."""
+        super(RandomZData, self).__init__()
+        self.shape = shape
+
+    def get_data(self):
+        """Yield random normal vectors of shape :attr:`shape`."""
+        while True:
+            yield [np.random.normal(0, 1, size=self.shape)]
 
 
 class MultiModalNumberTransformer:
@@ -287,3 +394,118 @@ def npz_to_csv(npfilename, csvfilename):
 
     df = pd.DataFrame(dict(enumerate(table)))
     df.to_csv(csvfilename, index=False, header=False)
+
+
+class Preprocessor:
+    """Transform back and forth human-readable data into TGAN numerical features."""
+
+    def __init__(self, continuous_columns=None, metadata=None):
+
+        if continuous_columns is None:
+            continuous_columns = []
+
+        self.continuous_columns = continuous_columns
+        self.metadata = metadata
+        self.continous_transformer = MultiModalNumberTransformer()
+        self.categorical_transformer = CategoricalTransformer()
+
+    def fit_transform(self, data, fitting=True):
+        """ """
+        num_cols = data.shape[1]
+
+        transformed_data = {}
+        details = []
+
+        for i in range(num_cols):
+            if i in self.continuous_columns:
+                column_data = data[i].values.reshape([-1, 1])
+                features, probs, means, stds = self.continous_transformer.transform(column_data)
+                details.append({
+                    "type": "value",
+                    "means": means,
+                    "stds": stds,
+                    "n": 5
+                })
+                transformed_data['f%02d' % i] = np.concatenate((features, probs), axis=1)
+
+            else:
+                column_data = data[i].astype(str).values
+                features, mapping, n = self.categorical_transformer.transform(column_data)
+                transformed_data['f%02d' % i] = features
+                details.append({
+                    "type": "category",
+                    "mapping": mapping,
+                    "n": n
+                })
+
+        if fitting:
+            self.metadata = {
+                "num_features": num_cols,
+                "details": details
+            }
+
+        return transformed_data
+
+    def transform(self, data):
+        return self.fit_transform(data, fitting=False)
+
+    def fit(self, data):
+        self.fit_transform(data)
+
+    def reverse_transform(self, data):
+
+        table = []
+
+        for i in range(self.metadata['num_features']):
+            column_data = data['f%02d' % i]
+            column_metadata = self.metadata['details'][i]
+
+            if column_metadata['type'] == 'value':
+                column = self.continous_transformer.reverse_transform(column_data, column_metadata)
+
+            if column_metadata['type'] == 'category':
+                column = self.categorical_transformer.reverse_transform(
+                    column_data, column_metadata)
+
+            table.append(column)
+
+        return pd.DataFrame(dict(enumerate(table)))
+
+
+class TGANDataset:
+
+    def __init__(self, data, preprocessor):
+        self.data = data
+        self.preprocessor = preprocessor
+        self.metadata = preprocessor.metadata
+        self.dataflow = NpDataFlow(self.data, self.metadata)
+
+    def get_items(self):
+        return self.metadata, self.dataflow
+
+
+
+S3_DATASETS = []
+
+def download_dataset():
+    pass
+
+
+def load_data(dataset_name, continuous_columns=None, header=None, preprocessing=True, metadata=None):
+    """Load a TGANDataset."""
+
+    if dataset_name in S3_DATASETS:
+        raw_dataset = download_dataset(dataset_name)
+
+    else:
+        raw_dataset = pd.read_csv(dataset_name, header=header)
+
+    prep = Preprocessor()
+    if preprocessing:
+        dataset = prep.fit_transform(raw_dataset)
+
+    else:
+        prep.metadata = metadata
+        dataset = raw_dataset
+
+    return TGANDataset(dataset, prep)

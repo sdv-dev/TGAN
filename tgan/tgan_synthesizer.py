@@ -18,7 +18,7 @@ from tensorpack.tfutils.scope_utils import auto_reuse_variable_scope
 from tensorpack.tfutils.summary import add_moving_summary
 from tensorpack.utils.argtools import memoized
 
-from tgan.dataflows import RandomZData
+from tgan.data import RandomZData
 from tgan.gan import GANTrainer
 
 tunable_variables = {
@@ -556,32 +556,41 @@ class TGANModel:
 
     def __init__(
         self, model_params=None, log_dir='logs', model_dir='model', gpu=None, max_epoch=5,
-        steps_per_epoch=10000,
+        steps_per_epoch=10000, batch_size=200, z_dim=200
     ):
         self.log_dir = log_dir
         self.model_dir = model_dir
-        self.model_params = model_params if model_params else {}
+        self.max_epoch = max_epoch
+        self.steps_per_epoch = steps_per_epoch
+        self.batch_size = batch_size
+        self.z_dim = z_dim
+
+        if model_params is None:
+            model_params = {}
+
+        self.model_params = model_params
+        self.model_params['batch_size'] = batch_size
+        self.model_params['z_dim'] = z_dim
+
         if gpu:
             os.environ['CUDA_VISIBLE_DEVICES'] = gpu
 
         self.gpu = gpu
-        self.max_epoch = max_epoch
-        self.steps_per_epoch = steps_per_epoch
 
     def fit(self, data):
         """Fit the model to the given data."""
-        data, metadata = data
+        dataflow, metadata = data.get_items()
         self.model_params['metadata'] = metadata
 
         if os.path.isdir(self.model_dir) and os.listdir(self.model_dir):
-                session_init = SaverRestore(self.model_dir)
+            session_init = SaverRestore(self.model_dir)
         else:
             session_init = None
 
         logger.set_logger_dir(self.log_dir)
         trainer = GANTrainer(
             model_class=GraphBuilder,
-            data=data,
+            dataflow=dataflow,
             **self.model_params
         )
         trainer.train_with_defaults(
@@ -605,20 +614,18 @@ class TGANModel:
             ValueError
 
         """
+        restore_path = os.path.join(self.model_dir, 'checkpoint')
         pred = PredictConfig(
-            session_init=SaverRestore(self.model_dir),
-            model=GraphBuilder(**self.model_params, sampling=True),
+            session_init=SaverRestore(restore_path),
+            model=GraphBuilder(**self.model_params, training=False),
             input_names=['z'],
             output_names=['gen/gen', 'z'],
         )
 
-        batch_size = self.model_params.get('batch_size') or 200
-        z_dim = self.model_params.get('z_dim') or 200
-
         pred = SimpleDatasetPredictor(
-            pred, RandomZData((batch_size, z_dim)))
+            pred, RandomZData((self.batch_size, self.z_dim)))
 
-        max_iters = n // batch_size
+        max_iters = n // self.batch_size
 
         results = []
         for idx, o in enumerate(pred.get_result()):
@@ -630,7 +637,7 @@ class TGANModel:
 
         ptr = 0
         features = {}
-        for col_id, col_info in enumerate(self.metadata['details']):
+        for col_id, col_info in enumerate(self.model_params['metadata']['details']):
             if col_info['type'] == 'category':
                 features['f%02d' % col_id] = results[:, ptr:ptr + 1]
                 ptr += 1
