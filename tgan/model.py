@@ -555,22 +555,46 @@ class GraphBuilder(ModelDescBase):
 
 
 class TGANModel:
-    """Main model."""
+    """Main model.
+
+    Args:
+        output (`str`, default=`output`): Path to store the model and its artifacts.
+        gpu (`list[str]`, default=`[]`): Comma separated list of GPU(s) to use.
+        workers (`int`, default=1): Number of workers to run parallelism on.
+        batch_size (`int`, default=`200`): Size of the batch to feed the model at each step.
+        z_dim (`int`, default=`100`): Number of labels in the data.
+        num_gen_rnn (`int`, default=`400`):
+        num_gen_feature (`int`, default=`100`): Number of features of in the generator.
+        num_dis_layers (`int`, default=`2`):
+        num_dis_hidden (`int`, default=`200`):
+        noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
+        max_epoch (`int`, default=`100`): Number of epochs to use during training.
+        steps_per_epoch (`int`, default=`10000`): Number of steps to run on each epoch.
+
+        optimizer (`str`, default=`AdamOptimizer`):
+            Name of the optimizer to use during `fit`,possible values are:
+            [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`].
+
+        learning_rate (`float`, default=`0.001`): Learning rate for the optimizer.
+        l2norm (`float`, default=`0.00001`): L2 reguralization coefficient when computing losses.
+
+
+    """
 
     def __init__(
-        self, model_params=None, log_dir='logs', model_dir='model', gpu=None, max_epoch=5,
-        steps_per_epoch=10000, batch_size=200, z_dim=200
+        self, model_params=None, output='output', gpu=None, max_epoch=5, steps_per_epoch=10000,
+        batch_size=200, z_dim=200, **kwargs
     ):
         """Initialize object."""
-        self.log_dir = log_dir
-        self.model_dir = model_dir
+        self.log_dir = os.path.join(output, 'logs')
+        self.model_dir = os.path.join(output, 'model')
         self.max_epoch = max_epoch
         self.steps_per_epoch = steps_per_epoch
         self.batch_size = batch_size
         self.z_dim = z_dim
 
         if model_params is None:
-            model_params = {}
+            model_params = kwargs
 
         self.model_params = model_params
         self.model_params['batch_size'] = batch_size
@@ -588,7 +612,8 @@ class TGANModel:
         self.model_params['metadata'] = metadata
 
         if os.path.isdir(self.model_dir) and os.listdir(self.model_dir):
-            session_init = SaverRestore(self.model_dir)
+            restore_path = os.path.join(self.model_dir, 'checkpoint')
+            session_init = SaverRestore(restore_path)
         else:
             session_init = None
 
@@ -662,3 +687,12 @@ class TGANModel:
                 )
 
         return self.preprocessor.reverse_transform(features)
+
+    def save():
+        """Save model into given path."""
+        pass
+
+    @classmethod
+    def load(cls):
+        """Load a saved model."""
+        pass
