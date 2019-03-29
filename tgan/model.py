@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# File: DCGAN.py
-# Author: Yuxin Wu <ppwwyyxxc@gmail.com>
 
 """TGAN_synthesizer."""
 
