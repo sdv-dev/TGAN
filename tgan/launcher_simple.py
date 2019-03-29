@@ -10,7 +10,7 @@ import subprocess
 
 import numpy as np
 
-from tgan.dataprocess import csv_to_npz, npz_to_csv, split_csv
+from tgan.data import csv_to_npz, npz_to_csv, split_csv
 from tgan.evaluation import evaluate_classification
 from tgan.tgan_synthesizer import tunable_variables
 

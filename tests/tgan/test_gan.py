@@ -15,9 +15,8 @@ class TestGanTrainer(TensorFlowTestCase):
     @patch('tgan.gan.GANTrainer.register_callback', autospec=True)
     @patch('tgan.gan.QueueInput', autospec=True)
     @patch('tgan.gan.BatchData', autospec=True)
-    @patch('tgan.gan.NpDataFlow', autospec=True)
     def test___init__(
-        self, np_mock, batch_mock, queue_mock, register_mock, funcwrapper_mock, ctx_mock,
+        self, batch_mock, queue_mock, register_mock, funcwrapper_mock, ctx_mock,
         clip_mock, control_mock
     ):
         """On init, the model is check, callbacks registered and training iteration defined."""
@@ -31,7 +30,6 @@ class TestGanTrainer(TensorFlowTestCase):
             'compute_gradients.return_value': [('computed', 'gradients')],
             'apply_gradients.return_value': 'applied gradients'
         })
-        np_mock.return_value = 'NPDataFlow'
         batch_mock.return_value = 'BatchData'
 
         model_instance = MagicMock(**{
@@ -46,7 +44,7 @@ class TestGanTrainer(TensorFlowTestCase):
             'get_inputs_desc.return_value': 'inputs_desc'
         })
         model_class = MagicMock(**{'return_value': model_instance})
-        data = 'path/to/'
+        dataflow = 'dataflow object'
 
         tower_wrapped = MagicMock(**{
             '__class__': TowerFuncWrapper
@@ -70,14 +68,13 @@ class TestGanTrainer(TensorFlowTestCase):
         ]
 
         # Run
-        instance = GANTrainer(model_class, data)
+        instance = GANTrainer(model_class, dataflow)
 
         # Check
         assert instance.tower_func == tower_wrapped
         assert instance.train_op == 'applied gradients'
 
-        np_mock.assert_called_once_with(data, shuffle=True)
-        batch_mock.assert_called_once_with('NPDataFlow', 'batch_size_value')
+        batch_mock.assert_called_once_with('dataflow object', 'batch_size_value')
         queue_mock.assert_called_once_with('BatchData')
         assert clip_mock.call_args_list == expected_clip_mock_call_arg_list
         assert opt_mock.compute_gradients.call_args_list == expected_op_compute_call_args_list

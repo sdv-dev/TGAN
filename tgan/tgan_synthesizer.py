@@ -579,7 +579,8 @@ class TGANModel:
 
     def fit(self, data):
         """Fit the model to the given data."""
-        dataflow, metadata = data.get_items()
+        dataflow, metadata, preprocessor = data.get_items()
+        self.preprocessor = preprocessor
         self.model_params['metadata'] = metadata
 
         if os.path.isdir(self.model_dir) and os.listdir(self.model_dir):
@@ -656,7 +657,7 @@ class TGANModel:
                     "`values`. Instead it was {}.".format(col_id, col_info['type'])
                 )
 
-        return features
+        return self.preprocessor.reverse_transform(features)
 
 
 def get_parser():

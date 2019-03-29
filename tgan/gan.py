@@ -5,8 +5,6 @@ from tensorpack import BatchData, QueueInput, StagingInput, TowerTrainer
 from tensorpack.graph_builder import DataParallelBuilder, LeastLoadedDeviceSetter
 from tensorpack.tfutils.tower import TowerContext, TowerFuncWrapper
 
-from tgan.data import NpDataFlow
-
 
 class GANTrainer(TowerTrainer):
     """GanTrainer model.
@@ -26,7 +24,6 @@ class GANTrainer(TowerTrainer):
     def __init__(self, model_class, dataflow, **model_kwargs):
         """Initialize object."""
         model = model_class(**model_kwargs)
-
         batch_data = BatchData(dataflow, model.batch_size)
 
         input = QueueInput(batch_data)

@@ -17,6 +17,7 @@ install_requires = [
     'scikit-learn>=0.20.2',
     'tensorflow>=1.12.0',
     'tensorpack==0.8.9', # https://github.com/DAI-Lab/TGAN/issues/5
+    'urllib3>=1.24.1'
 ]
 
 setup_requires = [

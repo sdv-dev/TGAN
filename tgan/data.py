@@ -8,17 +8,29 @@ that we can use to fit our model.
 
 
 
-
-
 """
-
-
 import json
+import os
+import shutil
 
 import numpy as np
 import pandas as pd
+import urllib3
 from sklearn.mixture import GaussianMixture
 from tensorpack import DataFlow, RNGDataFlow
+
+DEMO_DATASETS = {
+    'census': (
+        'https://s3.amazonaws.com/hdi-demos/tgan-demo/census-train.csv',
+        'data/census.csv',
+        [0, 5, 16, 17, 18, 29, 38]
+    ),
+    'covertype': (
+        'https://s3.amazonaws.com/hdi-demos/tgan-demo/covertype-train.csv',
+        'data/covertype.csv',
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    )
+}
 
 
 def check_metadata(metadata):
@@ -66,7 +78,7 @@ class NpDataFlow(RNGDataFlow):
 
     Attributes:
         shuffle(bool): Wheter or not to shuffle the data.
-        info(dict): Metadata for the given :attr:`data`.
+        metadata(dict): Metadata for the given :attr:`data`.
         num_features(int): Number of features in given data.
         data(list): Prepared data from :attr:`filename`.
         distribution(list): DepecrationWarning?
@@ -133,6 +145,7 @@ class NpDataFlow(RNGDataFlow):
 
         for k in idxs:
             yield self.data[k]
+
 
 class RandomZData(DataFlow):
     """Random dataflow.
@@ -439,10 +452,12 @@ class Preprocessor:
                 })
 
         if fitting:
-            self.metadata = {
+            metadata = {
                 "num_features": num_cols,
                 "details": details
             }
+            check_metadata(metadata)
+            self.metadata = metadata
 
         return transformed_data
 
@@ -481,26 +496,42 @@ class TGANDataset:
         self.dataflow = NpDataFlow(self.data, self.metadata)
 
     def get_items(self):
-        return self.metadata, self.dataflow
+        return self.dataflow, self.metadata, self.preprocessor
 
 
+def download_file(url, file_name):
+    """Download a file from url and save it as filename."""
+    c = urllib3.PoolManager()
 
-S3_DATASETS = []
-
-def download_dataset():
-    pass
+    with c.request('GET', url, preload_content=False) as resp, open(file_name, 'wb') as out_file:
+        shutil.copyfileobj(resp, out_file)
 
 
-def load_data(dataset_name, continuous_columns=None, header=None, preprocessing=True, metadata=None):
-    """Load a TGANDataset."""
+def load_data(name, continuous_columns=None, header=None, preprocessing=True, metadata=None):
+    """Load a TGANDataset.
 
-    if dataset_name in S3_DATASETS:
-        raw_dataset = download_dataset(dataset_name)
+    This function has different behaviors depending on some of the parameters
 
-    else:
-        raw_dataset = pd.read_csv(dataset_name, header=header)
+    Args:
+        name(str): Name or path of the dataset.
+        continuous_columns(list[int]):
+        header():
+        preprocessing(bool)
+        metadata
 
-    prep = Preprocessor()
+
+    """
+
+    params = DEMO_DATASETS.get(name)
+    if params:
+        url, file_name, continuous_columns = params
+        name = file_name
+        if not os.path.isfile(file_name):
+            download_file(url, file_name)
+
+    raw_dataset = pd.read_csv(name, header=header)
+
+    prep = Preprocessor(continuous_columns=continuous_columns)
     if preprocessing:
         dataset = prep.fit_transform(raw_dataset)
 
