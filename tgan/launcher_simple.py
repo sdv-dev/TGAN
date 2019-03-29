@@ -12,7 +12,7 @@ import numpy as np
 
 from tgan.data import csv_to_npz, npz_to_csv, split_csv
 from tgan.evaluation import evaluate_classification
-from tgan.tgan_synthesizer import tunable_variables
+from tgan.model import tunable_variables
 
 test_dir = 'expdir'
 

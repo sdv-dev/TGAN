@@ -6,7 +6,7 @@ from numpy.testing import assert_equal
 from tensorflow.test import TestCase as TensorFlowTestCase
 from tensorpack.tfutils.tower import TowerContext
 
-from tgan.tgan_synthesizer import GraphBuilder, TGANModel
+from tgan.model import GraphBuilder, TGANModel
 
 
 class TestGraphBuilder(TensorFlowTestCase):
@@ -39,7 +39,7 @@ class TestGraphBuilder(TensorFlowTestCase):
         assert output.shape.as_list() == shape
         assert output.consumers() == [graph.get_operation_by_name(cons) for cons in consumers]
 
-    @patch('tgan.tgan_synthesizer.InputDesc', autospec=True)
+    @patch('tgan.model.InputDesc', autospec=True)
     def test__get_inputs(self, input_mock):
         """_get_inputs return a list of all the metadat for input entries in the graph."""
         # Setup
@@ -337,7 +337,7 @@ class TestGraphBuilder(TensorFlowTestCase):
         # Check
         assert result is None
 
-    @patch('tgan.tgan_synthesizer.tf.get_collection', autospec=True)
+    @patch('tgan.model.tf.get_collection', autospec=True)
     def test_collect_variables(self, collection_mock):
         """collect_variable assign the collected variables defined in the given scopes."""
         # Setup
@@ -412,13 +412,13 @@ class TestTGANModel(TensorFlowTestCase):
 
 """
 
-    @patch('tgan.tgan_synthesizer.np.savez', autospec=True)
-    @patch('tgan.tgan_synthesizer.json.dumps', autospec=True)
-    @patch('tgan.tgan_synthesizer.np.concatenate', autospec=True)
-    @patch('tgan.tgan_synthesizer.SimpleDatasetPredictor', autospec=True)
-    @patch('tgan.tgan_synthesizer.RandomZData', autospec=True)
-    @patch('tgan.tgan_synthesizer.PredictConfig', autospec=True)
-    @patch('tgan.tgan_synthesizer.get_model_loader', autospec=True)
+    @patch('tgan.model.np.savez', autospec=True)
+    @patch('tgan.model.json.dumps', autospec=True)
+    @patch('tgan.model.np.concatenate', autospec=True)
+    @patch('tgan.model.SimpleDatasetPredictor', autospec=True)
+    @patch('tgan.model.RandomZData', autospec=True)
+    @patch('tgan.model.PredictConfig', autospec=True)
+    @patch('tgan.model.get_model_loader', autospec=True)
     def test_sample_value_column(
         self, get_model_mock, predict_mock, random_mock,
         simple_mock, concat_mock, json_mock, save_mock
