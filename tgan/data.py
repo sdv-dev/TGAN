@@ -13,6 +13,7 @@ import json
 import os
 import shutil
 
+import certifi
 import numpy as np
 import pandas as pd
 import urllib3
@@ -415,6 +416,16 @@ class Preprocessor:
     Args:
         continous_columns(list): List of columns to be considered continuous
         metadata(dict): Metadata to initialize the object.
+
+    Attributes:
+        continous_columns(list): Same as constructor argument.
+        metadata(dict): Information about the transformations applied to the data and its format.
+        continous_transformer(MultiModalNumberTransformer):
+            Transformer for columns in :attr:`continuous_columns`
+        categorical_transformer(CategoricalTransformer):
+            Transformer for categorical columns.
+        columns(list): List of columns labels.
+
     """
 
     def __init__(self, continuous_columns=None, metadata=None):
@@ -439,11 +450,13 @@ class Preprocessor:
 
         """
         num_cols = data.shape[1]
+        self.columns = data.columns
+        data.columns = list(range(num_cols))
 
         transformed_data = {}
         details = []
 
-        for i in range(num_cols):
+        for i in data.columns:
             if i in self.continuous_columns:
                 column_data = data[i].values.reshape([-1, 1])
                 features, probs, means, stds = self.continous_transformer.transform(column_data)
@@ -523,7 +536,9 @@ class Preprocessor:
 
             table.append(column)
 
-        return pd.DataFrame(dict(enumerate(table)))
+        result = pd.DataFrame(dict(enumerate(table)))
+        result.columns = self.columns
+        return result
 
 
 class TGANDataset:
@@ -533,41 +548,48 @@ class TGANDataset:
     be able to sample afterwards.
 
     Args:
-        data(dict): Preprocessed features.
+        features(dict[str, numpy.ndarray]): Preprocessed features.
         preprocessor(tgan.data.Preprocessor): Preprocessor object used to prepare features.
     """
 
-    def __init__(self, data, preprocessor):
+    def __init__(self, features, preprocessor):
         """Initialize object, set arguments as attributes, initialize DataFlow."""
-        self.data = data
+        self.features = features
         self.preprocessor = preprocessor
         self.metadata = preprocessor.metadata
-        self.dataflow = NpDataFlow(self.data, self.metadata)
 
     def get_items(self):
         """Return dataflow, metadata and preprocessor."""
-        return self.dataflow, self.metadata, self.preprocessor
+        return NpDataFlow(self.features, self.metadata), self.metadata, self.preprocessor
 
 
 def download_file(url, file_name):
     """Download a file from url and save it as filename."""
-    c = urllib3.PoolManager()
+    c = urllib3.PoolManager(
+        cert_reqs='CERT_REQUIRED',
+        ca_certs=certifi.where())
 
     with c.request('GET', url, preload_content=False) as resp, open(file_name, 'wb') as out_file:
         shutil.copyfileobj(resp, out_file)
 
 
 def load_data(name, continuous_columns=None, header=None, preprocessing=True, metadata=None):
-    """Load a TGANDataset.
+    """Fetch, load and prepare a dataset.
 
-    This function has different behaviors depending on some of the parameters
+    If name is one of the demo datasets
+
 
     Args:
         name(str): Name or path of the dataset.
-        continuous_columns(list[int]):
-        header():
-        preprocessing(bool)
-        metadata(dict):
+        continuous_columns(list[int]): 0-indexed list of columns positions to be considered
+                                       continuous during preprocessing. This argument is
+                                       **required** if we want to preprocess a local dataset.
+        header(): Header parameter when executing :attr:`pandas.read_csv`
+        preprocessing(bool): Whether or not preprocess the dataset after fetching it.
+                             This will one-hot encode categorical columns and transform continuous
+                             columns. This is a **required** step for raw data to become valid
+                             input for the model.
+        metadata(dict): Metadata for a given dataset, if we are loading a preprocessed dataset,
 
     """
     params = DEMO_DATASETS.get(name)
