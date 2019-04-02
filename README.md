@@ -1,3 +1,8 @@
+<p align="left">
+<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="SteganoGAN" />
+<i>An open source project from Data to AI Lab at MIT.</i>
+</p>
+
 [![PyPi Shield](https://img.shields.io/pypi/v/TGAN.svg)](https://pypi.python.org/pypi/TGAN)
 [![Travis CI Shield](https://travis-ci.org/DAI-Lab/TGAN.svg?branch=master)](https://travis-ci.org/DAI-Lab/TGAN)
 
