@@ -274,7 +274,7 @@ class TestGraphBuilder(TensorFlowTestCase):
         )
         self.check_operation_nodes(
             graph, 'dis_fc0/dropout/Identity', 'Identity', tf.float64, [7, 110],
-            ['dis_fc0/LeakyRelu/mul', 'dis_fc0/LeakyRelu']
+            ['dis_fc0/LeakyRelu']
         )
 
     def test__build_graph(self):
@@ -411,6 +411,8 @@ class TestTGANModel(TensorFlowTestCase):
         assert instance.batch_size == 200
         assert instance.z_dim == 200
         assert instance.gpu is None
+        assert instance.save_checkpoints is True
+        assert instance.restore_session is True
 
     def test_fit(self):
         """ """
