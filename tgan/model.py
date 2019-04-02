@@ -9,6 +9,7 @@ This module contains two classes:
 - :attr:`TGANModel`: The public API for the model, that offers a simplified interface for the
   underlying operations with GraphBuilder and trainers in order to fit and sample data.
 """
+import json
 import os
 
 import dill
@@ -162,7 +163,7 @@ class GraphBuilder(ModelDescBase):
         """Return optimizer of base class."""
         return self._get_optimizer()
 
-    def _get_inputs(self):
+    def inputs(self):
         """Return metadata about entry data.
 
         Returns:
@@ -440,7 +441,7 @@ class GraphBuilder(ModelDescBase):
         """
         return tf.reduce_sum((tf.log(pred + 1e-4) - tf.log(real + 1e-4)) * pred)
 
-    def _build_graph(self, inputs):
+    def build_graph(self, *inputs):
         """Build the whole graph.
 
         Args:
@@ -644,11 +645,15 @@ class TGANModel:
         )
 
         restore_path = os.path.join(self.model_dir, 'checkpoint')
+
         if os.path.isfile(restore_path) and self.restore_session:
             session_init = SaverRestore(restore_path)
+            with open(os.path.join(self.log_dir, 'stats.json')) as f:
+                starting_epoch = json.load(f)[-1]['epoch_num'] + 1
 
         else:
             session_init = None
+            starting_epoch = 1
 
         action = 'k' if self.restore_session else None
         logger.set_logger_dir(self.log_dir, action=action)
@@ -662,6 +667,7 @@ class TGANModel:
             steps_per_epoch=self.steps_per_epoch,
             max_epoch=self.max_epoch,
             session_init=session_init,
+            starting_epoch=starting_epoch
         )
 
         self.model.training = False

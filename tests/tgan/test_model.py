@@ -40,7 +40,7 @@ class TestGraphBuilder(TensorFlowTestCase):
         assert output.consumers() == [graph.get_operation_by_name(cons) for cons in consumers]
 
     @patch('tgan.model.InputDesc', autospec=True)
-    def test__get_inputs(self, input_mock):
+    def test_inputs(self, input_mock):
         """_get_inputs return a list of all the metadat for input entries in the graph."""
         # Setup
         metadata = {
@@ -66,13 +66,13 @@ class TestGraphBuilder(TensorFlowTestCase):
         expected_result = ['value_input', 'cluster_input', 'category_input']
 
         # Run
-        result = instance._get_inputs()
+        result = instance.inputs()
 
         # Check
         assert result == expected_result
         assert input_mock.call_args_list == expected_input_mock_call_args_list
 
-    def test__get_inputs_raises(self):
+    def test_inputs_raises(self):
         """_get_inputs raises a ValueError if an invalid column type is found."""
         # Setup
         metadata = {
@@ -88,7 +88,7 @@ class TestGraphBuilder(TensorFlowTestCase):
 
         try:
             # Run
-            instance._get_inputs()
+            instance.inputs()
 
         except ValueError as error:
             # Check
@@ -273,11 +273,11 @@ class TestGraphBuilder(TensorFlowTestCase):
             ['dis_fc0/bn/batchnorm/mul']
         )
         self.check_operation_nodes(
-            graph, 'dis_fc0/dropout/Identity', 'Identity', tf.float64, [7, 110],
+            graph, 'dis_fc0/dropout', 'Identity', tf.float64, [7, 110],
             ['dis_fc0/LeakyRelu']
         )
 
-    def test__build_graph(self):
+    def test_build_graph(self):
         """ """
         # Setup
         metadata = {
@@ -296,7 +296,7 @@ class TestGraphBuilder(TensorFlowTestCase):
 
         # Run
         with TowerContext('', is_training=False):
-            result = instance._build_graph(inputs)
+            result = instance.build_graph(*inputs)
 
         # Check
         assert result is None
@@ -329,7 +329,7 @@ class TestGraphBuilder(TensorFlowTestCase):
             np.full((200, 1), 0)
         ]
         with TowerContext('', is_training=False):
-            instance._build_graph(inputs)
+            instance.build_graph(*inputs)
 
             # Run
             result = instance.build_losses(logits_real, logits_fake, extra_g, l2_norm)
@@ -413,89 +413,3 @@ class TestTGANModel(TensorFlowTestCase):
         assert instance.gpu is None
         assert instance.save_checkpoints is True
         assert instance.restore_session is True
-
-    def test_fit(self):
-        """ """
-        # Setup
-
-        # Run
-
-        # Check
-
-
-"""
-
-    @patch('tgan.model.np.savez', autospec=True)
-    @patch('tgan.model.json.dumps', autospec=True)
-    @patch('tgan.model.np.concatenate', autospec=True)
-    @patch('tgan.model.SimpleDatasetPredictor', autospec=True)
-    @patch('tgan.model.RandomZData', autospec=True)
-    @patch('tgan.model.PredictConfig', autospec=True)
-    @patch('tgan.model.get_model_loader', autospec=True)
-    def test_sample_value_column(
-        self, get_model_mock, predict_mock, random_mock,
-        simple_mock, concat_mock, json_mock, save_mock
-    ):
-        """ """
-        # Setup
-        n = 200
-        output_name = 'output name'
-        output_filename = 'output filename'
-
-        metadata = {
-            'details': [
-                {
-                    'type': 'value',
-                    'n': 5
-                },
-                {
-                    'type': 'category',
-                    'n': 5
-                }
-            ]
-        }
-
-        instance = GraphBuilder(metadata)
-        instance.model_dir = 'model path'
-
-        get_model_mock.return_value = 'restored model'
-        predict_mock.return_value = 'predict config object'
-        simple_instance = MagicMock(**{'get_result.return_value': [[0], [1]]})
-        simple_mock.return_value = simple_instance
-        random_mock.return_value = 'random z data'
-        json_mock.return_value = 'metadata'
-        concat_mock.side_effect = [np.zeros((5, 10)), 'concatenated results']
-
-        expected_concat_first_call_args = (([0],), {'axis': 0})
-
-        # Run
-        result = instance.sample(n, output_name, output_filename)
-
-        # Check
-        assert result is None
-
-        get_model_mock.assert_called_once_with('model path')
-        predict_mock.assert_called_once_with(
-            session_init='restored model',
-            model=instance,
-            input_names=['z'],
-            output_names=['output name', 'z']
-        )
-        random_mock.assert_called_once_with((200, 200))
-        simple_mock.assert_called_once_with('predict config object', 'random z data')
-
-        assert len(concat_mock.call_args_list) == 2
-        first_call, second_call = concat_mock.call_args_list
-        assert first_call == expected_concat_first_call_args
-        assert len(second_call[0]) == 1
-        assert_equal(second_call[0][0][0], np.zeros((5, 1)))
-        assert_equal(second_call[0][0][1], np.zeros((5, 5)))
-        second_call[1] == {'axis': 1}
-
-        assert len(save_mock.call_args_list) == 1
-        call_args = save_mock.call_args_list[0]
-        assert call_args[0] == (output_filename, )
-        assert call_args[1]['info'] == 'metadata'
-        assert call_args[1]['f00'] == 'concatenated results'
-        assert_equal(call_args[1]['f01'], np.zeros((5, 1)))
-"""
