@@ -11,16 +11,17 @@ This module contains two classes:
 """
 import os
 
+import dill
 import numpy as np
 import tensorflow as tf
 from tensorpack import (
-    BatchNorm, Dropout, FullyConnected, InputDesc, ModelDescBase, ModelSaver, PredictConfig,
-    SaverRestore, SimpleDatasetPredictor, logger)
+    BatchData, BatchNorm, Dropout, FullyConnected, InputDesc, ModelDescBase, ModelSaver,
+    PredictConfig, QueueInput, SaverRestore, SimpleDatasetPredictor, logger)
 from tensorpack.tfutils.scope_utils import auto_reuse_variable_scope
 from tensorpack.tfutils.summary import add_moving_summary
 from tensorpack.utils.argtools import memoized
 
-from tgan.data import RandomZData
+from tgan.data import Preprocessor, RandomZData, TGANDataFlow
 from tgan.trainer import GANTrainer
 
 TUNABLE_VARIABLES = {
@@ -558,43 +559,54 @@ class TGANModel:
     """Main model.
 
     Args:
-        output (`str`, default=`output`): Path to store the model and its artifacts.
-        gpu (`list[str]`, default=`[]`): Comma separated list of GPU(s) to use.
-        workers (`int`, default=1): Number of workers to run parallelism on.
-        batch_size (`int`, default=`200`): Size of the batch to feed the model at each step.
-        z_dim (`int`, default=`100`): Number of labels in the data.
-        num_gen_rnn (`int`, default=`400`):
-        num_gen_feature (`int`, default=`100`): Number of features of in the generator.
-        num_dis_layers (`int`, default=`2`):
-        num_dis_hidden (`int`, default=`200`):
-        noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
-        max_epoch (`int`, default=`100`): Number of epochs to use during training.
-        steps_per_epoch (`int`, default=`10000`): Number of steps to run on each epoch.
-
-        optimizer (`str`, default=`AdamOptimizer`):
-            Name of the optimizer to use during `fit`,possible values are:
-            [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`].
-
-        learning_rate (`float`, default=`0.001`): Learning rate for the optimizer.
-        l2norm (`float`, default=`0.00001`): L2 reguralization coefficient when computing losses.
-
+        output (str, optional): Path to store the model and its artifacts. Defaults to
+            :attr:`output`.
+        gpu (list[str], optional):Comma separated list of GPU(s) to use. Defaults to :attr:`None`.
+        workers (int, optional): Number of workers to run parallelism on. Defaults to :attr:`1`.
+        batch_size (int, optional): Size of the batch to feed the model at each step. Defaults to
+            :attr:`200`.
+        z_dim (int, optional): Number of labels in the data. Defaults to :attr:`100`.
+        num_gen_rnn (int, optional): Defaults to :attr:`400`.
+        num_gen_feature (int, optional): Number of features of in the generator. Defaults to
+            :attr:`100`
+        num_dis_layers (int, optional): Defaults to :attr:`2`.
+        num_dis_hidden (int, optional): Defaults to :attr:`200`.
+        noise (float, optional): Upper bound to the gaussian noise. Defaults to :attr:`0.2`.
+        max_epoch (int, optional): Number of epochs to use during training. Defaults to
+            :attr:`100`.
+        steps_per_epoch (int, optional): Number of steps to run on each epoch. Defaults to
+            :attr:`10000`.
+        optimizer (str, optional): Name of the optimizer to use during `fit`,possible values are:
+            [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`]. Defaults to
+            :attr:`AdamOptimizer`.
+        learning_rate (float, optional): Learning rate for the optimizer. Defaults to
+            :attr:`0.001`.
+        l2norm (float, optional):
+            L2 reguralization coefficient when computing losses. Defaults to :attr:`0.00001`.
+        save_checkpoints(bool, optional): Whether or not to store checkpoints of the model after
+            each training epoch. Defaults to :attr:`True`
+        restore_session(bool, optional): Whether or not continue training from the last checkpoint.
+            Defaults to :attr:`True`.
 
     """
 
     def __init__(
-        self, model_params=None, output='output', gpu=None, max_epoch=5, steps_per_epoch=10000,
-        batch_size=200, z_dim=200, **kwargs
+        self, continuous_columns, output='output', gpu=None, max_epoch=5,
+        steps_per_epoch=10000, batch_size=200, z_dim=200, save_checkpoints=True,
+        restore_session=True, **kwargs
     ):
         """Initialize object."""
+        self.continuous_columns = continuous_columns
         self.log_dir = os.path.join(output, 'logs')
         self.model_dir = os.path.join(output, 'model')
         self.max_epoch = max_epoch
         self.steps_per_epoch = steps_per_epoch
         self.batch_size = batch_size
         self.z_dim = z_dim
+        self.save_checkpoints = save_checkpoints
+        self.restore_session = restore_session
 
-        if model_params is None:
-            model_params = kwargs
+        model_params = kwargs
 
         self.model_params = model_params
         self.model_params['batch_size'] = batch_size
@@ -606,36 +618,70 @@ class TGANModel:
         self.gpu = gpu
 
     def fit(self, data):
-        """Fit the model to the given data."""
-        dataflow, metadata, preprocessor = data.get_items()
-        self.preprocessor = preprocessor
+        """Fit the model to the given data.
+
+        Args:
+            data(pandas.DataFrame): dataset to fit the model.
+
+        Returns:
+            None
+
+        """
+        self.preprocessor = Preprocessor(continuous_columns=self.continuous_columns)
+        data = self.preprocessor.fit_transform(data)
+        metadata = self.preprocessor.metadata
+        dataflow = TGANDataFlow(data, metadata)
+        batch_data = BatchData(dataflow, self.batch_size)
+        input_queue = QueueInput(batch_data)
+
         self.model_params['metadata'] = metadata
 
-        if os.path.isdir(self.model_dir) and os.listdir(self.model_dir):
-            restore_path = os.path.join(self.model_dir, 'checkpoint')
+        self.model = GraphBuilder(**self.model_params, training=True)
+
+        self.trainer = GANTrainer(
+            model=self.model,
+            input_queue=input_queue,
+        )
+
+        restore_path = os.path.join(self.model_dir, 'checkpoint')
+        if os.path.isfile(restore_path) and self.restore_session:
             session_init = SaverRestore(restore_path)
+
         else:
             session_init = None
 
-        logger.set_logger_dir(self.log_dir)
-        trainer = GANTrainer(
-            model_class=GraphBuilder,
-            dataflow=dataflow,
-            **self.model_params
-        )
-        trainer.train_with_defaults(
-            callbacks=[ModelSaver(checkpoint_dir=self.model_dir), ],
+        action = 'k' if self.restore_session else None
+        logger.set_logger_dir(self.log_dir, action=action)
+
+        callbacks = []
+        if self.save_checkpoints:
+            callbacks.append(ModelSaver(checkpoint_dir=self.model_dir))
+
+        self.trainer.train_with_defaults(
+            callbacks=callbacks,
             steps_per_epoch=self.steps_per_epoch,
             max_epoch=self.max_epoch,
-            session_init=session_init
+            session_init=session_init,
         )
 
-    def sample(self, n):
+        self.model.training = False
+        predict_config = PredictConfig(
+            session_init=SaverRestore(restore_path),
+            model=self.model,
+            input_names=['z'],
+            output_names=['gen/gen', 'z'],
+        )
+
+        self.simple_dataset_predictor = SimpleDatasetPredictor(
+            predict_config,
+            RandomZData((self.batch_size, self.z_dim))
+        )
+
+    def sample(self, num_samples):
         """Generate samples from model.
 
         Args:
-            n(int)
-            output_name(str):
+            num_samples(int)
 
         Returns:
             None
@@ -644,21 +690,10 @@ class TGANModel:
             ValueError
 
         """
-        restore_path = os.path.join(self.model_dir, 'checkpoint')
-        pred = PredictConfig(
-            session_init=SaverRestore(restore_path),
-            model=GraphBuilder(**self.model_params, training=False),
-            input_names=['z'],
-            output_names=['gen/gen', 'z'],
-        )
-
-        pred = SimpleDatasetPredictor(
-            pred, RandomZData((self.batch_size, self.z_dim)))
-
-        max_iters = n // self.batch_size
+        max_iters = (num_samples // self.batch_size) + 1
 
         results = []
-        for idx, o in enumerate(pred.get_result()):
+        for idx, o in enumerate(self.simple_dataset_predictor.get_result()):
             results.append(o[0])
             if idx + 1 == max_iters:
                 break
@@ -688,9 +723,10 @@ class TGANModel:
 
         return self.preprocessor.reverse_transform(features)
 
-    def save():
+    def save(self, model_path):
         """Save model into given path."""
-        pass
+        with open(model_path, 'wb') as f:
+            dill.dump(self, f)
 
     @classmethod
     def load(cls):
