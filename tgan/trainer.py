@@ -1,7 +1,7 @@
 """GAN Models."""
 
 import tensorflow as tf
-from tensorpack import BatchData, QueueInput, StagingInput, TowerTrainer
+from tensorpack import StagingInput, TowerTrainer
 from tensorpack.graph_builder import DataParallelBuilder, LeastLoadedDeviceSetter
 from tensorpack.tfutils.tower import TowerContext, TowerFuncWrapper
 
@@ -16,28 +16,24 @@ class GANTrainer(TowerTrainer):
     Just calling :meth:`model.build_graph` directly is OK.
 
     Args:
-        input(tensorpack.input_source.InputSource): Data input.
+        input_queue(tensorpack.input_source.QueueInput): Data input.
         model(tgan.GAN.GANModelDesc): Model to train.
 
     """
 
-    def __init__(self, model_class, dataflow, **model_kwargs):
+    def __init__(self, model, input_queue):
         """Initialize object."""
-        model = model_class(**model_kwargs)
-        batch_data = BatchData(dataflow, model.batch_size)
-
-        input = QueueInput(batch_data)
         super().__init__()
         inputs_desc = model.get_inputs_desc()
 
         # Setup input
-        cbs = input.setup(inputs_desc)
+        cbs = input_queue.setup(inputs_desc)
         self.register_callback(cbs)
 
         # Build the graph
         self.tower_func = TowerFuncWrapper(model.build_graph, inputs_desc)
         with TowerContext('', is_training=True):
-            self.tower_func(*input.get_input_tensors())
+            self.tower_func(*input_queue.get_input_tensors())
 
         opt = model.get_optimizer()
 
@@ -66,7 +62,7 @@ class SeparateGANTrainer(TowerTrainer):
     """A GAN trainer which runs two optimization ops with a certain ratio.
 
     Args:
-        input(tensorpack.input_source.InputSource): Data input.
+        input(tensorpack.input_source.QueueInput): Data input.
         model(tgan.GAN.GANModelDesc): Model to train.
         d_period(int): period of each d_opt run
         g_period(int): period of each g_opt run
@@ -110,7 +106,7 @@ class MultiGPUGANTrainer(TowerTrainer):
 
     Args:
         nr_gpu(int):
-        input(tensorpack.input_source.InputSource): Data input.
+        input(tensorpack.input_source.QueueInput): Data input.
         model(tgan.GAN.GANModelDesc): Model to train.
 
     """

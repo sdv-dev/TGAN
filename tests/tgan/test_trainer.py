@@ -13,24 +13,20 @@ class TestGanTrainer(TensorFlowTestCase):
     @patch('tgan.trainer.TowerContext', autospec=True)
     @patch('tgan.trainer.TowerFuncWrapper', autospec=True)
     @patch('tgan.trainer.GANTrainer.register_callback', autospec=True)
-    @patch('tgan.trainer.QueueInput', autospec=True)
-    @patch('tgan.trainer.BatchData', autospec=True)
     def test___init__(
-        self, batch_mock, queue_mock, register_mock, funcwrapper_mock, ctx_mock,
+        self, register_mock, funcwrapper_mock, ctx_mock,
         clip_mock, control_mock
     ):
         """On init, the model is check, callbacks registered and training iteration defined."""
         # Setup
-        input_values = MagicMock(**{
+        input_queue = MagicMock(**{
             'setup.return_value': 'setup_value',
             'get_input_tensors.return_value': ['input', 'tensors']
         })
-        queue_mock.return_value = input_values
         opt_mock = MagicMock(**{
             'compute_gradients.return_value': [('computed', 'gradients')],
             'apply_gradients.return_value': 'applied gradients'
         })
-        batch_mock.return_value = 'BatchData'
 
         model_instance = MagicMock(**{
             'build_graph': 'graph callback',
@@ -43,8 +39,6 @@ class TestGanTrainer(TensorFlowTestCase):
             'get_optimizer.return_value': opt_mock,
             'get_inputs_desc.return_value': 'inputs_desc'
         })
-        model_class = MagicMock(**{'return_value': model_instance})
-        dataflow = 'dataflow object'
 
         tower_wrapped = MagicMock(**{
             '__class__': TowerFuncWrapper
@@ -68,20 +62,18 @@ class TestGanTrainer(TensorFlowTestCase):
         ]
 
         # Run
-        instance = GANTrainer(model_class, dataflow)
+        instance = GANTrainer(model_instance, input_queue)
 
         # Check
         assert instance.tower_func == tower_wrapped
         assert instance.train_op == 'applied gradients'
 
-        batch_mock.assert_called_once_with('dataflow object', 'batch_size_value')
-        queue_mock.assert_called_once_with('BatchData')
         assert clip_mock.call_args_list == expected_clip_mock_call_arg_list
         assert opt_mock.compute_gradients.call_args_list == expected_op_compute_call_args_list
         assert opt_mock.apply_gradients.call_args_list == expected_op_apply_call_args_list
 
-        input_values.setup.assert_called_once_with('inputs_desc')
-        input_values.get_input_tensors.assert_called_once_with()
+        input_queue.setup.assert_called_once_with('inputs_desc')
+        input_queue.get_input_tensors.assert_called_once_with()
 
         model_instance.get_inputs_desc.assert_called_once_with()
         model_instance.get_optimizer.assert_called_once_with()

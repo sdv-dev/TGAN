@@ -6,11 +6,11 @@ import pandas as pd
 from numpy.testing import assert_allclose, assert_equal
 
 from tgan.data import (
-    CategoricalTransformer, MultiModalNumberTransformer, NpDataFlow, RandomZData, check_inputs,
+    CategoricalTransformer, MultiModalNumberTransformer, RandomZData, TGANDataFlow, check_inputs,
     check_metadata, csv_to_npz, npz_to_csv, split_csv)
 
 
-class TestNPDataFlow(TestCase):
+class TesttganDataFlow(TestCase):
 
     def test___init__(self):
         """ """
@@ -40,7 +40,7 @@ class TestNPDataFlow(TestCase):
         )]
 
         # Run
-        result = NpDataFlow(data, metadata, shuffle)
+        result = TGANDataFlow(data, metadata, shuffle)
 
         # Check
         assert result.shuffle is False
@@ -57,7 +57,7 @@ class TestNPDataFlow(TestCase):
             'num_features': 1,
         }
         data = np.array([1, 2, 3])
-        instance = NpDataFlow([], metadata, shuffle)
+        instance = TGANDataFlow([], metadata, shuffle)
         instance.data = data
         # Run
         result = instance.size()
@@ -88,7 +88,7 @@ class TestNPDataFlow(TestCase):
                 [0.2, 1.2, 2.2, 3.2],
             ]),
         }
-        instance = NpDataFlow(data, metadata, shuffle)
+        instance = TGANDataFlow(data, metadata, shuffle)
         expected_result = [
             (0, np.array([0.0]), np.array([1.0, 2.0, 3.0])),
             (1, np.array([0.1]), np.array([1.1, 2.1, 3.1])),
@@ -114,7 +114,7 @@ class TestNPDataFlow(TestCase):
             'num_features': 1,
         }
         data = {'f00': [0, 1, 2, 3, 4]}
-        instance = NpDataFlow(data, metadata, shuffle)
+        instance = TGANDataFlow(data, metadata, shuffle)
 
         instance.rng = np.random.RandomState(0)
 

@@ -391,15 +391,26 @@ class TestTGANModel(TensorFlowTestCase):
     def test___init__(self):
         """On init, arguments are set as attributes."""
         # Setup
-        model_params = {
-            'some_key': 'some_value'
+        continuous_columns = []
+        expected_model_params = {
+            'some_key': 'some_value',
+            'batch_size': 200,
+            'z_dim': 200
         }
 
         # Run
-        instance = TGANModel(model_params)
+        instance = TGANModel(continuous_columns, some_key='some_value')
 
         # Check
-        assert instance.model_params == model_params
+        assert instance.continuous_columns == continuous_columns
+        assert instance.model_params == expected_model_params
+        assert instance.log_dir == 'output/logs'
+        assert instance.model_dir == 'output/model'
+        assert instance.max_epoch == 5
+        assert instance.steps_per_epoch == 10000
+        assert instance.batch_size == 200
+        assert instance.z_dim == 200
+        assert instance.gpu is None
 
     def test_fit(self):
         """ """

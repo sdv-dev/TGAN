@@ -74,7 +74,7 @@ def check_inputs(function):
     return decorated
 
 
-class NpDataFlow(RNGDataFlow):
+class TGANDataFlow(RNGDataFlow):
     """Subclass of :class:`tensorpack.RNGDataFlow` prepared to work with :class:`numpy.ndarray`.
 
     Attributes:
@@ -541,28 +541,6 @@ class Preprocessor:
         return result
 
 
-class TGANDataset:
-    """Dataset object.
-
-    This object contains everything that the model will need in order to be :attr:`fit` and
-    be able to sample afterwards.
-
-    Args:
-        features(dict[str, numpy.ndarray]): Preprocessed features.
-        preprocessor(tgan.data.Preprocessor): Preprocessor object used to prepare features.
-    """
-
-    def __init__(self, features, preprocessor):
-        """Initialize object, set arguments as attributes, initialize DataFlow."""
-        self.features = features
-        self.preprocessor = preprocessor
-        self.metadata = preprocessor.metadata
-
-    def get_items(self):
-        """Return dataflow, metadata and preprocessor."""
-        return NpDataFlow(self.features, self.metadata), self.metadata, self.preprocessor
-
-
 def download_file(url, file_name):
     """Download a file from url and save it as filename."""
     c = urllib3.PoolManager(
@@ -599,19 +577,4 @@ def load_data(name, continuous_columns=None, header=None, preprocessing=True, me
         if not os.path.isfile(file_name):
             download_file(url, file_name)
 
-    raw_dataset = pd.read_csv(name, header=header)
-
-    prep = Preprocessor(continuous_columns=continuous_columns, metadata=metadata)
-
-    if preprocessing:
-
-        if metadata is not None:
-            raise ValueError('Can\'t preprocess if metadata is being given')
-
-        dataset = prep.fit_transform(raw_dataset)
-
-    else:
-        prep.metadata = metadata
-        dataset = raw_dataset
-
-    return TGANDataset(dataset, prep)
+    return pd.read_csv(name, header=header)
