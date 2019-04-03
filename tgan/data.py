@@ -2,14 +2,7 @@
 
 This modules contains the tools to preprare the data, from the raw csv files, to the DataFlow
 objects will be used to fit our models.
-
-The easiest way is to use the :attr:`load_data` function, that will return a TGANDataset object,
-that we can use to fit our model.
-
-You can pass
-
 """
-import json
 import os
 import shutil
 
@@ -18,6 +11,7 @@ import numpy as np
 import pandas as pd
 import urllib3
 from sklearn.mixture import GaussianMixture
+from sklearn.preprocessing import LabelEncoder
 from tensorpack import DataFlow, RNGDataFlow
 
 DEMO_DATASETS = {
@@ -70,7 +64,7 @@ def check_inputs(function):
 
         return function(self, data, *args, **kwargs)
 
-    decorated.__doc__ == function.__doc__
+    decorated.__doc__ = function.__doc__
     return decorated
 
 
@@ -147,6 +141,12 @@ class TGANDataFlow(RNGDataFlow):
         for k in idxs:
             yield self.data[k]
 
+    def __iter__(self):
+        return self.get_data()
+
+    def __len__(self):
+        return self.size()
+
 
 class RandomZData(DataFlow):
     """Random dataflow.
@@ -165,6 +165,12 @@ class RandomZData(DataFlow):
         """Yield random normal vectors of shape :attr:`shape`."""
         while True:
             yield [np.random.normal(0, 1, size=self.shape)]
+
+    def __iter__(self):
+        return self.get_data()
+
+    def __len__(self):
+        return self.shape[0]
 
 
 class MultiModalNumberTransformer:
@@ -242,7 +248,8 @@ class MultiModalNumberTransformer:
 
         return features, probs, list(means.flat), list(stds.flat)
 
-    def reverse_transform(self, data, info):
+    @staticmethod
+    def inverse_transform(data, info):
         """Reverse the clustering of values.
 
         Args:
@@ -264,150 +271,6 @@ class MultiModalNumberTransformer:
         select_std = std[p_argmax]
 
         return features * 2 * select_std + select_mean
-
-
-class CategoricalTransformer:
-    """One-hot encoder for Categorical transformer."""
-
-    def transform(self, data):
-        """Apply transform.
-
-        Args:
-            data(numpy.ndarray): Categorical array to transform.
-
-        Return:
-            tuple[numpy.ndarray, list, int]: Transformed values, list of unique values,
-            and amount of uniques.
-
-        """
-        unique_values = np.unique(data).tolist()
-        value_mapping = {value: index for index, value in enumerate(unique_values)}
-
-        v = list(map(lambda x: value_mapping[x], data))
-        features = np.asarray(v).reshape([-1, 1])
-
-        return features, unique_values, len(unique_values)
-
-    @check_inputs
-    def reverse_transform(self, data, info):
-        """Reverse the transform.
-
-        Args:
-            data(np.ndarray): Transformed data to restore as categorical.
-            info(dict): Metadata for the given column.
-
-        Returns:
-            list: Values in the original space.
-
-        """
-        id2str = dict(enumerate(info['mapping']))
-        return list(map(lambda x: id2str[x], data.flat))
-
-
-def split_csv(csv_filename, csv_out1, csv_out2, ratio=0.8):
-    """Split a csv file in two and save it.
-
-    Args:
-        csv_filename(str): Path for the original file.
-        csv_out1(str): Destination for one of the splitted files.
-        csv_out2(str): Destination for one of the splitted files.
-        ratio(float): Size proportion to split the original file.
-
-    Returns:
-        None
-
-    """
-    df = pd.read_csv(csv_filename, header=-1)
-    mask = np.random.rand(len(df)) < ratio
-    df1 = df[mask]
-    df2 = df[~mask]
-    df1.to_csv(csv_out1, header=False, index=False)
-    df2.to_csv(csv_out2, header=False, index=False)
-
-
-def csv_to_npz(csv_filename, npz_filename, continuous_cols):
-    """Read data from a csv file and convert it to the training npz for TGAN.
-
-    Args:
-        csv_filename(str): Path to origin csv file.
-        npz_filename(str): Path to store the destination npz file.
-        continuous_cols(list[str or int]): List of labels for columns with continous values.
-
-    Returns:
-        None
-
-    """
-    df = pd.read_csv(csv_filename, header=-1)
-    num_cols = len(list(df))
-
-    data = {}
-    details = []
-    continous_transformer = MultiModalNumberTransformer()
-    categorical_transformer = CategoricalTransformer()
-
-    for i in range(num_cols):
-        if i in continuous_cols:
-            column_data = df[i].values.reshape([-1, 1])
-            features, probs, means, stds = continous_transformer.transform(column_data)
-            details.append({
-                "type": "value",
-                "means": means,
-                "stds": stds,
-                "n": 5
-            })
-            data['f%02d' % i] = np.concatenate((features, probs), axis=1)
-
-        else:
-            column_data = df[i].astype(str).values
-            features, mapping, n = categorical_transformer.transform(column_data)
-            data['f%02d' % i] = features
-            details.append({
-                "type": "category",
-                "mapping": mapping,
-                "n": n
-            })
-
-    info = {
-        "num_features": num_cols,
-        "details": details
-    }
-
-    np.savez(npz_filename, info=json.dumps(info), **data)
-
-
-def npz_to_csv(npfilename, csvfilename):
-    """Convert a npz file into a csv and return its contents.
-
-    Args:
-        npfilename(str): Path to origin npz file.
-        csvfilename(str): Path to destination csv file.
-
-    Returns:
-        None
-
-    """
-    data = np.load(npfilename)
-    metadata = json.loads(str(data['info']))
-    check_metadata(metadata)
-
-    table = []
-    continous_transformer = MultiModalNumberTransformer()
-    categorical_transformer = CategoricalTransformer()
-
-    for i in range(metadata['num_features']):
-        column_data = data['f%02d' % i]
-        column_metadata = metadata['details'][i]
-
-        if column_metadata['type'] == 'value':
-            column = continous_transformer.reverse_transform(column_data, column_metadata)
-
-        if column_metadata['type'] == 'category':
-            column = categorical_transformer.reverse_transform(column_data, column_metadata)
-
-        table.append(column)
-
-    df = pd.DataFrame(dict(enumerate(table)))
-    df.to_csv(csvfilename, index=False, header=False)
 
 
 class Preprocessor:
@@ -436,7 +299,8 @@ class Preprocessor:
         self.continuous_columns = continuous_columns
         self.metadata = metadata
         self.continous_transformer = MultiModalNumberTransformer()
-        self.categorical_transformer = CategoricalTransformer()
+        self.categorical_transformer = LabelEncoder()
+        self.columns = None
 
     def fit_transform(self, data, fitting=True):
         """Transform human-readable data into TGAN numerical features.
@@ -472,14 +336,16 @@ class Preprocessor:
 
             else:
                 column_data = data[i].astype(str).values
-                features, mapping, n = self.categorical_transformer.transform(column_data)
+                features = self.categorical_transformer.fit_transform(column_data)
                 transformed_data['f%02d' % i] = features
 
                 if fitting:
+                    mapping = self.categorical_transformer.classes_
+                    num_categories = mapping.shape[0]
                     details.append({
                         "type": "category",
                         "mapping": mapping,
-                        "n": n
+                        "n": num_categories
                     })
 
         if fitting:
@@ -528,11 +394,12 @@ class Preprocessor:
             column_metadata = self.metadata['details'][i]
 
             if column_metadata['type'] == 'value':
-                column = self.continous_transformer.reverse_transform(column_data, column_metadata)
+                column = self.continous_transformer.inverse_transform(column_data, column_metadata)
 
             if column_metadata['type'] == 'category':
-                column = self.categorical_transformer.reverse_transform(
-                    column_data, column_metadata)
+                self.categorical_transformer.classes_ = column_metadata['mapping']
+                column = self.categorical_transformer.inverse_transform(
+                    column_data.ravel().astype(np.int32))
 
             table.append(column)
 
@@ -543,15 +410,15 @@ class Preprocessor:
 
 def download_file(url, file_name):
     """Download a file from url and save it as filename."""
-    c = urllib3.PoolManager(
+    conn = urllib3.PoolManager(
         cert_reqs='CERT_REQUIRED',
         ca_certs=certifi.where())
 
-    with c.request('GET', url, preload_content=False) as resp, open(file_name, 'wb') as out_file:
-        shutil.copyfileobj(resp, out_file)
+    with conn.request('GET', url, preload_content=False) as resp, open(file_name, 'wb') as out:
+        shutil.copyfileobj(resp, out)
 
 
-def load_data(name, continuous_columns=None, header=None, preprocessing=True, metadata=None):
+def load_data(name, header=None):
     """Fetch, load and prepare a dataset.
 
     If name is one of the demo datasets
@@ -559,15 +426,7 @@ def load_data(name, continuous_columns=None, header=None, preprocessing=True, me
 
     Args:
         name(str): Name or path of the dataset.
-        continuous_columns(list[int]): 0-indexed list of columns positions to be considered
-                                       continuous during preprocessing. This argument is
-                                       **required** if we want to preprocess a local dataset.
         header(): Header parameter when executing :attr:`pandas.read_csv`
-        preprocessing(bool): Whether or not preprocess the dataset after fetching it.
-                             This will one-hot encode categorical columns and transform continuous
-                             columns. This is a **required** step for raw data to become valid
-                             input for the model.
-        metadata(dict): Metadata for a given dataset, if we are loading a preprocessed dataset,
 
     """
     params = DEMO_DATASETS.get(name)
@@ -577,4 +436,4 @@ def load_data(name, continuous_columns=None, header=None, preprocessing=True, me
         if not os.path.isfile(file_name):
             download_file(url, file_name)
 
-    return pd.read_csv(name, header=header)
+    return pd.read_csv(name, header=header), continuous_columns
