@@ -51,26 +51,19 @@ class TestEvaluation(TestCase):
         assert_equal(labels, expected_labels)
 
     @patch('tgan.evaluation._proc_data', autospec=True)
-    @patch('tgan.evaluation.pd.read_csv', autospec=True)
-    def test_evaluate_classification(self, read_mock, proc_mock):
+    def test_evaluate_classification(self, proc_mock):
         """ """
         # Setup
-        train_csv = 'path to train data.'
-        test_csv = 'path to test data.'
+        train_csv = pd.DataFrame(['train_data'])
+        test_csv = pd.DataFrame(['test_data'])
         continuous_cols = []
         classifier_spec = {'predict.return_value': 'array of predictions'}
         classifier = MagicMock(**classifier_spec)
         metric = MagicMock(return_value='score for model')
 
-        read_mock.side_effect = [pd.DataFrame(['train_data']), pd.DataFrame(['test_data'])]
         proc_mock.return_value = (['feature_1', 'feature_2'], ['label_1', 'label_2'])
 
         expected_result = 'score for model'
-
-        expected_read_mock_call_args_list = [
-            (('path to train data.',), {'header': -1}),
-            (('path to test data.',), {'header': -1}),
-        ]
 
         # Run
         result = evaluation.evaluate_classification(
@@ -79,7 +72,6 @@ class TestEvaluation(TestCase):
         # Check
         assert result == expected_result
 
-        assert read_mock.call_args_list == expected_read_mock_call_args_list
         classifier.fit.assert_called_once_with(['feature_1'], ['label_1'])
         classifier.predict.assert_called_once_with(['feature_2'])
         metric.assert_called_once_with(['label_2'], 'array of predictions')

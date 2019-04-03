@@ -36,14 +36,14 @@ def _proc_data(df, continuous_cols):
 
 
 def evaluate_classification(
-    train_csv, test_csv, continuous_cols,
+    train_data, test_data, continuous_cols,
     classifier=DecisionTreeClassifier(max_depth=20), metric=accuracy_score
 ):
     """Score a model with the given data.
 
     Args:
-        train_csv(str): Path to the train csv file.
-        test_csv(str): Path to the test csv file.
+        train_csv(pandas.DataFrame): Path to the train csv file.
+        test_csv(pandas.DataFrame): Path to the test csv file.
         continous_cols(list[str]): List of labels of continous columns.
         classifier(object): Classifier to evaluate the classification. It have to implement
            :meth:`fit` and :meth:`predict` methods.
@@ -53,11 +53,8 @@ def evaluate_classification(
         float: score for the given data, classifier and metric.
 
     """
-    train_set = pd.read_csv(train_csv, header=-1)
-    test_set = pd.read_csv(test_csv, header=-1)
-
-    n_train = len(train_set)
-    dataset = pd.concat([train_set, test_set])
+    n_train = len(train_data)
+    dataset = pd.concat([train_data, test_data])
 
     features, labels = _proc_data(dataset, continuous_cols)
 
