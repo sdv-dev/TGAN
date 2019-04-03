@@ -26,14 +26,14 @@ from tgan.data import Preprocessor, RandomZData, TGANDataFlow
 from tgan.trainer import GANTrainer
 
 TUNABLE_VARIABLES = {
-    "--batch_size": [50, 100, 200],
-    "--z_dim": [50, 100, 200, 400],
-    "--num_gen_rnn": [100, 200, 300, 400, 500, 600],
-    "--num_gen_feature": [100, 200, 300, 400, 500, 600],
-    "--num_dis_layers": [1, 2, 3, 4, 5],
-    "--num_dis_hidden": [100, 200, 300, 400, 500],
-    "--learning_rate": [0.0002, 0.0005, 0.001],
-    "--noise": [0.05, 0.1, 0.2, 0.3]
+    'batch_size': [50, 100, 200],
+    'z_dim': [50, 100, 200, 400],
+    'num_gen_rnn': [100, 200, 300, 400, 500, 600],
+    'num_gen_feature': [100, 200, 300, 400, 500, 600],
+    'num_dis_layers': [1, 2, 3, 4, 5],
+    'num_dis_hidden': [100, 200, 300, 400, 500],
+    'learning_rate': [0.0002, 0.0005, 0.001],
+    'noise': [0.05, 0.1, 0.2, 0.3]
 }
 
 
