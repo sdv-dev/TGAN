@@ -92,6 +92,8 @@ class TGANDataFlow(RNGDataFlow):
 
         """
         self.shuffle = shuffle
+        if self.shuffle:
+            self.reset_state()
 
         self.metadata = metadata
         self.num_features = self.metadata['num_features']
@@ -337,7 +339,7 @@ class Preprocessor:
             else:
                 column_data = data[i].astype(str).values
                 features = self.categorical_transformer.fit_transform(column_data)
-                transformed_data['f%02d' % i] = features
+                transformed_data['f%02d' % i] = features.reshape([-1, 1])
 
                 if fitting:
                     mapping = self.categorical_transformer.classes_
