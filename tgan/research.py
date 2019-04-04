@@ -1,3 +1,5 @@
+#!usr/bin/env python
+
 """Tune and evaluate TGAN models."""
 import os
 
@@ -7,6 +9,7 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from tensorpack.utils import logger
 
+import ipdb; ipdb.set_trace()
 from tgan.evaluation import evaluate_classification
 from tgan.model import TUNABLE_VARIABLES, TGANModel
 
@@ -67,6 +70,16 @@ def run_experiment(
     4. We use these trained models on real test data and see how well they perform.
 
     """
+    if os.path.isdir(name):
+        if force:
+            logger.info('Folder "{}" exists, and force=True. Deleting folder.'.format(name))
+            os.rmdir(name)
+
+        else:
+            raise ValueError(
+                'Folder "{}" already exist. Please, use force=True to force deletion '
+                'or use a different name.'.format(name))
+
     # Load and split data
     data = pd.read_csv(file_path, header=-1)
     train_data, test_data = train_test_split(data, train_size=0.8)
