@@ -10,7 +10,9 @@ This module contains two classes:
   underlying operations with GraphBuilder and trainers in order to fit and sample data.
 """
 import json
+import pickle
 import os
+import tarfile
 
 import numpy as np
 import tensorflow as tf
@@ -599,6 +601,7 @@ class TGANModel:
         self.continuous_columns = continuous_columns
         self.log_dir = os.path.join(output, 'logs')
         self.model_dir = os.path.join(output, 'model')
+        self.output = output
 
         # Training params
         self.max_epoch = max_epoch
@@ -607,6 +610,7 @@ class TGANModel:
         self.restore_session = restore_session
 
         # Model params
+        self.model = None
         self.batch_size = batch_size
         self.z_dim = z_dim
         self.noise = noise
@@ -623,6 +627,43 @@ class TGANModel:
 
         self.gpu = gpu
 
+    def get_model(self, training=True):
+        """Return a new instance of the model."""
+        return GraphBuilder(
+            metadata=self.metadata,
+            batch_size=self.batch_size,
+            z_dim=self.z_dim,
+            noise=self.noise,
+            l2norm=self.l2norm,
+            learning_rate=self.learning_rate,
+            num_gen_rnn=self.num_gen_rnn,
+            num_gen_feature=self.num_gen_feature,
+            num_dis_layers=self.num_dis_layers,
+            num_dis_hidden=self.num_dis_hidden,
+            optimizer=self.optimizer,
+            training=training
+        )
+
+    def prepare_sampling(self):
+
+        if self.model is None:
+            self.model = self.get_model(training=False)
+
+        else:
+            self.model.training = False
+
+        predict_config = PredictConfig(
+            session_init=SaverRestore(self.restore_path),
+            model=self.model,
+            input_names=['z'],
+            output_names=['gen/gen', 'z'],
+        )
+
+        self.simple_dataset_predictor = SimpleDatasetPredictor(
+            predict_config,
+            RandomZData((self.batch_size, self.z_dim))
+        )
+
     def fit(self, data):
         """Fit the model to the given data.
 
@@ -635,35 +676,22 @@ class TGANModel:
         """
         self.preprocessor = Preprocessor(continuous_columns=self.continuous_columns)
         data = self.preprocessor.fit_transform(data)
-        metadata = self.preprocessor.metadata
-        dataflow = TGANDataFlow(data, metadata)
+        self.metadata = self.preprocessor.metadata
+        dataflow = TGANDataFlow(data, self.metadata)
         batch_data = BatchData(dataflow, self.batch_size)
         input_queue = QueueInput(batch_data)
 
-        self.model = GraphBuilder(
-            metadata=metadata,
-            batch_size=self.batch_size,
-            z_dim=self.z_dim,
-            noise=self.noise,
-            l2norm=self.l2norm,
-            learning_rate=self.learning_rate,
-            num_gen_rnn=self.num_gen_rnn,
-            num_gen_feature=self.num_gen_feature,
-            num_dis_layers=self.num_dis_layers,
-            num_dis_hidden=self.num_dis_hidden,
-            optimizer=self.optimizer,
-            training=True
-        )
+        self.model = self.get_model(training=True)
 
-        self.trainer = GANTrainer(
+        trainer = GANTrainer(
             model=self.model,
             input_queue=input_queue,
         )
 
-        restore_path = os.path.join(self.model_dir, 'checkpoint')
+        self.restore_path = os.path.join(self.model_dir, 'checkpoint')
 
-        if os.path.isfile(restore_path) and self.restore_session:
-            session_init = SaverRestore(restore_path)
+        if os.path.isfile(self.restore_path) and self.restore_session:
+            session_init = SaverRestore(self.restore_path)
             with open(os.path.join(self.log_dir, 'stats.json')) as f:
                 starting_epoch = json.load(f)[-1]['epoch_num'] + 1
 
@@ -678,7 +706,7 @@ class TGANModel:
         if self.save_checkpoints:
             callbacks.append(ModelSaver(checkpoint_dir=self.model_dir))
 
-        self.trainer.train_with_defaults(
+        trainer.train_with_defaults(
             callbacks=callbacks,
             steps_per_epoch=self.steps_per_epoch,
             max_epoch=self.max_epoch,
@@ -686,18 +714,7 @@ class TGANModel:
             starting_epoch=starting_epoch
         )
 
-        self.model.training = False
-        predict_config = PredictConfig(
-            session_init=SaverRestore(restore_path),
-            model=self.model,
-            input_names=['z'],
-            output_names=['gen/gen', 'z'],
-        )
-
-        self.simple_dataset_predictor = SimpleDatasetPredictor(
-            predict_config,
-            RandomZData((self.batch_size, self.z_dim))
-        )
+        self.prepare_sampling()
 
     def sample(self, num_samples):
         """Generate samples from model.
@@ -724,7 +741,7 @@ class TGANModel:
 
         ptr = 0
         features = {}
-        for col_id, col_info in enumerate(self.model_params['metadata']['details']):
+        for col_id, col_info in enumerate(self.metadata['details']):
             if col_info['type'] == 'category':
                 features['f%02d' % col_id] = results[:, ptr:ptr + 1]
                 ptr += 1
@@ -745,11 +762,51 @@ class TGANModel:
 
         return self.preprocessor.reverse_transform(features)[:num_samples].copy()
 
-    def save(self, model_path):
-        """Save model into given path."""
-        pass
+    def tar_folder(self, tar_name):
+        """Generate a tar of :self.output:."""
+        with tarfile.open(tar_name, 'w:gz') as tar_handle:
+            for root, dirs, files in os.walk(self.output):
+                for file_ in files:
+                    tar_handle.add(os.path.join(root, file_))
+
+            tar_handle.close()
 
     @classmethod
-    def load(cls):
-        """Load a saved model."""
-        pass
+    def load(cls, path):
+        """Loads a pretrained model from a given path."""
+
+        with tarfile.open(path, 'r:gz') as tar_handle:
+            destination_dir = os.path.dirname(tar_handle.getmembers()[0].name)
+            tar_handle.extractall()
+
+        with open('{}/TGANModel'.format(destination_dir), 'rb') as f:
+            instance = pickle.load(f)
+
+        instance.prepare_sampling()
+        return instance
+
+    def save(self, path, force=False):
+        """Save the fitted model in the given path."""
+        if os.path.exists(path) and not force:
+            logger.info('The indicated path already exists. Use `force=True` to overwrite.')
+            return
+
+        base_path = os.path.dirname(path)
+        if not os.path.exists(base_path):
+            os.makedirs(base_path)
+
+        model = self.model
+        dataset_predictor = self.simple_dataset_predictor
+
+        self.model = None
+        self.simple_dataset_predictor = None
+
+        with open('{}/TGANModel'.format(self.output), 'wb') as f:
+            pickle.dump(self, f)
+
+        self.model = model
+        self.simple_dataset_predictor = dataset_predictor
+
+        self.tar_folder(path)
+
+        logger.info('Model saved successfully.')
