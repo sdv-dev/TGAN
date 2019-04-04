@@ -2,8 +2,10 @@
 
 import argparse
 
+from tgan.research.experiments import run_experiments
 
-def get_parser():
+
+def get_train_parser():
     """Build the ArgumentParser for CLI."""
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', help='comma separated list of GPU(s) to use.')
@@ -35,3 +37,24 @@ def get_parser():
     parser.add_argument('--l2norm', type=float, default=0.00001)
 
     return parser
+
+
+def get_parser():
+    """Build argument parser for TGAN CLI utility."""
+    parser = argparse.ArgumentParser(description='TGAN Command Line Interface.')
+    parser.set_defaults(function=None)
+
+    action = parser.add_subparsers(title='action', dest='action')
+    action.required = True
+
+    experiments = action.add_parser('experiments', help='Run experiments using TGAN.')
+    experiments.add_argument('path', type=str, help='Path to the JSON file.')
+
+    return parser
+
+
+def main():
+    """Python Entry point for CLI."""
+    parser = get_parser()
+    args = parser.parse_args()
+    run_experiments(args.path)

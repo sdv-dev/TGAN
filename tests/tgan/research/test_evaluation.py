@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 from numpy.testing import assert_equal
 
-from tgan import evaluation
+from tgan.research import evaluation
 
 
 class TestEvaluation(TestCase):
@@ -50,7 +50,7 @@ class TestEvaluation(TestCase):
         assert_equal(features, expected_features)
         assert_equal(labels, expected_labels)
 
-    @patch('tgan.evaluation._proc_data', autospec=True)
+    @patch('tgan.research.evaluation._proc_data', autospec=True)
     def test_evaluate_classification(self, proc_mock):
         """ """
         # Setup

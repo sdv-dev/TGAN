@@ -17,7 +17,8 @@ install_requires = [
     'scikit-learn>=0.20.2',
     'tensorflow>=1.12.0',
     'tensorpack>=0.9.0',
-    'urllib3>=1.24.1'
+    'urllib3>=1.24.1',
+    'certifi>=2018.11.29'
 ]
 
 setup_requires = [
@@ -73,6 +74,11 @@ setup(
     ],
     description="Generative adversarial training for synthesizing tabular data",
     extras_require=extras_require,
+    entry_points={
+        'console_scripts': [
+            'tgan=tgan.cli:main'
+        ]
+    },
     install_package_data=True,
     install_requires=install_requires,
     license="MIT license",

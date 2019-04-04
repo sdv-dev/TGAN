@@ -12,7 +12,6 @@ This module contains two classes:
 import json
 import os
 
-import dill
 import numpy as np
 import tensorflow as tf
 from tensorpack import (
@@ -641,9 +640,8 @@ class TGANModel:
         batch_data = BatchData(dataflow, self.batch_size)
         input_queue = QueueInput(batch_data)
 
-        self.model_params['metadata'] = metadata
-
         self.model = GraphBuilder(
+            metadata=metadata,
             batch_size=self.batch_size,
             z_dim=self.z_dim,
             noise=self.noise,
@@ -749,8 +747,7 @@ class TGANModel:
 
     def save(self, model_path):
         """Save model into given path."""
-        with open(model_path, 'wb') as f:
-            dill.dump(self, f)
+        pass
 
     @classmethod
     def load(cls):

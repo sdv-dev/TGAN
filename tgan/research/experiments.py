@@ -1,6 +1,7 @@
 #!usr/bin/env python
 
 """Tune and evaluate TGAN models."""
+import json
 import os
 
 import numpy as np
@@ -9,8 +10,8 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from tensorpack.utils import logger
 
-from tgan.evaluation import evaluate_classification
 from tgan.model import TUNABLE_VARIABLES, TGANModel
+from tgan.research.evaluation import evaluate_classification
 
 
 def prepare_hyperparameter_search(steps_per_epoch, num_random_search):
@@ -57,16 +58,20 @@ def fit_score_model(
 
 
 def run_experiment(
-    name, max_epoch, steps_per_epoch, output_epoch, sample_rows, file_path, continuous_columns,
+    name, epoch, steps_per_epoch, output_epoch, sample_rows, train_csv, continuous_cols,
     num_random_search, store_samples=True, force=False
 ):
     """Run experiment using the given params and collect the results.
 
     The experiment run the following steps:
-    1. We fetch and split our data between test and train
+
+    1. We fetch and split our data between test and train.
+
     2. We first train a TGAN data synthesizer using the real training data T and generate a
        synthetic training dataset Tsynth.
+
     3. We then train machine learning models on both the real and synthetic datasets.
+
     4. We use these trained models on real test data and see how well they perform.
 
     """
@@ -81,7 +86,7 @@ def run_experiment(
                 'or use a different name.'.format(name))
 
     # Load and split data
-    data = pd.read_csv(file_path, header=-1)
+    data = pd.read_csv(train_csv, header=-1)
     train_data, test_data = train_test_split(data, train_size=0.8)
 
     # Prepare hyperparameter search
@@ -89,5 +94,17 @@ def run_experiment(
 
     return fit_score_model(
         name, model_kwargs, train_data, test_data,
-        continuous_columns, sample_rows, store_samples
+        continuous_cols, sample_rows, store_samples
     )
+
+
+def run_experiments(path):
+    """Run experiments specified in JSON file."""
+    with open(path) as f:
+        experiments_config = json.load(f)
+
+    if isinstance(experiments_config, list):
+        for experiment in experiments_config:
+            run_experiment(**experiment)
+    else:
+        run_experiment(**experiments_config)
