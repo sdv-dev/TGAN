@@ -1,7 +1,7 @@
-tgan.launcher module
+tgan.research module
 ====================
 
-.. automodule:: tgan.launcher
+.. automodule:: tgan.research
     :members:
     :undoc-members:
     :show-inheritance:

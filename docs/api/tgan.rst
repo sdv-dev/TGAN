@@ -13,9 +13,8 @@ Submodules
 
    tgan.data
    tgan.evaluation
-   tgan.launcher
-   tgan.launcher_simple
    tgan.model
    tgan.tgan
+   tgan.research
    tgan.trainer
 
