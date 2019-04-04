@@ -11,10 +11,9 @@ Submodules
 
 .. toctree::
 
+   tgan.cli
    tgan.data
-   tgan.evaluation
    tgan.model
-   tgan.tgan
-   tgan.research
    tgan.trainer
-
+   tgan.research.evaluation
+   tgan.research.experiments
