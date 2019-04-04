@@ -73,7 +73,7 @@ class GraphBuilder(ModelDescBase):
         self.num_gen_feature = num_gen_feature
         self.num_dis_layers = num_dis_layers
         self.num_dis_hidden = num_dis_hidden
-        self.optimizer = optimizer,
+        self.optimizer = optimizer
         self.training = training
 
     def collect_variables(self, g_scope='gen', d_scope='discrim'):
@@ -557,61 +557,67 @@ class GraphBuilder(ModelDescBase):
 
 
 class TGANModel:
-    """Main model.
+    """Main model from TGAN.
 
     Args:
+        continuous_columns (list[int]): 0-index list of column indices to be considered continuous.
         output (str, optional): Path to store the model and its artifacts. Defaults to
             :attr:`output`.
         gpu (list[str], optional):Comma separated list of GPU(s) to use. Defaults to :attr:`None`.
-        workers (int, optional): Number of workers to run parallelism on. Defaults to :attr:`1`.
+        max_epoch (int, optional): Number of epochs to use during training. Defaults to :attr:`5`.
+        steps_per_epoch (int, optional): Number of steps to run on each epoch. Defaults to
+            :attr:`10000`.
+        save_checkpoints(bool, optional): Whether or not to store checkpoints of the model after
+            each training epoch. Defaults to :attr:`True`
+        restore_session(bool, optional): Whether or not continue training from the last checkpoint.
+            Defaults to :attr:`True`.
         batch_size (int, optional): Size of the batch to feed the model at each step. Defaults to
             :attr:`200`.
         z_dim (int, optional): Number of labels in the data. Defaults to :attr:`100`.
+        noise (float, optional): Upper bound to the gaussian noise. Defaults to :attr:`0.2`.
+        l2norm (float, optional):
+            L2 reguralization coefficient when computing losses. Defaults to :attr:`0.00001`.
+        learning_rate (float, optional): Learning rate for the optimizer. Defaults to
+            :attr:`0.001`.
         num_gen_rnn (int, optional): Defaults to :attr:`400`.
         num_gen_feature (int, optional): Number of features of in the generator. Defaults to
             :attr:`100`
         num_dis_layers (int, optional): Defaults to :attr:`2`.
         num_dis_hidden (int, optional): Defaults to :attr:`200`.
-        noise (float, optional): Upper bound to the gaussian noise. Defaults to :attr:`0.2`.
-        max_epoch (int, optional): Number of epochs to use during training. Defaults to
-            :attr:`100`.
-        steps_per_epoch (int, optional): Number of steps to run on each epoch. Defaults to
-            :attr:`10000`.
         optimizer (str, optional): Name of the optimizer to use during `fit`,possible values are:
             [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`]. Defaults to
             :attr:`AdamOptimizer`.
-        learning_rate (float, optional): Learning rate for the optimizer. Defaults to
-            :attr:`0.001`.
-        l2norm (float, optional):
-            L2 reguralization coefficient when computing losses. Defaults to :attr:`0.00001`.
-        save_checkpoints(bool, optional): Whether or not to store checkpoints of the model after
-            each training epoch. Defaults to :attr:`True`
-        restore_session(bool, optional): Whether or not continue training from the last checkpoint.
-            Defaults to :attr:`True`.
-
     """
 
     def __init__(
-        self, continuous_columns, output='output', gpu=None, max_epoch=5,
-        steps_per_epoch=10000, batch_size=200, z_dim=200, save_checkpoints=True,
-        restore_session=True, **kwargs
+        self, continuous_columns, output='output', gpu=None, max_epoch=5, steps_per_epoch=10000,
+        save_checkpoints=True, restore_session=True, batch_size=200, z_dim=200, noise=0.2,
+        l2norm=0.00001, learning_rate=0.001, num_gen_rnn=100, num_gen_feature=100,
+        num_dis_layers=1, num_dis_hidden=100, optimizer='AdamOptimizer',
     ):
         """Initialize object."""
+        # Output
         self.continuous_columns = continuous_columns
         self.log_dir = os.path.join(output, 'logs')
         self.model_dir = os.path.join(output, 'model')
+
+        # Training params
         self.max_epoch = max_epoch
         self.steps_per_epoch = steps_per_epoch
-        self.batch_size = batch_size
-        self.z_dim = z_dim
         self.save_checkpoints = save_checkpoints
         self.restore_session = restore_session
 
-        model_params = kwargs
-
-        self.model_params = model_params
-        self.model_params['batch_size'] = batch_size
-        self.model_params['z_dim'] = z_dim
+        # Model params
+        self.batch_size = batch_size
+        self.z_dim = z_dim
+        self.noise = noise
+        self.l2norm = l2norm
+        self.learning_rate = learning_rate
+        self.num_gen_rnn = num_gen_rnn
+        self.num_gen_feature = num_gen_feature
+        self.num_dis_layers = num_dis_layers
+        self.num_dis_hidden = num_dis_hidden
+        self.optimizer = optimizer
 
         if gpu:
             os.environ['CUDA_VISIBLE_DEVICES'] = gpu
@@ -637,7 +643,19 @@ class TGANModel:
 
         self.model_params['metadata'] = metadata
 
-        self.model = GraphBuilder(**self.model_params, training=True)
+        self.model = GraphBuilder(
+            batch_size=self.batch_size,
+            z_dim=self.z_dim,
+            noise=self.noise,
+            l2norm=self.l2norm,
+            learning_rate=self.learning_rate,
+            num_gen_rnn=self.num_gen_rnn,
+            num_gen_feature=self.num_gen_feature,
+            num_dis_layers=self.num_dis_layers,
+            num_dis_hidden=self.num_dis_hidden,
+            optimizer=self.optimizer,
+            training=True
+        )
 
         self.trainer = GANTrainer(
             model=self.model,

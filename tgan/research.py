@@ -9,7 +9,6 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 from tensorpack.utils import logger
 
-import ipdb; ipdb.set_trace()
 from tgan.evaluation import evaluate_classification
 from tgan.model import TUNABLE_VARIABLES, TGANModel
 
@@ -32,8 +31,9 @@ def prepare_hyperparameter_search(steps_per_epoch, num_random_search):
 
 def fit_score_model(
         name, model_kwargs, train_data, test_data, continuous_columns,
-        sample_rows, store_samples):
-
+        sample_rows, store_samples
+):
+    """Fit and score models using given params."""
     for index, kwargs in enumerate(model_kwargs):
         logger.info('Training TGAN Model %d/%d', index + 1, len(model_kwargs))
 

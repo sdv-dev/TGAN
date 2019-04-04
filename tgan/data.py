@@ -144,9 +144,11 @@ class TGANDataFlow(RNGDataFlow):
             yield self.data[k]
 
     def __iter__(self):
+        """Iterate over self.data."""
         return self.get_data()
 
     def __len__(self):
+        """Length of batches."""
         return self.size()
 
 
@@ -169,9 +171,11 @@ class RandomZData(DataFlow):
             yield [np.random.normal(0, 1, size=self.shape)]
 
     def __iter__(self):
+        """Return data."""
         return self.get_data()
 
     def __len__(self):
+        """Length of batches."""
         return self.shape[0]
 
 
@@ -343,11 +347,10 @@ class Preprocessor:
 
                 if fitting:
                     mapping = self.categorical_transformer.classes_
-                    num_categories = mapping.shape[0]
                     details.append({
                         "type": "category",
                         "mapping": mapping,
-                        "n": num_categories
+                        "n": mapping.shape[0],
                     })
 
         if fitting:

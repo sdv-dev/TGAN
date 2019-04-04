@@ -272,10 +272,6 @@ class TestGraphBuilder(TensorFlowTestCase):
             graph, 'dis_fc0/concat', 'ConcatV2', tf.float64, [7, 110],
             ['dis_fc0/bn/batchnorm/mul']
         )
-        self.check_operation_nodes(
-            graph, 'dis_fc0/dropout', 'Identity', tf.float64, [7, 110],
-            ['dis_fc0/LeakyRelu']
-        )
 
     def test_build_graph(self):
         """ """
@@ -392,18 +388,12 @@ class TestTGANModel(TensorFlowTestCase):
         """On init, arguments are set as attributes."""
         # Setup
         continuous_columns = []
-        expected_model_params = {
-            'some_key': 'some_value',
-            'batch_size': 200,
-            'z_dim': 200
-        }
 
         # Run
-        instance = TGANModel(continuous_columns, some_key='some_value')
+        instance = TGANModel(continuous_columns)
 
         # Check
         assert instance.continuous_columns == continuous_columns
-        assert instance.model_params == expected_model_params
         assert instance.log_dir == 'output/logs'
         assert instance.model_dir == 'output/model'
         assert instance.max_epoch == 5
