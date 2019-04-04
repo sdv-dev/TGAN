@@ -32,7 +32,7 @@ class GANTrainer(TowerTrainer):
 
         # Build the graph
         self.tower_func = TowerFuncWrapper(model.build_graph, inputs_desc)
-        with TowerContext('', is_training=True):
+        with TowerContext('train', is_training=True):
             self.tower_func(*input_queue.get_input_tensors())
 
         opt = model.get_optimizer()

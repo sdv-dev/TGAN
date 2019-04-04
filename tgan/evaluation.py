@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 
 
-def _proc_data(df, continuous_cols):
+def _proc_data(df, continuous_cols, label_name=None):
     """Transform dataframe into matrix of features and its labels.
 
     Args:
@@ -20,6 +20,7 @@ def _proc_data(df, continuous_cols):
     """
     features = []
     num_cols = df.shape[1]
+    df.columns = list(range(num_cols))
 
     for i in range(num_cols - 1):
 
@@ -30,7 +31,10 @@ def _proc_data(df, continuous_cols):
             features.append(pd.get_dummies(df[i]).values)
 
     features = np.concatenate(features, axis=1)
-    labels = df[num_cols - 1].values
+    if label_name is None:
+        label_name = num_cols - 1
+
+    labels = df.iloc[:, label_name].values
 
     return features, labels
 

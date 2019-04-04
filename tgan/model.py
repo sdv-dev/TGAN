@@ -696,7 +696,7 @@ class TGANModel:
             ValueError
 
         """
-        max_iters = (num_samples // self.batch_size) + 1
+        max_iters = (num_samples // self.batch_size)
 
         results = []
         for idx, o in enumerate(self.simple_dataset_predictor.get_result()):
@@ -727,7 +727,7 @@ class TGANModel:
                     "`values`. Instead it was {}.".format(col_id, col_info['type'])
                 )
 
-        return self.preprocessor.reverse_transform(features)
+        return self.preprocessor.reverse_transform(features)[:num_samples].copy()
 
     def save(self, model_path):
         """Save model into given path."""
