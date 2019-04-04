@@ -423,7 +423,7 @@ def download_file(url, file_name):
         shutil.copyfileobj(resp, out)
 
 
-def load_data(name, header=None):
+def load_demo_data(name, header=None):
     """Fetch, load and prepare a dataset.
 
     If name is one of the demo datasets
@@ -440,5 +440,12 @@ def load_data(name, header=None):
         name = file_name
         if not os.path.isfile(file_name):
             download_file(url, file_name)
+
+    else:
+        message = (
+            '{} is not a valid dataset name. '
+            'Supported values are: {}.'.format(name, list(DEMO_DATASETS.keys()))
+        )
+        raise ValueError(message)
 
     return pd.read_csv(name, header=header), continuous_columns
