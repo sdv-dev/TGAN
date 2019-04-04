@@ -81,7 +81,7 @@ the data, numerical and categorical columns will be processed differently.
 
 The output of **TGAN** is a table of sampled data with the same columns as the input table and as many rows as requested.
 
-#### Demo Datasets
+### Demo Datasets
 
 **TGAN** includes a few datasets to use for development or demonstration purposes. These datasets
 come from the [UCI Machine Learning repository](http://archive.ics.uci.edu/ml), but have been
@@ -90,14 +90,14 @@ preprocessed to be ready to use with **TGAN**, following the requirements specif
 These datasets can be browsed and directly downloaded from the
 [tgan-demo AWS S3 Bucket](https://s3.amazonaws.com/hdi-demos/tgan-demo/)
 
-##### Census dataset
+#### Census dataset
 
 This dataset contains a single table, with information from the census, labeled with information of
 wheter or not the income of is greater than 50.000 $/year. It's a single csv file, containing
 199522 rows and 41 columns. From these 41 columns, only 7 are identified as continuous. In **TGAN** this
 dataset is called `census`.
 
-##### Cover type
+#### Cover type
 
 This dataset contains a single table with cartographic information labeled with the different
 forrest cover types. It's a single csv file, containing 465588 rows and 55 columns. From these
@@ -119,27 +119,40 @@ ipython
 ### 1. Load the data
 
 The first step is to load the data wich we will use to fit TGAN. In order to do so, we will first
-import the function `tgan.data.load_data` and call it with the name the dataset that we want to load.
+import the function `tgan.data.load_data` and call it with the name the dataset that we want to
+load.
 
-In this case, we will load the `census` dataset, which we will use during the subsequent steps.
+In this case, we will load the `census` dataset, which we will use during the subsequent steps,
+and obtain two objects:
+
+1. `data` will contain a `pandas.DataFrame` with the table of data from the `census` dataset ready
+   to be used to fit the model.
+
+2. `continous_columns` will contain a `list` with the indices of continuous columns.
 
 ```
-In [1]: from tgan.data import load_data
+In [1]: from tgan.data import load_demo_data
 
-In [2]: data = load_data('census')
+In [2]: data, continuous_columns = load_demo_data('census')
 
-In [3]: data.head(3)
+In [3]: data.head(3).T[:10]
 Out[3]:
+                              0                                     1                             2
+0                            73                                    58                            18
+1               Not in universe        Self-employed-not incorporated               Not in universe
+2                             0                                     4                             0
+3                             0                                    34                             0
+4          High school graduate            Some college but no degree                    10th grade
+5                             0                                     0                             0
+6               Not in universe                       Not in universe                   High school
+7                       Widowed                              Divorced                 Never married
+8   Not in universe or children                          Construction   Not in universe or children
+9               Not in universe   Precision production craft & repair               Not in universe
 
-   age   Federal government   Local government   Never worked   Not in universe   Private  ...
-0   73                    0                  0              0                 1         0  ...
-1   58                    1                  0              0                 0         0  ...
-2   18                    0                  0              0                 1         0  ...
-
+In [4]: continuous_columns
+Out[4]: [0, 5, 16, 17, 18, 29, 38]
 
 ```
-
-`data` will contain a `pandas.DataFrame` with the table of data from the `census` dataset ready to be used to fit the model.
 
 ### 2. Create a TGAN instance
 
@@ -148,9 +161,9 @@ The next step is to import TGAN and create an instance of the model.
 To do so, we need to import the `tgan.model.TGANModel` class and call it.
 
 ```
-In [4]: from tgan.model import TGANModel
+In [5]: from tgan.model import TGANModel
 
-In [5]: tgan = TGANModel()
+In [6]: tgan = TGANModel()
 ```
 
 This will create a TGAN instance with the default parameters.
@@ -161,10 +174,11 @@ The third step is to pass the data that we have loaded previously to the `TGANMo
 start the fitting.
 
 ```
-In [6]: tgan.fit(data)
+In [7]: tgan.fit(data)
 ```
 
-This process will not return anything, however, the progress of the fitting will be printed into screen.
+This process will not return anything, however, the progress of the fitting will be printed into
+screen.
 
 **NOTE** Depending on the performance of the system you are running, and the parameters selected
 for the model, this step can take up to a few hours.
@@ -175,12 +189,12 @@ After the model has been fit, we are ready to generate new samples by calling th
 method passing it the desired amount of samples:
 
 ```
-In [7]: num_samples = 1000
+In [8]: num_samples = 1000
 
-In [8]: samples = tgan.sample(num_samples)
+In [9]: samples = tgan.sample(num_samples)
 
-In [9]: samples.head(3)
-Out[9]:
+In [10]: samples.head(3)
+Out[10]:
 
    age   Federal government   Local government   Never worked   Not in universe   Private  ...
 0   59                    0                  0              0                 1         0  ...
@@ -194,22 +208,25 @@ the same format as the input data and 1000 rows as we requested.
 
 ### 5. Save and Load a model
 
-In the steps above we saw that the fitting process is slow, so we probably would like to avoid having to fit every we want to generate samples. Instead we can fit a model once, save it, and load it every time we want to sample new data.
+In the steps above we saw that the fitting process is slow, so we probably would like to avoid
+having to fit every we want to generate samples. Instead we can fit a model once, save it, and
+load it every time we want to sample new data.
 
 If we have a fitted model, we can save it by calling the `TGANModel.save` method, that only takes
-as argument the path to store the model into. Similarly, the `TGANModel.load` allows to load a model stored on disk by passing as argument a path where the model is stored.
+as argument the path to store the model into. Similarly, the `TGANModel.load` allows to load a
+model stored on disk by passing as argument a path where the model is stored.
 
 ```
-In [10]: model_path = 'models/mymodel'
+In [11]: model_path = 'models/mymodel'
 
-In [11]: tgan.save(model_path)
+In [12]: tgan.save(model_path)
 
-In [12]: new_tgan = TGAN.load(model_path)
+In [13]: new_tgan = TGAN.load(model_path)
 
-In [13]: new_samples = new_tgan.sample(num_samples)
+In [14]: new_samples = new_tgan.sample(num_samples)
 
-In [14]: new_samples.head(3)
-Out[14]:
+In [15]: new_samples.head(3)
+Out[15]:
 
    age   Federal government   Local government   Never worked   Not in universe   Private  ...
 0   59                    0                  0              0                 1         0  ...
@@ -223,23 +240,20 @@ At this point we could use this model instance to generate more samples.
 
 In the previous steps we used some demonstration data but we did not show how to load your own dataset.
 
-In order to do so you can use the same funciton as before, `load_data`, by passing it the path
-to the CSV file that you want to load.
+In order to do so you can use `pandas.read_csv` by passing it the path to the CSV file that you want to load.
 
-Additionally, there are a couple of arguments that allow customizing the preprocessing to your data:
-
-* `preprocessing` - (`bool`, default:`True`): Whether or not preprocess the dataset after fetching it.
-  This will one-hot encode categorical columns and transform continuous columns in a way that are
-  easier for the model to interpret.
-* `continuous_columns` - (`list`, default=`[]`): 0-indexed list of columns positions to be considered
-  continuous during preprocessing. This argument is **required** if we want to preprocess a local
-  dataset.
+Additionally, you will need to create 0-indexed list of columns indices to be considered continuous.
 
 For example, if we want to load a local CSV file, `path/to/my.csv`, that has as continuous columns
-their first 4 columns, that is, indices [0,1,2,3], we would do it like this
+their first 4 columns, that is, indices `[0,1,2,3]`, we would do it like this:
 
 ```
-In [15]: data = load_data('path/to/my.csv', continuous_columns=[0,1,2,3])
+In [16]: import pandas as pd
+
+In [17]: data = pd.read_csv('data/census.csv')
+
+In [18]: continuous_columns = [0,1,2,3]
+
 ```
 
 ## Model Parameters
@@ -249,47 +263,51 @@ If you want to change the default behavior of TGANModel, such as as different `b
 
 ### Model general behavior
 
+* continous_columns (`list[int]`, required): List of columns to be considered continuous.
 * output (`str`, default=`output`): Path to store the model and its artifacts.
 * gpu (`list[str]`, default=`[]`): Comma separated list of GPU(s) to use.
-* workers (`int`, default=1): Number of workers to run parallelism on.
 
 ### Neural network definition and fitting
 
+* max_epoch (`int`, default=`100`): Number of epochs to use during training.
+* steps_per_epoch (`int`, default=`10000`): Number of steps to run on each epoch.
+* save_checkpoints(`bool`, default=True): Whether or not to store checkpoints of the model after each training epoch.
+* restore_session(`bool`, default=True): Whether or not continue training from the last checkpoint.
 * batch_size (`int`, default=`200`): Size of the batch to feed the model at each step.
 * z_dim (`int`, default=`100`): Number of labels in the data.
+* noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
+* l2norm (`float`, default=`0.00001`): L2 reguralization coefficient when computing losses.
+* learning_rate (`float`, default=`0.001`): Learning rate for the optimizer.
 * num_gen_rnn (`int`, default=`400`):
 * num_gen_feature (`int`, default=`100`): Number of features of in the generator.
 * num_dis_layers (`int`, default=`2`):
 * num_dis_hidden (`int`, default=`200`):
-* noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
-* max_epoch (`int`, default=`100`): Number of epochs to use during training.
-* steps_per_epoch (`int`, default=`10000`): Number of steps to run on each epoch.
 * optimizer (`str`, default=`AdamOptimizer`): Name of the optimizer to use during `fit`, possible
   values are: [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`].
-* learning_rate (`float`, default=`0.001`): Learning rate for the optimizer.
-* l2norm (`float`, default=`0.00001`): L2 reguralization coefficient when computing losses.
 
 If we wanted to create an identical instance to the one created on step 2, but passing the arguments in a explicit way we will do something like this:
 
 ```
 In [16]: tgan = TGANModel(
+    ...:     continuous_columns,
     ...:     output='output',
-    ...:     gpu=[],
-    ...:     load=None,
-    ...:     workers=1,
-    ...:     batch_size=200,
-    ...:     z_dim=100,
-    ...:     num_gen_rnn=400,
-    ...:     num_gen_feature=100
-    ...:     num_dis_layers=2,
-    ...:     num_dis_hidden=200,
-    ...:     noise=0.2,
-    ...:     max_epoch=100,
+    ...:     gpu=None,
+    ...:     max_epoch=5,
     ...:     steps_per_epoch=10000,
-    ...:     optimizer='AdamOptimizer',
+    ...:     save_checkpoints=True,
+    ...:     restore_session=True,
+    ...:     batch_size=200,
+    ...:     z_dim=200,
+    ...:     noise=0.2,
+    ...:     l2norm=0.00001,
     ...:     learning_rate=0.001,
-    ...:     l2norm=0.00001
-    ...:)
+    ...:     num_gen_rnn=100,
+    ...:     num_gen_feature=100,
+    ...:     num_dis_layers=1,
+    ...:     num_dis_hidden=100,
+    ...:     optimizer='AdamOptimizer'
+    ...: )
+
 ```
 
 ## Citation
@@ -306,3 +324,4 @@ If you use TGAN, please cite the following work:
   year={2018}
 }
 ```
+You can find the original paper [here](https://arxiv.org/pdf/1811.11264.pdf)
