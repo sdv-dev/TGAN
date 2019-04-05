@@ -163,7 +163,7 @@ To do so, we need to import the `tgan.model.TGANModel` class and call it.
 ```
 In [5]: from tgan.model import TGANModel
 
-In [6]: tgan = TGANModel()
+In [6]: tgan = TGANModel(continuous_columns)
 ```
 
 This will create a TGAN instance with the default parameters.
@@ -278,10 +278,10 @@ If you want to change the default behavior of TGANModel, such as as different `b
 * noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
 * l2norm (`float`, default=`0.00001`): L2 reguralization coefficient when computing losses.
 * learning_rate (`float`, default=`0.001`): Learning rate for the optimizer.
-* num_gen_rnn (`int`, default=`400`):
-* num_gen_feature (`int`, default=`100`): Number of features of in the generator.
-* num_dis_layers (`int`, default=`2`):
-* num_dis_hidden (`int`, default=`200`):
+* num_gen_rnn (`int`, default=`400`): Number of units in rnn cell in generator.
+* num_gen_feature (`int`, default=`100`): Number of units in fully connected layer in generator.
+* num_dis_layers (`int`, default=`2`): Number of layers in discriminator.
+* num_dis_hidden (`int`, default=`200`): Number of units per layer in discriminator.
 * optimizer (`str`, default=`AdamOptimizer`): Name of the optimizer to use during `fit`, possible
   values are: [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`].
 

@@ -1,23 +1,35 @@
-.. mdinclude:: readme.rst
+Welcome to TGAN!
+========================
+
+.. figure:: images/dai-logo.png
+   :width: 300 px
+   :alt: DAI-Lab Logo
+
+   An open source project from Data to AI Lab at MIT.
+
+Overview
+--------
+
+TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data.
+Currently, TGAN can generate numerical columns and categorical columns. This software can do
+random search for TGAN parameters on multiple datasets using multiple GPUs.
+
+.. mdinclude:: ../README.md
 
 .. toctree::
-   :hidden:
+   :caption: Getting Started
    :maxdepth: 2
 
-   Overview <readme>
+   Welcome <self>
    installation
+   quickstart
    usage
 
 .. toctree::
-   :caption: Advanced Usage
+   :caption: Resources
    :hidden:
 
    API Reference <api/tgan>
-
-.. toctree::
-   :caption: Development Notes
-   :hidden:
-
    contributing
    authors
    history

@@ -10,8 +10,8 @@ This module contains two classes:
   underlying operations with GraphBuilder and trainers in order to fit and sample data.
 """
 import json
-import pickle
 import os
+import pickle
 import tarfile
 
 import numpy as np
@@ -645,7 +645,7 @@ class TGANModel:
         )
 
     def prepare_sampling(self):
-
+        """Prepare model for generate samples."""
         if self.model is None:
             self.model = self.get_model(training=False)
 
@@ -773,8 +773,7 @@ class TGANModel:
 
     @classmethod
     def load(cls, path):
-        """Loads a pretrained model from a given path."""
-
+        """Load a pretrained model from a given path."""
         with tarfile.open(path, 'r:gz') as tar_handle:
             destination_dir = os.path.dirname(tar_handle.getmembers()[0].name)
             tar_handle.extractall()

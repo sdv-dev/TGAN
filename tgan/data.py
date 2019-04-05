@@ -436,10 +436,13 @@ def load_demo_data(name, header=None):
     """
     params = DEMO_DATASETS.get(name)
     if params:
-        url, file_name, continuous_columns = params
-        name = file_name
-        if not os.path.isfile(file_name):
-            download_file(url, file_name)
+        url, file_path, continuous_columns = params
+        if not os.path.isfile(file_path):
+            base_path = os.path.dirname(file_path)
+            if not os.path.exists(base_path):
+                os.makedirs(base_path)
+
+            download_file(url, file_path)
 
     else:
         message = (
@@ -448,4 +451,4 @@ def load_demo_data(name, header=None):
         )
         raise ValueError(message)
 
-    return pd.read_csv(name, header=header), continuous_columns
+    return pd.read_csv(file_path, header=header), continuous_columns
