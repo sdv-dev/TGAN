@@ -139,3 +139,4 @@ data/
 *.ipynb
 logs/
 model/
+docs/api/
