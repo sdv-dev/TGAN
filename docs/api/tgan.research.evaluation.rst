@@ -1,7 +1,0 @@
-tgan.research.evaluation module
-================================
-
-.. automodule:: tgan.research.evaluation
-    :members:
-    :undoc-members:
-    :show-inheritance:

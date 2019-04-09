@@ -1,7 +1,0 @@
-tgan.data module
-================
-
-.. automodule:: tgan.data
-    :members:
-    :undoc-members:
-    :show-inheritance:

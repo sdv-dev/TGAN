@@ -98,13 +98,17 @@ def run_experiment(
     )
 
 
-def run_experiments(path):
+def run_experiments(config_path, output_path):
     """Run experiments specified in JSON file."""
-    with open(path) as f:
+    with open(config_path) as f:
         experiments_config = json.load(f)
 
     if isinstance(experiments_config, list):
+        result = []
         for experiment in experiments_config:
-            run_experiment(**experiment)
+            result.append(run_experiment(**experiment))
     else:
-        run_experiment(**experiments_config)
+        result = run_experiment(**experiments_config)
+
+    with open(output_path, 'wb+') as f:
+        json.dump(result, f)

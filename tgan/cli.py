@@ -48,7 +48,8 @@ def get_parser():
     action.required = True
 
     experiments = action.add_parser('experiments', help='Run experiments using TGAN.')
-    experiments.add_argument('path', type=str, help='Path to the JSON file.')
+    experiments.add_argument('input', type=str, help='Path to the JSON file with the configuration.')
+    experiments.add_argument('output', type=str, help='Path to store the results.')
 
     return parser
 
@@ -57,4 +58,4 @@ def main():
     """Python Entry point for CLI."""
     parser = get_parser()
     args = parser.parse_args()
-    run_experiments(args.path)
+    run_experiments(args.input, args.output)
