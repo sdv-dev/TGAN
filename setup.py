@@ -15,8 +15,8 @@ install_requires = [
     'numpy>=1.16.0',
     'pandas>=0.23.4',
     'scikit-learn>=0.20.2',
-    'tensorflow>=1.12.0',
-    'tensorpack>=0.9.0',
+    'tensorflow-gpu>=1.13.0, <2.0',
+    'tensorpack==0.9.4',
     'urllib3>=1.24.1',
     'certifi>=2018.11.29'
 ]
@@ -52,6 +52,10 @@ development_requirements = [
     # distribute on PyPI
     'twine>=1.10.0',
     'wheel>=0.30.0',
+
+    # Advanced testing
+    'coverage>=4.5.1',
+    'tox>=2.9.1',
 ]
 
 extras_require = {
