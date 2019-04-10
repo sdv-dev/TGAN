@@ -274,8 +274,8 @@ If you want to change the default behavior of TGANModel, such as as different `b
 * save_checkpoints(`bool`, default=True): Whether or not to store checkpoints of the model after each training epoch.
 * restore_session(`bool`, default=True): Whether or not continue training from the last checkpoint.
 * batch_size (`int`, default=`200`): Size of the batch to feed the model at each step.
-* z_dim (`int`, default=`100`): Number of labels in the data.
-* noise (`float`, default=`0.2`): Upper bound to the gaussian noise.
+* z_dim (`int`, default=`100`): Number of dimensions in the noise input for the generator.
+* noise (`float`, default=`0.2`): Upper bound to the gaussian noise added to categorical columns.
 * l2norm (`float`, default=`0.00001`): L2 reguralization coefficient when computing losses.
 * learning_rate (`float`, default=`0.001`): Learning rate for the optimizer.
 * num_gen_rnn (`int`, default=`400`): Number of units in rnn cell in generator.

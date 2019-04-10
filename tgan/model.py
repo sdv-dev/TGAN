@@ -574,8 +574,10 @@ class TGANModel:
             Defaults to :attr:`True`.
         batch_size (int, optional): Size of the batch to feed the model at each step. Defaults to
             :attr:`200`.
-        z_dim (int, optional): Number of labels in the data. Defaults to :attr:`100`.
-        noise (float, optional): Upper bound to the gaussian noise. Defaults to :attr:`0.2`.
+        z_dim (int, optional): Number of dimensions in the noise input for the generator.
+            Defaults to :attr:`100`.
+        noise (float, optional): Upper bound to the gaussian noise added to categorical columns.
+            Defaults to :attr:`0.2`.
         l2norm (float, optional):
             L2 reguralization coefficient when computing losses. Defaults to :attr:`0.00001`.
         learning_rate (float, optional): Learning rate for the optimizer. Defaults to

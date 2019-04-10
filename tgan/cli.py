@@ -48,8 +48,10 @@ def get_parser():
     action.required = True
 
     experiments = action.add_parser('experiments', help='Run experiments using TGAN.')
-    experiments.add_argument('input', type=str, help='Path to the JSON file with the configuration.')
-    experiments.add_argument('output', type=str, help='Path to store the results.')
+    experiments.add_argument(
+        'input', type=str, help='Path to the JSON file with the configuration.')
+    experiments.add_argument(
+        'output', type=str, help='Path to store the results.')
 
     return parser
 
