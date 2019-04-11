@@ -332,34 +332,8 @@ To run random searchs for the best model hyperparameters for a given dataset, we
   * `steps_per_epoch`: Number of optimization steps in each epoch.
   * `sample_rows`: Number of rows to sample when evaluating the model.
 
-Below have an example of JSON configuration to run a 10 iteration random search using the dataset
-we downloaded on the Quickstart:
-
-``` python
-{
-    'name': 'census',
-    'num_random_search': 10,
-    'train_csv': 'data/census.csv',
-    'continuous_cols': [0, 5, 16, 17, 18, 29, 38],
-    'epoch': 5,
-    'steps_per_epoch': 10000,
-    'sample_rows': 10000
-}
-```
-
-Alternatively, you can run multiple experiments with a single file if you format the configuration as an array:
-
-``` python
-[
-    {
-      ... # Configuration for first search
-    },
-    {
-      ... # Configuration for second search
-    },
-    ...
-]
-```
+You can see an example of such a json file in [examples/config.json](examples/config.json), which you
+can download and use as a template.
 
 #### Execution
 
@@ -369,7 +343,7 @@ Once we have prepared everything we can launch the random hyperparameter search 
 tgan experiments config.json results.json
 ```
 
-Where the first argument, `config.json`,  is the path to the configuration JSON, and the second,
+Where the first argument, `config.json`, is the path to your configuration JSON, and the second,
 `results.json`, is the path to store the summary of the execution.
 
 This will run the random search, wich basically consist of the folling steps:
