@@ -11,8 +11,7 @@
 Generative adversarial training for synthesizing tabular data.
 
 TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data. Currently, TGAN can
-generate numerical columns and categorical columns. This software can do random search for TGAN parameters
-on multiple datasets using multiple GPUs.
+generate numerical columns and categorical columns.
 
 * Free software: MIT license
 * Documentation: https://DAI-Lab.github.io/tgan
@@ -53,7 +52,7 @@ dependencies for testing and code linting.
 
 ### Data Format
 
-#### Input
+#### <a id="data-format-input"> </a> Input
 
 In order to be able to sample new synthetic data, **TGAN** needs to first be *fitted* to existing data.
 
@@ -308,6 +307,123 @@ In [16]: tgan = TGANModel(
     ...:     optimizer='AdamOptimizer'
     ...: )
 
+```
+
+## Command-line interface
+
+We include a command-line interface that allows users to access TGAN functionality. Currently only one action is supported.
+
+### Random hyperparameter search
+
+#### Input
+
+To run random searchs for the best model hyperparameters for a given dataset, we will need:
+
+* A dataset, in a csv file, without any missing value, only columns of type `bool`, `str`, `int` or
+  `float` and only one type for column, as specified in [Data Format Input](#data-format-input).
+
+* A JSON file containing the configuration for the search. This configuration shall contain:
+
+  * `name`: Name of the experiment. A folder with this name will be created.
+  * `num_random_search`: Number of iterations in hyper parameter search.
+  * `train_csv`: Path to the csv file containing the dataset.
+  * `continuous_cols`: List of column indices, starting at 0, to be considered continuous.
+  * `epoch`: Number of epoches to train the model.
+  * `steps_per_epoch`: Number of optimization steps in each epoch.
+  * `sample_rows`: Number of rows to sample when evaluating the model.
+
+Below have an example of JSON configuration to run a 10 iteration random search using the dataset
+we downloaded on the Quickstart:
+
+``` python
+{
+    'name': 'census',
+    'num_random_search': 10,
+    'train_csv': 'data/census.csv',
+    'continuous_cols': [0, 5, 16, 17, 18, 29, 38],
+    'epoch': 5,
+    'steps_per_epoch': 10000,
+    'sample_rows': 10000
+}
+```
+
+Alternatively, you can run multiple experiments with a single file if you format the configuration as an array:
+
+``` python
+[
+    {
+      ... # Configuration for first search
+    },
+    {
+      ... # Configuration for second search
+    },
+    ...
+]
+```
+
+#### Execution
+
+Once we have prepared everything we can launch the random hyperparameter search with this command:
+
+``` bash
+tgan experiments config.json results.json
+```
+
+Where the first argument, `config.json`,  is the path to the configuration JSON, and the second,
+`results.json`, is the path to store the summary of the execution.
+
+This will run the random search, wich basically consist of the folling steps:
+
+1. We fetch and split our data between test and train.
+2. We randomly select the hyperparameters to test.
+3. Then, for each hyperparameter combination, we train a TGAN model using the real training data T
+   and generate a synthetic training dataset Tsynth.
+4. We then train machine learning models on both the real and synthetic datasets.
+5. We use these trained models on real test data and see how well they perform.
+
+#### Output
+
+One the experiment has finished, the following can be found:
+
+* A JSON file, in the example above called `results.json`, containing a summary of the experiments.
+  This JSON will contain a key for each experiment `name`, and on it, an array of length
+  `num_random_search`, with the selected parameters and its evaluation score. For a configuration
+  like the example, the summary will look like this:
+
+``` python
+{
+    'census': [
+        {
+            "steps_per_epoch" : 10000,
+            "num_gen_feature" : 300,
+            "num_dis_hidden" : 300,
+            "batch_size" : 100,
+            "num_gen_rnn" : 400,
+            "score" : 0.937802280415988,
+            "max_epoch" : 5,
+            "num_dis_layers" : 4,
+            "learning_rate" : 0.0002,
+            "z_dim" : 100,
+            "noise" : 0.2
+        },
+        ... # 9 more nodes
+    ]
+}
+```
+
+* A set of folders, each one names after the `name` specified in the JSON configuration, contained
+in the `experiments` folder. In each folder, sampled data and the models can be found. For a configuration
+like the example, this will look like this:
+
+```
+experiments/
+  census/
+    data/       # Sampled data with each of the models in the random search.
+    model_0/
+      logs/     # Training logs
+      model/    # Tensorflow model checkpoints
+    model_1/    # 9 more folders, one for each model in the random search
+    ...
 ```
 
 ## Citation

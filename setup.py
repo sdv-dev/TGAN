@@ -15,7 +15,7 @@ install_requires = [
     'numpy>=1.16.0',
     'pandas>=0.23.4',
     'scikit-learn>=0.20.2',
-    'tensorflow-gpu>=1.13.0, <2.0',
+    'tensorflow>=1.13.0, <2.0',
     'tensorpack==0.9.4',
     'urllib3>=1.24.1',
     'certifi>=2018.11.29'
