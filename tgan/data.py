@@ -16,12 +16,12 @@ from tensorpack import DataFlow, RNGDataFlow
 
 DEMO_DATASETS = {
     'census': (
-        'https://s3.amazonaws.com/hdi-demos/tgan-demo/census-train.csv',
+        'http://hdi-project-tgan.s3.amazonaws.com/census-train.csv',
         'data/census.csv',
         [0, 5, 16, 17, 18, 29, 38]
     ),
     'covertype': (
-        'https://s3.amazonaws.com/hdi-demos/tgan-demo/covertype-train.csv',
+        'http://hdi-project-tgan.s3.amazonaws.com/covertype-train.csv',
         'data/covertype.csv',
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     )
