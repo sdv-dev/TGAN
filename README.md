@@ -114,12 +114,12 @@ forrest cover types. It's a single csv file, containing 465588 rows and 55 colum
 In this short tutorial we will guide you through a series of steps that will help you getting
 started with the most basic usage of **TGAN** in order to generate samples from a given dataset.
 
-**NOTE**: All the examples of this tutorial are run in an [IPython Shell](https://ipython.org/),
-which you can install by running the following commands inside your *virtualenv*:
+**NOTE**: The following examples are also covered in a [Jupyter](https://jupyter.org/) notebook,
+which you can execute by running the following commands inside your *virtualenv*:
 
 ```
-pip install ipython
-ipython
+pip install jupyter
+jupyter notebook examples/Usage_Example.ipynb
 ```
 
 ### 1. Load the data
@@ -137,12 +137,9 @@ dataset ready to be used to fit the model.
 2. `continuous_columns`, that will contain a `list` with the indices of continuous columns.
 
 ```
-In [1]: from tgan.data import load_demo_data
-
-In [2]: data, continuous_columns = load_demo_data('census')
-
-In [3]: data.head(3).T[:10]
-Out[3]:
+>>> from tgan.data import load_demo_data
+>>> data, continuous_columns = load_demo_data('census')
+>>> data.head(3).T[:10]
                               0                                     1                             2
 0                            73                                    58                            18
 1               Not in universe        Self-employed-not incorporated               Not in universe
@@ -155,8 +152,8 @@ Out[3]:
 8   Not in universe or children                          Construction   Not in universe or children
 9               Not in universe   Precision production craft & repair               Not in universe
 
-In [4]: continuous_columns
-Out[4]: [0, 5, 16, 17, 18, 29, 38]
+>>> continuous_columns
+[0, 5, 16, 17, 18, 29, 38]
 
 ```
 
@@ -170,9 +167,8 @@ To do so, we need to import the `tgan.model.TGANModel` class and call it with th
 This will create a TGAN instance with the default parameters:
 
 ```
-In [5]: from tgan.model import TGANModel
-
-In [6]: tgan = TGANModel(continuous_columns)
+>>> from tgan.model import TGANModel
+>>> tgan = TGANModel(continuous_columns)
 ```
 
 ### 3. Fit the model
@@ -181,7 +177,7 @@ Once you have a **TGAN** instance, you can proceed to call it's `fit` method pas
 you loaded before in order to start the fitting process:
 
 ```
-In [7]: tgan.fit(data)
+>>> tgan.fit(data)
 ```
 
 This process will not return anything, however, the progress of the fitting will be printed in the
@@ -196,12 +192,9 @@ After the model has been fitted, you are ready to generate new samples by callin
 method of the `TGAN` instance passing it the desired amount of samples:
 
 ```
-In [8]: num_samples = 1000
-
-In [9]: samples = tgan.sample(num_samples)
-
-In [10]: samples.head(3).T[:10]
-Out[10]:
+>>> num_samples = 1000
+>>> samples = tgan.sample(num_samples)
+>>> samples.head(3).T[:10]
                                          0                                     1                                   2
 0                                       12                                    27                                  56
 
@@ -232,37 +225,33 @@ as argument the path where the model will be stored. Similarly, the `TGANModel.l
 a model stored on disk by passing as argument the path where the model is stored.
 
 ```
-In [11]: model_path = 'models/mymodel.pkl'
-
-In [12]: tgan.save(model_path)
-Out[12]: Model saved successfully.
+>>> model_path = 'models/mymodel.pkl'
+>>> tgan.save(model_path)
+Model saved successfully.
 ```
 
 Bear in mind that in case the file already exists, **TGAN** will avoid overwritting it unless the
 `force=True` argument is passed:
 
 ```
-In [13]: tgan.save(model_path)
-Out[13]: The indicated path already exists. Use `force=True` to overwrite.
+>>> tgan.save(model_path)
+The indicated path already exists. Use `force=True` to overwrite.
 ```
 
 In order to do so:
 
 ```
-In [14]: tgan.save(model_path, force=True)
-Out[14]: Model saved successfully.
+>>> tgan.save(model_path, force=True)
+Model saved successfully.
 ```
 
 Once the model is saved, it can be loaded back as a **TGAN** instance by using the `TGANModel.load`
 method:
 
 ```
-In [15]: new_tgan = TGANModel.load(model_path)
-
-In [16]: new_samples = new_tgan.sample(num_samples)
-
-In [17]: new_samples.head(3).T[:10]
-Out[17]:
+>>> new_tgan = TGANModel.load(model_path)
+>>> new_samples = new_tgan.sample(num_samples)
+>>> new_samples.head(3).T[:10]
 
                                          0                                     1                                   2
 0                                       12                                    27                                  56
@@ -296,22 +285,18 @@ For example, if we want to load a local CSV file, `path/to/my.csv`, that has as 
 their first 4 columns, that is, indices `[0, 1, 2, 3]`, we would do it like this:
 
 ```
-In [1]: import pandas as pd
-
-In [2]: data = pd.read_csv('data/census.csv')
-
-In [3]: continuous_columns = [0, 1, 2, 3]
+>>> import pandas as pd
+>>> data = pd.read_csv('data/census.csv')
+>>> continuous_columns = [0, 1, 2, 3]
 ```
 
 Now you can use the `continuous_columns` to create a **TGAN** instance and use the `data` to `fit`
 it, like we did before:
 
 ```
-In [4]: from tgan.model import TGANModel
-
-In [5]: tgan = TGANModel(continuous_columns)
-
-In [6]: tgan.fit(data)
+>>> from tgan.model import TGANModel
+>>> tgan = TGANModel(continuous_columns)
+>>> tgan.fit(data)
 ```
 
 ## Model Parameters
@@ -346,9 +331,8 @@ If you wanted to create an identical instance to the one created on step 2, but 
 arguments in a explicit way, this can be achieved with the following lines:
 
 ```
-In [1]: from tgan.model import TGANModel
-
-In [2]: tgan = TGANModel(
+>>> from tgan.model import TGANModel
+>>> tgan = TGANModel(
    ...:     continuous_columns,
    ...:     output='output',
    ...:     max_epoch=5,
