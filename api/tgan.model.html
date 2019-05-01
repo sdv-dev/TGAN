@@ -1,0 +1,636 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tgan.model module &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tgan.trainer module" href="tgan.trainer.html" />
+    <link rel="prev" title="tgan.data module" href="tgan.data.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="../_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tgan.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="tgan.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tgan.data.html">tgan.data module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="tgan.html">tgan package</a> &raquo;</li>
+        
+      <li>tgan.model module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/DAI-Lab/TGAN/blob/master/docs/api/tgan.model.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-tgan.model">
+<span id="tgan-model-module"></span><h1>tgan.model module<a class="headerlink" href="#module-tgan.model" title="Permalink to this headline">¶</a></h1>
+<p>Module with the model for TGAN.</p>
+<p>This module contains two classes:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#tgan.model.GraphBuilder" title="tgan.model.GraphBuilder"><code class="xref py py-attr docutils literal notranslate"><span class="pre">GraphBuilder</span></code></a>: That defines the graph and implements a Tensorpack compatible API.</p></li>
+<li><p><a class="reference internal" href="#tgan.model.TGANModel" title="tgan.model.TGANModel"><code class="xref py py-attr docutils literal notranslate"><span class="pre">TGANModel</span></code></a>: The public API for the model, that offers a simplified interface for the
+underlying operations with GraphBuilder and trainers in order to fit and sample data.</p></li>
+</ul>
+<dl class="class">
+<dt id="tgan.model.GraphBuilder">
+<em class="property">class </em><code class="descclassname">tgan.model.</code><code class="descname">GraphBuilder</code><span class="sig-paren">(</span><em>metadata</em>, <em>batch_size=200</em>, <em>z_dim=200</em>, <em>noise=0.2</em>, <em>l2norm=1e-05</em>, <em>learning_rate=0.001</em>, <em>num_gen_rnn=100</em>, <em>num_gen_feature=100</em>, <em>num_dis_layers=1</em>, <em>num_dis_hidden=100</em>, <em>optimizer='AdamOptimizer'</em>, <em>training=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.graph_builder.model_desc.ModelDescBase</span></code></p>
+<p>Main model for TGAN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>None</strong> – </p>
+</dd>
+</dl>
+<p>Attributes:</p>
+<dl class="staticmethod">
+<dt id="tgan.model.GraphBuilder.batch_diversity">
+<em class="property">static </em><code class="descname">batch_diversity</code><span class="sig-paren">(</span><em>l</em>, <em>n_kernel=10</em>, <em>kernel_dim=10</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.batch_diversity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.batch_diversity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the minibatch discrimination vector.</p>
+<p>Let <span class="math notranslate nohighlight">\(f(x_i) \in \mathbb{R}^A\)</span> denote a vector of features for input <span class="math notranslate nohighlight">\(x_i\)</span>,
+produced by some intermediate layer in the discriminator. We then multiply the vector
+<span class="math notranslate nohighlight">\(f(x_i)\)</span> by a tensor <span class="math notranslate nohighlight">\(T \in \mathbb{R}^{A×B×C}\)</span>, which results in a matrix
+<span class="math notranslate nohighlight">\(M_i \in \mathbb{R}^{B×C}\)</span>. We then compute the <span class="math notranslate nohighlight">\(L_1\)</span>-distance between the
+rows of the resulting matrix <span class="math notranslate nohighlight">\(M_i\)</span> across samples <span class="math notranslate nohighlight">\(i \in {1, 2, ... , n}\)</span>
+and apply a negative exponential:</p>
+<div class="math notranslate nohighlight">
+\[cb(x_i, x_j) = exp(−||M_{i,b} − M_{j,b}||_{L_1} ) \in \mathbb{R}.\]</div>
+<p>The output <span class="math notranslate nohighlight">\(o(x_i)\)</span> for this <em>minibatch layer</em> for a sample <span class="math notranslate nohighlight">\(x_i\)</span> is then
+defined as the sum of the cb(xi, xj )’s to all other samples:</p>
+<div class="math notranslate nohighlight">
+\begin{aligned}
+
+&amp;o(x_i)_b = \sum^{n}_{j=1} cb(x_i , x_j) \in \mathbb{R}\\
+&amp;o(x_i) = \Big[ o(x_i)_1, o(x_i)_2, . . . , o(x_i)_B \Big] \in \mathbb{R}^B\\
+&amp;o(X) ∈ R^{n×B}\\
+
+\end{aligned}</div><div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is extracted from <a class="reference external" href="https://arxiv.org/pdf/1606.03498.pdf">Improved techniques for training GANs</a> (Section 3.2) by
+Tim Salimans, Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and
+Xi Chen.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>l</strong> (<em>tf.Tensor</em>) – </p></li>
+<li><p><strong>n_kernel</strong> (<em>int</em>) – </p></li>
+<li><p><strong>kernel_dim</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tensorflow.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.GraphBuilder.build_graph">
+<code class="descname">build_graph</code><span class="sig-paren">(</span><em>*inputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.build_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.build_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the whole graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>list</em><em>[</em><em>tensorflow.Tensor</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.GraphBuilder.build_losses">
+<code class="descname">build_losses</code><span class="sig-paren">(</span><em>logits_real</em>, <em>logits_fake</em>, <em>extra_g=0</em>, <em>l2_norm=1e-05</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.build_losses"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.build_losses" title="Permalink to this definition">¶</a></dt>
+<dd><p>D and G play two-player minimax game with value function <span class="math notranslate nohighlight">\(V(G,D)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[min_G max_D V(D, G) = IE_{x \sim p_{data}} [log D(x)] + IE_{z \sim p_{fake}}
+    [log (1 - D(G(z)))]\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logits_real</strong> (<em>tensorflow.Tensor</em>) – discrim logits from real samples.</p></li>
+<li><p><strong>logits_fake</strong> (<em>tensorflow.Tensor</em>) – discrim logits from fake samples from generator.</p></li>
+<li><p><strong>extra_g</strong> (<em>float</em>) – </p></li>
+<li><p><strong>l2_norm</strong> (<em>float</em>) – scale to apply L2 regularization.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.GraphBuilder.collect_variables">
+<code class="descname">collect_variables</code><span class="sig-paren">(</span><em>g_scope='gen'</em>, <em>d_scope='discrim'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.collect_variables"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.collect_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign generator and discriminator variables from their scopes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>g_scope</strong> (<em>str</em>) – Scope for the generator.</p></li>
+<li><p><strong>d_scope</strong> (<em>str</em>) – Scope for the discriminator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any of the assignments fails or the collections are empty.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tgan.model.GraphBuilder.compute_kl">
+<em class="property">static </em><code class="descname">compute_kl</code><span class="sig-paren">(</span><em>real</em>, <em>pred</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.compute_kl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.compute_kl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the Kullback–Leibler divergence, <span class="math notranslate nohighlight">\(D_{KL}(\textrm{pred} || \textrm{real})\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>real</strong> (<em>tensorflow.Tensor</em>) – Real values.</p></li>
+<li><p><strong>pred</strong> (<em>tensorflow.Tensor</em>) – Predicted values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Computed divergence for the given values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.GraphBuilder.discriminator">
+<code class="descname">discriminator</code><span class="sig-paren">(</span><em>vecs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.discriminator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.discriminator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build discriminator.</p>
+<p>We use a <span class="math notranslate nohighlight">\(l\)</span>-layer fully connected neural network as the discriminator.
+We concatenate <span class="math notranslate nohighlight">\(v_{1:n_c}\)</span>, <span class="math notranslate nohighlight">\(u_{1:n_c}\)</span> and <span class="math notranslate nohighlight">\(d_{1:n_d}\)</span> together as the
+input. We compute the internal layers as</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\begin{aligned}\\f^{(D)}_{1} &amp;= \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{1}(v_{1:n_c} \oplus u_{1:n_c}
+    \oplus d_{1:n_d})\\f^{(D)}_{1} &amp;= \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{i}(f^{(D)}_{i−1} \oplus
+    \textrm{diversity}(f^{(D)}_{i−1})))), i = 2:l\\\end{aligned}\end{aligned}\end{align} \]</div>
+<p>where <span class="math notranslate nohighlight">\(\oplus\)</span> is the concatenation operation. <span class="math notranslate nohighlight">\(\textrm{diversity}(·)\)</span> is the
+mini-batch discrimination vector [42]. Each dimension of the diversity vector is the total
+distance between one sample and all other samples in the mini-batch using some learned
+distance metric. <span class="math notranslate nohighlight">\(\textrm{BN}(·)\)</span> is batch normalization, and
+<span class="math notranslate nohighlight">\(\textrm{LeakyReLU}(·)\)</span> is the leaky reflect linear activation function. We further
+compute the output of discriminator as <span class="math notranslate nohighlight">\(W^{(D)}(f^{(D)}_{l} \oplus \textrm{diversity}
+(f^{(D)}_{l}))\)</span> which is a scalar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vecs</strong> (<em>list</em><em>[</em><em>tensorflow.Tensor</em><em>]</em>) – List of tensors matching the spec of <a class="reference internal" href="#tgan.model.GraphBuilder.inputs" title="tgan.model.GraphBuilder.inputs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">inputs()</span></code></a></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a (b, 1) logits</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tensorpack.FullyConected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.GraphBuilder.generator">
+<code class="descname">generator</code><span class="sig-paren">(</span><em>z</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.generator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build generator graph.</p>
+<p>We generate a numerical variable in 2 steps. We first generate the value scalar
+<span class="math notranslate nohighlight">\(v_i\)</span>, then generate the cluster vector <span class="math notranslate nohighlight">\(u_i\)</span>. We generate categorical
+feature in 1 step as a probability distribution over all possible labels.</p>
+<p>The output and hidden state size of LSTM is <span class="math notranslate nohighlight">\(n_h\)</span>. The input to the LSTM in each
+step <span class="math notranslate nohighlight">\(t\)</span> is the random variable <span class="math notranslate nohighlight">\(z\)</span>, the previous hidden vector <span class="math notranslate nohighlight">\(f_{t−1}\)</span>
+or an embedding vector <span class="math notranslate nohighlight">\(f^{\prime}_{t−1}\)</span> depending on the type of previous output,
+and the weighted context vector <span class="math notranslate nohighlight">\(a_{t−1}\)</span>. The random variable <span class="math notranslate nohighlight">\(z\)</span> has
+<span class="math notranslate nohighlight">\(n_z\)</span> dimensions.
+Each dimension is sampled from <span class="math notranslate nohighlight">\(\mathcal{N}(0, 1)\)</span>. The attention-based context
+vector at is a weighted average over all the previous LSTM outputs <span class="math notranslate nohighlight">\(h_{1:t}\)</span>.
+So <span class="math notranslate nohighlight">\(a_t\)</span> is a <span class="math notranslate nohighlight">\(n_h\)</span>-dimensional vector.
+We learn a attention weight vector <span class="math notranslate nohighlight">\(α_t \in \mathbb{R}^t\)</span> and compute context as</p>
+<div class="math notranslate nohighlight">
+\[a_t = \sum_{k=1}^{t} \frac{\textrm{exp}  {\alpha}_{t, j}}
+    {\sum_{j} \textrm{exp}  \alpha_{t,j}} h_k.\]</div>
+<p>We set :math: <cite>a_0</cite> = 0. The output of LSTM is <span class="math notranslate nohighlight">\(h_t\)</span> and we project the output to
+a hidden vector <span class="math notranslate nohighlight">\(f_t = \textrm{tanh}(W_h h_t)\)</span>, where <span class="math notranslate nohighlight">\(W_h\)</span> is a learned
+parameter in the network. The size of <span class="math notranslate nohighlight">\(f_t\)</span> is <span class="math notranslate nohighlight">\(n_f\)</span> .
+We further convert the hidden vector to an output variable.</p>
+<ul class="simple">
+<li><p>If the output is the value part of a continuous variable, we compute the output as
+<span class="math notranslate nohighlight">\(v_i = \textrm{tanh}(W_t f_t)\)</span>. The hidden vector for <span class="math notranslate nohighlight">\(t + 1\)</span> step is
+<span class="math notranslate nohighlight">\(f_t\)</span>.</p></li>
+<li><p>If the output is the cluster part of a continuous variable, we compute the output as
+<span class="math notranslate nohighlight">\(u_i = \textrm{softmax}(W_t f_t)\)</span>. The feature vector for <span class="math notranslate nohighlight">\(t + 1\)</span> step is
+<span class="math notranslate nohighlight">\(f_t\)</span>.</p></li>
+<li><p>If the output is a discrete variable, we compute the output as
+<span class="math notranslate nohighlight">\(d_i = \textrm{softmax}(W_t f_t)\)</span>. The hidden vector for <span class="math notranslate nohighlight">\(t + 1\)</span> step is
+<span class="math notranslate nohighlight">\(f^{\prime}_{t} = E_i [arg_k \hspace{0.25em} \textrm{max} \hspace{0.25em} d_i ]\)</span>,
+where <span class="math notranslate nohighlight">\(E \in R^{|D_i|×n_f}\)</span> is an embedding matrix for discrete variable
+<span class="math notranslate nohighlight">\(D_i\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(f_0\)</span> is a special vector <span class="math notranslate nohighlight">\(\texttt{&lt;GO&gt;}\)</span> and we learn it during the
+training.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>z</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Outpu</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[tensorflow.Tensor]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any of the elements in self.metadata[‘details’] has an unsupported
+    value in the <cite>type</cite> key.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.model.GraphBuilder.get_optimizer">
+<code class="descname">get_optimizer</code><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.get_optimizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.get_optimizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return optimizer of base class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.GraphBuilder.inputs">
+<code class="descname">inputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#GraphBuilder.inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.GraphBuilder.inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return metadata about entry data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list[tensorpack.InputDesc]</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If any of the elements in self.metadata[‘details’] has an unsupported
+    value in the <cite>type</cite> key.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tgan.model.TGANModel">
+<em class="property">class </em><code class="descclassname">tgan.model.</code><code class="descname">TGANModel</code><span class="sig-paren">(</span><em>continuous_columns</em>, <em>output='output'</em>, <em>gpu=None</em>, <em>max_epoch=5</em>, <em>steps_per_epoch=10000</em>, <em>save_checkpoints=True</em>, <em>restore_session=True</em>, <em>batch_size=200</em>, <em>z_dim=200</em>, <em>noise=0.2</em>, <em>l2norm=1e-05</em>, <em>learning_rate=0.001</em>, <em>num_gen_rnn=100</em>, <em>num_gen_feature=100</em>, <em>num_dis_layers=1</em>, <em>num_dis_hidden=100</em>, <em>optimizer='AdamOptimizer'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main model from TGAN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continuous_columns</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – 0-index list of column indices to be considered continuous.</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to store the model and its artifacts. Defaults to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">output</span></code>.</p></li>
+<li><p><strong>gpu</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – Comma separated list of GPU(s) to use. Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>max_epoch</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of epochs to use during training. Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">5</span></code>.</p></li>
+<li><p><strong>steps_per_epoch</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of steps to run on each epoch. Defaults to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">10000</span></code>.</p></li>
+<li><p><strong>save_checkpoints</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to store checkpoints of the model after
+each training epoch. Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>restore_session</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not continue training from the last checkpoint.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of the batch to feed the model at each step. Defaults to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">200</span></code>.</p></li>
+<li><p><strong>z_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of dimensions in the noise input for the generator.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+<li><p><strong>noise</strong> (<em>float</em><em>, </em><em>optional</em>) – Upper bound to the gaussian noise added to categorical columns.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">0.2</span></code>.</p></li>
+<li><p><strong>l2norm</strong> (<em>float</em><em>, </em><em>optional</em>) – L2 reguralization coefficient when computing losses. Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">0.00001</span></code>.</p></li>
+<li><p><strong>learning_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Learning rate for the optimizer. Defaults to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">0.001</span></code>.</p></li>
+<li><p><strong>num_gen_rnn</strong> (<em>int</em><em>, </em><em>optional</em>) – Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">400</span></code>.</p></li>
+<li><p><strong>num_gen_feature</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of features of in the generator. Defaults to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">100</span></code></p></li>
+<li><p><strong>num_dis_layers</strong> (<em>int</em><em>, </em><em>optional</em>) – Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">2</span></code>.</p></li>
+<li><p><strong>num_dis_hidden</strong> (<em>int</em><em>, </em><em>optional</em>) – Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">200</span></code>.</p></li>
+<li><p><strong>optimizer</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the optimizer to use during <cite>fit</cite>,possible values are:
+[<cite>GradientDescentOptimizer</cite>, <cite>AdamOptimizer</cite>, <cite>AdadeltaOptimizer</cite>]. Defaults to
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">AdamOptimizer</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tgan.model.TGANModel.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the model to the given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>pandas.DataFrame</em>) – dataset to fit the model.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.TGANModel.get_model">
+<code class="descname">get_model</code><span class="sig-paren">(</span><em>training=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.get_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.get_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new instance of the model.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="tgan.model.TGANModel.load">
+<em class="property">classmethod </em><code class="descname">load</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a pretrained model from a given path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.TGANModel.prepare_sampling">
+<code class="descname">prepare_sampling</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.prepare_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.prepare_sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare model for generate samples.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.TGANModel.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><em>num_samples</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.sample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate samples from model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_samples</strong> (<em>int</em>) – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.TGANModel.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>path</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.save"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the fitted model in the given path.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.model.TGANModel.tar_folder">
+<code class="descname">tar_folder</code><span class="sig-paren">(</span><em>tar_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/model.html#TGANModel.tar_folder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.model.TGANModel.tar_folder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate a tar of :self.output:.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tgan.trainer.html" class="btn btn-neutral float-right" title="tgan.trainer module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tgan.data.html" class="btn btn-neutral float-left" title="tgan.data module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

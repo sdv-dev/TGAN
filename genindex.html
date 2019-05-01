@@ -1,0 +1,550 @@
+
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Index &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/tgan.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="api/tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/tgan.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/tgan.data.html">tgan.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/tgan.model.html">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Index</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/DAI-Lab/TGAN/blob/master/docs/genindex" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+
+<h1 id="index">Index</h1>
+
+<div class="genindex-jumpbox">
+ <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
+ | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
+ | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#T"><strong>T</strong></a>
+ 
+</div>
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.batch_diversity">batch_diversity() (tgan.model.GraphBuilder static method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.build_graph">build_graph() (tgan.model.GraphBuilder method)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.build_losses">build_losses() (tgan.model.GraphBuilder method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.categorical_transformer">categorical_transformer (tgan.data.Preprocessor attribute)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.check_inputs">check_inputs() (in module tgan.data)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.check_metadata">check_metadata() (in module tgan.data)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.collect_variables">collect_variables() (tgan.model.GraphBuilder method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.columns">columns (tgan.data.Preprocessor attribute)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.compute_kl">compute_kl() (tgan.model.GraphBuilder static method)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.continous_columns">continous_columns (tgan.data.Preprocessor attribute)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.continous_transformer">continous_transformer (tgan.data.Preprocessor attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="D">D</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.data">data (tgan.data.TGANDataFlow attribute)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.discriminator">discriminator() (tgan.model.GraphBuilder method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.distribution">distribution (tgan.data.TGANDataFlow attribute)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.download_file">download_file() (in module tgan.data)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.research.evaluation.html#tgan.research.evaluation.evaluate_classification">evaluate_classification() (in module tgan.research.evaluation)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.fit">fit() (tgan.data.Preprocessor method)</a>
+
+      <ul>
+        <li><a href="api/tgan.model.html#tgan.model.TGANModel.fit">(tgan.model.TGANModel method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.research.experiments.html#tgan.research.experiments.fit_score_model">fit_score_model() (in module tgan.research.experiments)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.fit_transform">fit_transform() (tgan.data.Preprocessor method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.trainer.html#tgan.trainer.GANTrainer">GANTrainer (class in tgan.trainer)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.generator">generator() (tgan.model.GraphBuilder method)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.RandomZData.get_data">get_data() (tgan.data.RandomZData method)</a>
+
+      <ul>
+        <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.get_data">(tgan.data.TGANDataFlow method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel.get_model">get_model() (tgan.model.TGANModel method)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.get_optimizer">get_optimizer (tgan.model.GraphBuilder attribute)</a>
+</li>
+      <li><a href="api/tgan.cli.html#tgan.cli.get_parser">get_parser() (in module tgan.cli)</a>
+</li>
+      <li><a href="api/tgan.cli.html#tgan.cli.get_train_parser">get_train_parser() (in module tgan.cli)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder">GraphBuilder (class in tgan.model)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.GraphBuilder.inputs">inputs() (tgan.model.GraphBuilder method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.MultiModalNumberTransformer.inverse_transform">inverse_transform() (tgan.data.MultiModalNumberTransformer static method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="L">L</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel.load">load() (tgan.model.TGANModel class method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.load_demo_data">load_demo_data() (in module tgan.data)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.cli.html#tgan.cli.main">main() (in module tgan.cli)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.metadata">metadata (tgan.data.Preprocessor attribute)</a>
+
+      <ul>
+        <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.metadata">(tgan.data.TGANDataFlow attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.trainer.html#tgan.trainer.MultiGPUGANTrainer">MultiGPUGANTrainer (class in tgan.trainer)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.MultiModalNumberTransformer">MultiModalNumberTransformer (class in tgan.data)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.num_features">num_features (tgan.data.TGANDataFlow attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.MultiModalNumberTransformer.num_modes">num_modes (tgan.data.MultiModalNumberTransformer attribute)</a>
+</li>
+      <li><a href="api/tgan.research.experiments.html#tgan.research.experiments.numpy_default">numpy_default() (in module tgan.research.experiments)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.research.experiments.html#tgan.research.experiments.prepare_hyperparameter_search">prepare_hyperparameter_search() (in module tgan.research.experiments)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel.prepare_sampling">prepare_sampling() (tgan.model.TGANModel method)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor">Preprocessor (class in tgan.data)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="R">R</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.data.html#tgan.data.RandomZData">RandomZData (class in tgan.data)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.Preprocessor.reverse_transform">reverse_transform() (tgan.data.Preprocessor method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.research.experiments.html#tgan.research.experiments.run_experiment">run_experiment() (in module tgan.research.experiments)</a>
+</li>
+      <li><a href="api/tgan.research.experiments.html#tgan.research.experiments.run_experiments">run_experiments() (in module tgan.research.experiments)</a>
+</li>
+      <li><a href="api/tgan.trainer.html#tgan.trainer.SeparateGANTrainer.run_step">run_step() (tgan.trainer.SeparateGANTrainer method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel.sample">sample() (tgan.model.TGANModel method)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel.save">save() (tgan.model.TGANModel method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.trainer.html#tgan.trainer.SeparateGANTrainer">SeparateGANTrainer (class in tgan.trainer)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.shuffle">shuffle (tgan.data.TGANDataFlow attribute)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow.size">size() (tgan.data.TGANDataFlow method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="T">T</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel.tar_folder">tar_folder() (tgan.model.TGANModel method)</a>
+</li>
+      <li><a href="api/tgan.html#module-tgan">tgan (module)</a>
+</li>
+      <li><a href="api/tgan.cli.html#module-tgan.cli">tgan.cli (module)</a>
+</li>
+      <li><a href="api/tgan.data.html#module-tgan.data">tgan.data (module)</a>
+</li>
+      <li><a href="api/tgan.model.html#module-tgan.model">tgan.model (module)</a>
+</li>
+      <li><a href="api/tgan.research.html#module-tgan.research">tgan.research (module)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/tgan.research.evaluation.html#module-tgan.research.evaluation">tgan.research.evaluation (module)</a>
+</li>
+      <li><a href="api/tgan.research.experiments.html#module-tgan.research.experiments">tgan.research.experiments (module)</a>
+</li>
+      <li><a href="api/tgan.trainer.html#module-tgan.trainer">tgan.trainer (module)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.TGANDataFlow">TGANDataFlow (class in tgan.data)</a>
+</li>
+      <li><a href="api/tgan.model.html#tgan.model.TGANModel">TGANModel (class in tgan.model)</a>
+</li>
+      <li><a href="api/tgan.data.html#tgan.data.MultiModalNumberTransformer.transform">transform() (tgan.data.MultiModalNumberTransformer method)</a>
+
+      <ul>
+        <li><a href="api/tgan.data.html#tgan.data.Preprocessor.transform">(tgan.data.Preprocessor method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

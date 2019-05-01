@@ -1,0 +1,403 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tgan.research.experiments &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../../_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="../../../_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/tgan.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../api/tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/tgan.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/tgan.data.html">tgan.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/tgan.model.html">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>tgan.research.experiments</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tgan.research.experiments</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;Tune and evaluate TGAN models.&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">tensorpack.utils</span> <span class="k">import</span> <span class="n">logger</span>
+
+<span class="kn">from</span> <span class="nn">tgan.model</span> <span class="k">import</span> <span class="n">TUNABLE_VARIABLES</span><span class="p">,</span> <span class="n">TGANModel</span>
+<span class="kn">from</span> <span class="nn">tgan.research.evaluation</span> <span class="k">import</span> <span class="n">evaluate_classification</span>
+
+
+<div class="viewcode-block" id="prepare_hyperparameter_search"><a class="viewcode-back" href="../../../api/tgan.research.experiments.html#tgan.research.experiments.prepare_hyperparameter_search">[docs]</a><span class="k">def</span> <span class="nf">prepare_hyperparameter_search</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="p">,</span> <span class="n">num_random_search</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Prepare hyperparameters.&quot;&quot;&quot;</span>
+    <span class="n">model_kwargs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">basic_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;max_epoch&#39;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">,</span>
+        <span class="s1">&#39;steps_per_epoch&#39;</span><span class="p">:</span> <span class="n">steps_per_epoch</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_random_search</span><span class="p">):</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">choices</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">choices</span> <span class="ow">in</span> <span class="n">TUNABLE_VARIABLES</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">basic_kwargs</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">model_kwargs</span></div>
+
+
+<div class="viewcode-block" id="fit_score_model"><a class="viewcode-back" href="../../../api/tgan.research.experiments.html#tgan.research.experiments.fit_score_model">[docs]</a><span class="k">def</span> <span class="nf">fit_score_model</span><span class="p">(</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">model_kwargs</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">continuous_columns</span><span class="p">,</span>
+        <span class="n">sample_rows</span><span class="p">,</span> <span class="n">store_samples</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fit and score models using given params.&quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">model_kwargs</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Training TGAN Model </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">model_kwargs</span><span class="p">))</span>
+
+        <span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+        <span class="n">base_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;experiments&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;model_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">TGANModel</span><span class="p">(</span><span class="n">continuous_columns</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_data</span><span class="p">)</span>
+        <span class="n">sampled_data</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">sample_rows</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">store_samples</span><span class="p">:</span>
+            <span class="n">dir_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">dir_name</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span>
+
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_name</span><span class="p">,</span> <span class="s1">&#39;model_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+            <span class="n">sampled_data</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">score</span> <span class="o">=</span> <span class="n">evaluate_classification</span><span class="p">(</span><span class="n">sampled_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span> <span class="n">continuous_columns</span><span class="p">)</span>
+        <span class="n">model_kwargs</span><span class="p">[</span><span class="n">index</span><span class="p">][</span><span class="s1">&#39;score&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+
+    <span class="k">return</span> <span class="n">model_kwargs</span></div>
+
+
+<div class="viewcode-block" id="run_experiment"><a class="viewcode-back" href="../../../api/tgan.research.experiments.html#tgan.research.experiments.run_experiment">[docs]</a><span class="k">def</span> <span class="nf">run_experiment</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="p">,</span> <span class="n">sample_rows</span><span class="p">,</span> <span class="n">train_csv</span><span class="p">,</span> <span class="n">continuous_cols</span><span class="p">,</span>
+    <span class="n">num_random_search</span><span class="p">,</span> <span class="n">store_samples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run experiment using the given params and collect the results.</span>
+
+<span class="sd">    The experiment run the following steps:</span>
+
+<span class="sd">    1. We fetch and split our data between test and train.</span>
+
+<span class="sd">    2. We first train a TGAN data synthesizer using the real training data T and generate a</span>
+<span class="sd">       synthetic training dataset Tsynth.</span>
+
+<span class="sd">    3. We then train machine learning models on both the real and synthetic datasets.</span>
+
+<span class="sd">    4. We use these trained models on real test data and see how well they perform.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Folder &quot;</span><span class="si">{}</span><span class="s1">&quot; exists, and force=True. Deleting folder.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">rmdir</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Folder &quot;</span><span class="si">{}</span><span class="s1">&quot; already exist. Please, use force=True to force deletion &#39;</span>
+                <span class="s1">&#39;or use a different name.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="c1"># Load and split data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">train_csv</span><span class="p">,</span> <span class="n">header</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">train_size</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+    <span class="c1"># Prepare hyperparameter search</span>
+    <span class="n">model_kwargs</span> <span class="o">=</span> <span class="n">prepare_hyperparameter_search</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="p">,</span> <span class="n">num_random_search</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">fit_score_model</span><span class="p">(</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">model_kwargs</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="n">test_data</span><span class="p">,</span>
+        <span class="n">continuous_cols</span><span class="p">,</span> <span class="n">sample_rows</span><span class="p">,</span> <span class="n">store_samples</span>
+    <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="numpy_default"><a class="viewcode-back" href="../../../api/tgan.research.experiments.html#tgan.research.experiments.numpy_default">[docs]</a><span class="k">def</span> <span class="nf">numpy_default</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Change numpy objects into json-serializable ones.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int16</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">TypeError</span></div>
+
+
+<div class="viewcode-block" id="run_experiments"><a class="viewcode-back" href="../../../api/tgan.research.experiments.html#tgan.research.experiments.run_experiments">[docs]</a><span class="k">def</span> <span class="nf">run_experiments</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run experiments specified in JSON file.&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">experiments_config</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">experiments_config</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">experiment</span> <span class="ow">in</span> <span class="n">experiments_config</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">experiment</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="o">**</span><span class="n">experiment</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">experiments_config</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">run_experiment</span><span class="p">(</span><span class="o">**</span><span class="n">experiments_config</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">numpy_default</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

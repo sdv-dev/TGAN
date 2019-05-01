@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tgan.trainer &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="../../_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/tgan.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/tgan.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.data.html">tgan.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.model.html">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>tgan.trainer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tgan.trainer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;GAN Models.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="k">import</span> <span class="n">StagingInput</span><span class="p">,</span> <span class="n">TowerTrainer</span>
+<span class="kn">from</span> <span class="nn">tensorpack.graph_builder</span> <span class="k">import</span> <span class="n">DataParallelBuilder</span><span class="p">,</span> <span class="n">LeastLoadedDeviceSetter</span>
+<span class="kn">from</span> <span class="nn">tensorpack.tfutils.tower</span> <span class="k">import</span> <span class="n">TowerContext</span><span class="p">,</span> <span class="n">TowerFuncWrapper</span>
+
+
+<div class="viewcode-block" id="GANTrainer"><a class="viewcode-back" href="../../api/tgan.trainer.html#tgan.trainer.GANTrainer">[docs]</a><span class="k">class</span> <span class="nc">GANTrainer</span><span class="p">(</span><span class="n">TowerTrainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;GanTrainer model.</span>
+
+<span class="sd">    We need to set :meth:`tower_func` because it&#39;s a :class:`TowerTrainer`, and only</span>
+<span class="sd">    :class:`TowerTrainer` supports automatic graph creation for inference during training.</span>
+
+<span class="sd">    If we don&#39;t care about inference during training, using :meth:`tower_func` is not needed.</span>
+<span class="sd">    Just calling :meth:`model.build_graph` directly is OK.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input_queue(tensorpack.input_source.QueueInput): Data input.</span>
+<span class="sd">        model(tgan.GAN.GANModelDesc): Model to train.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_queue</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">inputs_desc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_inputs_desc</span><span class="p">()</span>
+
+        <span class="c1"># Setup input</span>
+        <span class="n">cbs</span> <span class="o">=</span> <span class="n">input_queue</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">inputs_desc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">cbs</span><span class="p">)</span>
+
+        <span class="c1"># Build the graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tower_func</span> <span class="o">=</span> <span class="n">TowerFuncWrapper</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">build_graph</span><span class="p">,</span> <span class="n">inputs_desc</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">TowerContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tower_func</span><span class="p">(</span><span class="o">*</span><span class="n">input_queue</span><span class="o">.</span><span class="n">get_input_tensors</span><span class="p">())</span>
+
+        <span class="n">opt</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_optimizer</span><span class="p">()</span>
+
+        <span class="c1"># Define the training iteration by default, run one d_min after one g_min</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;optimize&#39;</span><span class="p">):</span>
+            <span class="n">g_min_grad</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">g_loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">g_vars</span><span class="p">)</span>
+            <span class="n">g_min_grad_clip</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">grad</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">g_min_grad</span>
+            <span class="p">]</span>
+
+            <span class="n">g_min_train_op</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">g_min_grad_clip</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;g_op&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">control_dependencies</span><span class="p">([</span><span class="n">g_min_train_op</span><span class="p">]):</span>
+                <span class="n">d_min_grad</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">d_loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">d_vars</span><span class="p">)</span>
+                <span class="n">d_min_grad_clip</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">clip_by_value</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span> <span class="n">var</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">grad</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">d_min_grad</span>
+                <span class="p">]</span>
+
+                <span class="n">d_min_train_op</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">d_min_grad_clip</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;d_op&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_op</span> <span class="o">=</span> <span class="n">d_min_train_op</span></div>
+
+
+<div class="viewcode-block" id="SeparateGANTrainer"><a class="viewcode-back" href="../../api/tgan.trainer.html#tgan.trainer.SeparateGANTrainer">[docs]</a><span class="k">class</span> <span class="nc">SeparateGANTrainer</span><span class="p">(</span><span class="n">TowerTrainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A GAN trainer which runs two optimization ops with a certain ratio.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        input(tensorpack.input_source.QueueInput): Data input.</span>
+<span class="sd">        model(tgan.GAN.GANModelDesc): Model to train.</span>
+<span class="sd">        d_period(int): period of each d_opt run</span>
+<span class="sd">        g_period(int): period of each g_opt run</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">d_period</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g_period</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">SeparateGANTrainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_d_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d_period</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_g_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">g_period</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">min</span><span class="p">(</span><span class="n">d_period</span><span class="p">,</span> <span class="n">g_period</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The minimum between d_period and g_period must be 1.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Setup input</span>
+        <span class="n">cbs</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_inputs_desc</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">cbs</span><span class="p">)</span>
+
+        <span class="c1"># Build the graph</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tower_func</span> <span class="o">=</span> <span class="n">TowerFuncWrapper</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">build_graph</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">get_inputs_desc</span><span class="p">())</span>
+        <span class="k">with</span> <span class="n">TowerContext</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">is_training</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tower_func</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="o">.</span><span class="n">get_input_tensors</span><span class="p">())</span>
+
+        <span class="n">opt</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_optimizer</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;optimize&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d_min</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">d_loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">d_vars</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;d_min&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">g_min</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+                <span class="n">model</span><span class="o">.</span><span class="n">g_loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">g_vars</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;g_min&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SeparateGANTrainer.run_step"><a class="viewcode-back" href="../../api/tgan.trainer.html#tgan.trainer.SeparateGANTrainer.run_step">[docs]</a>    <span class="k">def</span> <span class="nf">run_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Define the training iteration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_d_period</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hooked_sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d_min</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_step</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_g_period</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hooked_sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">g_min</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="MultiGPUGANTrainer"><a class="viewcode-back" href="../../api/tgan.trainer.html#tgan.trainer.MultiGPUGANTrainer">[docs]</a><span class="k">class</span> <span class="nc">MultiGPUGANTrainer</span><span class="p">(</span><span class="n">TowerTrainer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        nr_gpu(int):</span>
+<span class="sd">        input(tensorpack.input_source.QueueInput): Data input.</span>
+<span class="sd">        model(tgan.GAN.GANModelDesc): Model to train.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nr_gpu</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiGPUGANTrainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">nr_gpu</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;nr_gpu must be strictly greater than 1.&#39;</span><span class="p">)</span>
+
+        <span class="n">raw_devices</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/gpu:</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nr_gpu</span><span class="p">)]</span>
+
+        <span class="c1"># Setup input</span>
+        <span class="nb">input</span> <span class="o">=</span> <span class="n">StagingInput</span><span class="p">(</span><span class="nb">input</span><span class="p">)</span>
+        <span class="n">cbs</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">get_inputs_desc</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">register_callback</span><span class="p">(</span><span class="n">cbs</span><span class="p">)</span>
+
+        <span class="c1"># Build the graph with multi-gpu replication</span>
+        <span class="k">def</span> <span class="nf">get_cost</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+            <span class="n">model</span><span class="o">.</span><span class="n">build_graph</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">d_loss</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">g_loss</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tower_func</span> <span class="o">=</span> <span class="n">TowerFuncWrapper</span><span class="p">(</span><span class="n">get_cost</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">get_inputs_desc</span><span class="p">())</span>
+        <span class="n">devices</span> <span class="o">=</span> <span class="p">[</span><span class="n">LeastLoadedDeviceSetter</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">raw_devices</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">raw_devices</span><span class="p">]</span>
+
+        <span class="n">cost_list</span> <span class="o">=</span> <span class="n">DataParallelBuilder</span><span class="o">.</span><span class="n">build_on_towers</span><span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nr_gpu</span><span class="p">)),</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tower_func</span><span class="p">(</span><span class="o">*</span><span class="nb">input</span><span class="o">.</span><span class="n">get_input_tensors</span><span class="p">()),</span>
+            <span class="n">devices</span><span class="p">)</span>
+
+        <span class="c1"># Simply average the cost here. It might be faster to average the gradients</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;optimize&#39;</span><span class="p">):</span>
+            <span class="n">d_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add_n</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cost_list</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">nr_gpu</span><span class="p">)</span>
+            <span class="n">g_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">add_n</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cost_list</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">nr_gpu</span><span class="p">)</span>
+
+            <span class="n">opt</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_optimizer</span><span class="p">()</span>
+            <span class="c1"># run one d_min after one g_min</span>
+            <span class="n">g_min</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">g_loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">g_vars</span><span class="p">,</span>
+                                 <span class="n">colocate_gradients_with_ops</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;g_op&#39;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">control_dependencies</span><span class="p">([</span><span class="n">g_min</span><span class="p">]):</span>
+                <span class="n">d_min</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">d_loss</span><span class="p">,</span> <span class="n">var_list</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">d_vars</span><span class="p">,</span>
+                                     <span class="n">colocate_gradients_with_ops</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;d_op&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Define the training iteration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_op</span> <span class="o">=</span> <span class="n">d_min</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

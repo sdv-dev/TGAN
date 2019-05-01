@@ -1,0 +1,7 @@
+tgan.cli module
+===============
+
+.. automodule:: tgan.cli
+    :members:
+    :undoc-members:
+    :show-inheritance:

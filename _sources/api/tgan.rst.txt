@@ -1,0 +1,25 @@
+tgan package
+============
+
+.. automodule:: tgan
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    tgan.research
+
+Submodules
+----------
+
+.. toctree::
+
+   tgan.cli
+   tgan.data
+   tgan.model
+   tgan.trainer
+

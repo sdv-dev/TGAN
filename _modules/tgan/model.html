@@ -1,0 +1,1087 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tgan.model &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="../../_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/tgan.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/tgan.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.data.html">tgan.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.model.html">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>tgan.model</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tgan.model</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Module with the model for TGAN.</span>
+
+<span class="sd">This module contains two classes:</span>
+
+<span class="sd">- :attr:`GraphBuilder`: That defines the graph and implements a Tensorpack compatible API.</span>
+<span class="sd">- :attr:`TGANModel`: The public API for the model, that offers a simplified interface for the</span>
+<span class="sd">  underlying operations with GraphBuilder and trainers in order to fit and sample data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">tarfile</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">BatchData</span><span class="p">,</span> <span class="n">BatchNorm</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">FullyConnected</span><span class="p">,</span> <span class="n">InputDesc</span><span class="p">,</span> <span class="n">ModelDescBase</span><span class="p">,</span> <span class="n">ModelSaver</span><span class="p">,</span>
+    <span class="n">PredictConfig</span><span class="p">,</span> <span class="n">QueueInput</span><span class="p">,</span> <span class="n">SaverRestore</span><span class="p">,</span> <span class="n">SimpleDatasetPredictor</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">tensorpack.tfutils.scope_utils</span> <span class="k">import</span> <span class="n">auto_reuse_variable_scope</span>
+<span class="kn">from</span> <span class="nn">tensorpack.tfutils.summary</span> <span class="k">import</span> <span class="n">add_moving_summary</span>
+<span class="kn">from</span> <span class="nn">tensorpack.utils.argtools</span> <span class="k">import</span> <span class="n">memoized</span>
+
+<span class="kn">from</span> <span class="nn">tgan.data</span> <span class="k">import</span> <span class="n">Preprocessor</span><span class="p">,</span> <span class="n">RandomZData</span><span class="p">,</span> <span class="n">TGANDataFlow</span>
+<span class="kn">from</span> <span class="nn">tgan.trainer</span> <span class="k">import</span> <span class="n">GANTrainer</span>
+
+<span class="n">TUNABLE_VARIABLES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+    <span class="s1">&#39;z_dim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">],</span>
+    <span class="s1">&#39;num_gen_rnn&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+    <span class="s1">&#39;num_gen_feature&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">600</span><span class="p">],</span>
+    <span class="s1">&#39;num_dis_layers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s1">&#39;num_dis_hidden&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">],</span>
+    <span class="s1">&#39;learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0002</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span>
+    <span class="s1">&#39;noise&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="GraphBuilder"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder">[docs]</a><span class="k">class</span> <span class="nc">GraphBuilder</span><span class="p">(</span><span class="n">ModelDescBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main model for TGAN.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Attributes:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">metadata</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">z_dim</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">noise</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">l2norm</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
+        <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
+        <span class="n">num_gen_rnn</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">num_gen_feature</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">num_dis_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">num_dis_hidden</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;AdamOptimizer&#39;</span><span class="p">,</span>
+        <span class="n">training</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the object, set arguments as attributes.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span> <span class="o">=</span> <span class="n">z_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l2norm</span> <span class="o">=</span> <span class="n">l2norm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_rnn</span> <span class="o">=</span> <span class="n">num_gen_rnn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span> <span class="o">=</span> <span class="n">num_gen_feature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_dis_layers</span> <span class="o">=</span> <span class="n">num_dis_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_dis_hidden</span> <span class="o">=</span> <span class="n">num_dis_hidden</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="n">training</span>
+
+<div class="viewcode-block" id="GraphBuilder.collect_variables"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.collect_variables">[docs]</a>    <span class="k">def</span> <span class="nf">collect_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g_scope</span><span class="o">=</span><span class="s1">&#39;gen&#39;</span><span class="p">,</span> <span class="n">d_scope</span><span class="o">=</span><span class="s1">&#39;discrim&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assign generator and discriminator variables from their scopes.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            g_scope(str): Scope for the generator.</span>
+<span class="sd">            d_scope(str): Scope for the discriminator.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any of the assignments fails or the collections are empty.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g_vars</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GraphKeys</span><span class="o">.</span><span class="n">TRAINABLE_VARIABLES</span><span class="p">,</span> <span class="n">g_scope</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">d_vars</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GraphKeys</span><span class="o">.</span><span class="n">TRAINABLE_VARIABLES</span><span class="p">,</span> <span class="n">d_scope</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">g_vars</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_vars</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;There are no variables defined in some of the given scopes&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.build_losses"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.build_losses">[docs]</a>    <span class="k">def</span> <span class="nf">build_losses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logits_real</span><span class="p">,</span> <span class="n">logits_fake</span><span class="p">,</span> <span class="n">extra_g</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;D and G play two-player minimax game with value function :math:`V(G,D)`.</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            min_G max_D V(D, G) = IE_{x \sim p_{data}} [log D(x)] + IE_{z \sim p_{fake}}</span>
+<span class="sd">                [log (1 - D(G(z)))]</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            logits_real (tensorflow.Tensor): discrim logits from real samples.</span>
+<span class="sd">            logits_fake (tensorflow.Tensor): discrim logits from fake samples from generator.</span>
+<span class="sd">            extra_g(float):</span>
+<span class="sd">            l2_norm(float): scale to apply L2 regularization.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s2">&quot;GAN_loss&quot;</span><span class="p">):</span>
+            <span class="n">score_real</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">logits_real</span><span class="p">)</span>
+            <span class="n">score_fake</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">logits_fake</span><span class="p">)</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="s1">&#39;score-real&#39;</span><span class="p">,</span> <span class="n">score_real</span><span class="p">)</span>
+            <span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="s1">&#39;score-fake&#39;</span><span class="p">,</span> <span class="n">score_fake</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s2">&quot;discrim&quot;</span><span class="p">):</span>
+                <span class="n">d_loss_pos</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span>
+                    <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid_cross_entropy_with_logits</span><span class="p">(</span>
+                        <span class="n">logits</span><span class="o">=</span><span class="n">logits_real</span><span class="p">,</span>
+                        <span class="n">labels</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">logits_real</span><span class="p">))</span> <span class="o">*</span> <span class="mf">0.7</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span>
+                            <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">logits_real</span><span class="p">),</span>
+                            <span class="n">maxval</span><span class="o">=</span><span class="mf">0.3</span>
+                    <span class="p">),</span>
+                    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;loss_real&#39;</span>
+                <span class="p">)</span>
+
+                <span class="n">d_loss_neg</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid_cross_entropy_with_logits</span><span class="p">(</span>
+                    <span class="n">logits</span><span class="o">=</span><span class="n">logits_fake</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">logits_fake</span><span class="p">)),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;loss_fake&#39;</span><span class="p">)</span>
+
+                <span class="n">d_pos_acc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span>
+                    <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">score_real</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;accuracy_real&#39;</span><span class="p">)</span>
+
+                <span class="n">d_neg_acc</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span>
+                    <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">score_fake</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;accuracy_fake&#39;</span><span class="p">)</span>
+
+                <span class="n">d_loss</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">d_loss_pos</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">d_loss_neg</span> <span class="o">+</span> \
+                    <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">apply_regularization</span><span class="p">(</span>
+                        <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">l2_regularizer</span><span class="p">(</span><span class="n">l2_norm</span><span class="p">),</span>
+                        <span class="n">tf</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GraphKeys</span><span class="o">.</span><span class="n">TRAINABLE_VARIABLES</span><span class="p">,</span> <span class="s2">&quot;discrim&quot;</span><span class="p">))</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">d_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">d_loss</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;loss&#39;</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s2">&quot;gen&quot;</span><span class="p">):</span>
+                <span class="n">g_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid_cross_entropy_with_logits</span><span class="p">(</span>
+                    <span class="n">logits</span><span class="o">=</span><span class="n">logits_fake</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">logits_fake</span><span class="p">)))</span> <span class="o">+</span> \
+                    <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">apply_regularization</span><span class="p">(</span>
+                        <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">l2_regularizer</span><span class="p">(</span><span class="n">l2_norm</span><span class="p">),</span>
+                        <span class="n">tf</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GraphKeys</span><span class="o">.</span><span class="n">TRAINABLE_VARIABLES</span><span class="p">,</span> <span class="s1">&#39;gen&#39;</span><span class="p">))</span>
+
+                <span class="n">g_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">g_loss</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;loss&#39;</span><span class="p">)</span>
+                <span class="n">extra_g</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">extra_g</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;klloss&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">g_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">g_loss</span> <span class="o">+</span> <span class="n">extra_g</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;final-g-loss&#39;</span><span class="p">)</span>
+
+            <span class="n">add_moving_summary</span><span class="p">(</span>
+                <span class="n">g_loss</span><span class="p">,</span> <span class="n">extra_g</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">g_loss</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d_loss</span><span class="p">,</span> <span class="n">d_pos_acc</span><span class="p">,</span> <span class="n">d_neg_acc</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.get_optimizer"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.get_optimizer">[docs]</a>    <span class="nd">@memoized</span>
+    <span class="k">def</span> <span class="nf">get_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return optimizer of base class.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_optimizer</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.inputs"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.inputs">[docs]</a>    <span class="k">def</span> <span class="nf">inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return metadata about entry data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[tensorpack.InputDesc]</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any of the elements in self.metadata[&#39;details&#39;] has an unsupported</span>
+<span class="sd">                        value in the `type` key.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                <span class="n">gaussian_components</span> <span class="o">=</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
+                <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">InputDesc</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;input</span><span class="si">%02d</span><span class="s1">value&#39;</span> <span class="o">%</span> <span class="n">col_id</span><span class="p">))</span>
+
+                <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">InputDesc</span><span class="p">(</span>
+                        <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span>
+                        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">gaussian_components</span><span class="p">),</span>
+                        <span class="s1">&#39;input</span><span class="si">%02d</span><span class="s1">cluster&#39;</span> <span class="o">%</span> <span class="n">col_id</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                <span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">InputDesc</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;input</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">col_id</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;self.metadata[&#39;details&#39;][</span><span class="si">{}</span><span class="s2">][&#39;type&#39;] must be either `category` or &quot;</span>
+                    <span class="s2">&quot;`values`. Instead it was </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inputs</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.generator"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.generator">[docs]</a>    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build generator graph.</span>
+
+<span class="sd">        We generate a numerical variable in 2 steps. We first generate the value scalar</span>
+<span class="sd">        :math:`v_i`, then generate the cluster vector :math:`u_i`. We generate categorical</span>
+<span class="sd">        feature in 1 step as a probability distribution over all possible labels.</span>
+
+<span class="sd">        The output and hidden state size of LSTM is :math:`n_h`. The input to the LSTM in each</span>
+<span class="sd">        step :math:`t` is the random variable :math:`z`, the previous hidden vector :math:`f_{t−1}`</span>
+<span class="sd">        or an embedding vector :math:`f^{\prime}_{t−1}` depending on the type of previous output,</span>
+<span class="sd">        and the weighted context vector :math:`a_{t−1}`. The random variable :math:`z` has</span>
+<span class="sd">        :math:`n_z` dimensions.</span>
+<span class="sd">        Each dimension is sampled from :math:`\mathcal{N}(0, 1)`. The attention-based context</span>
+<span class="sd">        vector at is a weighted average over all the previous LSTM outputs :math:`h_{1:t}`.</span>
+<span class="sd">        So :math:`a_t` is a :math:`n_h`-dimensional vector.</span>
+<span class="sd">        We learn a attention weight vector :math:`α_t \in \mathbb{R}^t` and compute context as</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            a_t = \sum_{k=1}^{t} \frac{\textrm{exp}  {\alpha}_{t, j}}</span>
+<span class="sd">                {\sum_{j} \textrm{exp}  \alpha_{t,j}} h_k.</span>
+
+<span class="sd">        We set :math: `a_0` = 0. The output of LSTM is :math:`h_t` and we project the output to</span>
+<span class="sd">        a hidden vector :math:`f_t = \textrm{tanh}(W_h h_t)`, where :math:`W_h` is a learned</span>
+<span class="sd">        parameter in the network. The size of :math:`f_t` is :math:`n_f` .</span>
+<span class="sd">        We further convert the hidden vector to an output variable.</span>
+
+<span class="sd">        * If the output is the value part of a continuous variable, we compute the output as</span>
+<span class="sd">          :math:`v_i = \textrm{tanh}(W_t f_t)`. The hidden vector for :math:`t + 1` step is</span>
+<span class="sd">          :math:`f_t`.</span>
+
+<span class="sd">        * If the output is the cluster part of a continuous variable, we compute the output as</span>
+<span class="sd">          :math:`u_i = \textrm{softmax}(W_t f_t)`. The feature vector for :math:`t + 1` step is</span>
+<span class="sd">          :math:`f_t`.</span>
+
+<span class="sd">        * If the output is a discrete variable, we compute the output as</span>
+<span class="sd">          :math:`d_i = \textrm{softmax}(W_t f_t)`. The hidden vector for :math:`t + 1` step is</span>
+<span class="sd">          :math:`f^{\prime}_{t} = E_i [arg_k \hspace{0.25em} \textrm{max} \hspace{0.25em} d_i ]`,</span>
+<span class="sd">          where :math:`E \in R^{|D_i|×n_f}` is an embedding matrix for discrete variable</span>
+<span class="sd">          :math:`D_i`.</span>
+
+<span class="sd">        * :math:`f_0` is a special vector :math:`\texttt{&lt;GO&gt;}` and we learn it during the</span>
+<span class="sd">          training.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            z:</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[tensorflow.Tensor]: Outpu</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any of the elements in self.metadata[&#39;details&#39;] has an unsupported</span>
+<span class="sd">                        value in the `type` key.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;LSTM&#39;</span><span class="p">):</span>
+            <span class="n">cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">rnn_cell</span><span class="o">.</span><span class="n">LSTMCell</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_gen_rnn</span><span class="p">)</span>
+
+            <span class="n">state</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">zero_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+            <span class="n">attention</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_rnn</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">))</span>  <span class="c1"># &lt;GO&gt;</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="nb">input</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">states</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                    <span class="n">output</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">cell</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="nb">input</span><span class="p">,</span> <span class="n">attention</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">state</span><span class="p">)</span>
+                    <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                    <span class="n">gaussian_components</span> <span class="o">=</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
+                    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ptr</span><span class="p">):</span>
+                        <span class="n">h</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC&#39;</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">)</span>
+                        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC2&#39;</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">))</span>
+                        <span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">h</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">attw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;attw&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                        <span class="n">attw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">attw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">attention</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">attw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="n">output</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">cell</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="nb">input</span><span class="p">,</span> <span class="n">attention</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">state</span><span class="p">)</span>
+                    <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ptr</span><span class="p">):</span>
+                        <span class="n">h</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC&#39;</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">)</span>
+                        <span class="n">w</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC2&#39;</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">gaussian_components</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">)</span>
+                        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                        <span class="nb">input</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC3&#39;</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
+                        <span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="nb">input</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">attw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;attw&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                        <span class="n">attw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">attw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">attention</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">attw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">elif</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                    <span class="n">output</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">cell</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="nb">input</span><span class="p">,</span> <span class="n">attention</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">state</span><span class="p">)</span>
+                    <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%02d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ptr</span><span class="p">):</span>
+                        <span class="n">h</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC&#39;</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">)</span>
+                        <span class="n">w</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;FC2&#39;</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">],</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">)</span>
+                        <span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+                        <span class="n">one_hot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+                        <span class="nb">input</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span>
+                            <span class="s1">&#39;FC3&#39;</span><span class="p">,</span> <span class="n">one_hot</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
+                        <span class="nb">input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="nb">input</span><span class="p">,</span> <span class="n">z</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                        <span class="n">attw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;attw&quot;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+                        <span class="n">attw</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">attw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">attention</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">states</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">attw</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;self.metadata[&#39;details&#39;][</span><span class="si">{}</span><span class="s2">][&#39;type&#39;] must be either `category` or &quot;</span>
+                        <span class="s2">&quot;`values`. Instead it was </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                    <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.batch_diversity"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.batch_diversity">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">batch_diversity</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">n_kernel</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">kernel_dim</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return the minibatch discrimination vector.</span>
+
+<span class="sd">        Let :math:`f(x_i) \in \mathbb{R}^A` denote a vector of features for input :math:`x_i`,</span>
+<span class="sd">        produced by some intermediate layer in the discriminator. We then multiply the vector</span>
+<span class="sd">        :math:`f(x_i)` by a tensor :math:`T \in \mathbb{R}^{A×B×C}`, which results in a matrix</span>
+<span class="sd">        :math:`M_i \in \mathbb{R}^{B×C}`. We then compute the :math:`L_1`-distance between the</span>
+<span class="sd">        rows of the resulting matrix :math:`M_i` across samples :math:`i \in {1, 2, ... , n}`</span>
+<span class="sd">        and apply a negative exponential:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            cb(x_i, x_j) = exp(−||M_{i,b} − M_{j,b}||_{L_1} ) \in \mathbb{R}.</span>
+
+<span class="sd">        The output :math:`o(x_i)` for this *minibatch layer* for a sample :math:`x_i` is then</span>
+<span class="sd">        defined as the sum of the cb(xi, xj )’s to all other samples:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            :nowrap:</span>
+
+<span class="sd">            \begin{aligned}</span>
+
+<span class="sd">            &amp;o(x_i)_b = \sum^{n}_{j=1} cb(x_i , x_j) \in \mathbb{R}\\</span>
+<span class="sd">            &amp;o(x_i) = \Big[ o(x_i)_1, o(x_i)_2, . . . , o(x_i)_B \Big] \in \mathbb{R}^B\\</span>
+<span class="sd">            &amp;o(X) ∈ R^{n×B}\\</span>
+
+<span class="sd">            \end{aligned}</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            This is extracted from `Improved techniques for training GANs`_ (Section 3.2) by</span>
+<span class="sd">            Tim Salimans, Ian Goodfellow, Wojciech Zaremba, Vicki Cheung, Alec Radford, and</span>
+<span class="sd">            Xi Chen.</span>
+
+<span class="sd">        .. _Improved techniques for training GANs: https://arxiv.org/pdf/1606.03498.pdf</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            l(tf.Tensor)</span>
+<span class="sd">            n_kernel(int)</span>
+<span class="sd">            kernel_dim(int)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tensorflow.Tensor</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;fc_diversity&#39;</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">n_kernel</span> <span class="o">*</span> <span class="n">kernel_dim</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
+        <span class="n">M</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_kernel</span><span class="p">,</span> <span class="n">kernel_dim</span><span class="p">])</span>
+        <span class="n">M1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_kernel</span><span class="p">,</span> <span class="n">kernel_dim</span><span class="p">])</span>
+        <span class="n">M2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_kernel</span><span class="p">,</span> <span class="n">kernel_dim</span><span class="p">])</span>
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">M1</span> <span class="o">-</span> <span class="n">M2</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.discriminator"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.discriminator">[docs]</a>    <span class="nd">@auto_reuse_variable_scope</span>
+    <span class="k">def</span> <span class="nf">discriminator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vecs</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Build discriminator.</span>
+
+<span class="sd">        We use a :math:`l`-layer fully connected neural network as the discriminator.</span>
+<span class="sd">        We concatenate :math:`v_{1:n_c}`, :math:`u_{1:n_c}` and :math:`d_{1:n_d}` together as the</span>
+<span class="sd">        input. We compute the internal layers as</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            \begin{aligned}</span>
+
+<span class="sd">            f^{(D)}_{1} &amp;= \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{1}(v_{1:n_c} \oplus u_{1:n_c}</span>
+<span class="sd">                \oplus d_{1:n_d})</span>
+
+<span class="sd">            f^{(D)}_{1} &amp;= \textrm{LeakyReLU}(\textrm{BN}(W^{(D)}_{i}(f^{(D)}_{i−1} \oplus</span>
+<span class="sd">                \textrm{diversity}(f^{(D)}_{i−1})))), i = 2:l</span>
+
+<span class="sd">            \end{aligned}</span>
+
+<span class="sd">        where :math:`\oplus` is the concatenation operation. :math:`\textrm{diversity}(·)` is the</span>
+<span class="sd">        mini-batch discrimination vector [42]. Each dimension of the diversity vector is the total</span>
+<span class="sd">        distance between one sample and all other samples in the mini-batch using some learned</span>
+<span class="sd">        distance metric. :math:`\textrm{BN}(·)` is batch normalization, and</span>
+<span class="sd">        :math:`\textrm{LeakyReLU}(·)` is the leaky reflect linear activation function. We further</span>
+<span class="sd">        compute the output of discriminator as :math:`W^{(D)}(f^{(D)}_{l} \oplus \textrm{diversity}</span>
+<span class="sd">        (f^{(D)}_{l}))` which is a scalar.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vecs(list[tensorflow.Tensor]): List of tensors matching the spec of :meth:`inputs`</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tensorpack.FullyConected: a (b, 1) logits</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">vecs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dis_layers</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;dis_fc</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">logits</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span>
+                        <span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">logits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_dis_hidden</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">,</span>
+                        <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal_initializer</span><span class="p">(</span><span class="n">stddev</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">logits</span> <span class="o">=</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;fc&#39;</span><span class="p">,</span> <span class="n">logits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_dis_hidden</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span>
+
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">logits</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_diversity</span><span class="p">(</span><span class="n">logits</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">BatchNorm</span><span class="p">(</span><span class="s1">&#39;bn&#39;</span><span class="p">,</span> <span class="n">logits</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+                <span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">leaky_relu</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">FullyConnected</span><span class="p">(</span><span class="s1">&#39;dis_fc_top&#39;</span><span class="p">,</span> <span class="n">logits</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nl</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.compute_kl"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.compute_kl">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">compute_kl</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">pred</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the Kullback–Leibler divergence, :math:`D_{KL}(\textrm{pred} || \textrm{real})`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            real(tensorflow.Tensor): Real values.</span>
+<span class="sd">            pred(tensorflow.Tensor): Predicted values.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            float: Computed divergence for the given values.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">((</span><span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">pred</span> <span class="o">+</span> <span class="mf">1e-4</span><span class="p">)</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">real</span> <span class="o">+</span> <span class="mf">1e-4</span><span class="p">))</span> <span class="o">*</span> <span class="n">pred</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="GraphBuilder.build_graph"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.GraphBuilder.build_graph">[docs]</a>    <span class="k">def</span> <span class="nf">build_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build the whole graph.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            inputs(list[tensorflow.Tensor]):</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span>
+            <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z_train&#39;</span><span class="p">)</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder_with_default</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;gen&#39;</span><span class="p">):</span>
+            <span class="n">vecs_gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+            <span class="n">vecs_denorm</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">vecs_gen</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+                    <span class="n">vecs_denorm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">elif</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                    <span class="n">vecs_denorm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vecs_gen</span><span class="p">[</span><span class="n">ptr</span><span class="p">])</span>
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">vecs_denorm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vecs_gen</span><span class="p">[</span><span class="n">ptr</span><span class="p">])</span>
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;self.metadata[&#39;details&#39;][</span><span class="si">{}</span><span class="s2">][&#39;type&#39;] must be either `category` or &quot;</span>
+                        <span class="s2">&quot;`values`. Instead it was </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                    <span class="p">)</span>
+
+            <span class="n">tf</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">vecs_denorm</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gen&#39;</span><span class="p">)</span>
+
+        <span class="n">vecs_pos</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                <span class="n">one_hot</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">one_hot</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">])</span>
+                <span class="n">noise_input</span> <span class="o">=</span> <span class="n">one_hot</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+                    <span class="n">noise</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">one_hot</span><span class="p">),</span> <span class="n">minval</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maxval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">)</span>
+                    <span class="n">noise_input</span> <span class="o">=</span> <span class="p">(</span><span class="n">one_hot</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span>
+                        <span class="n">one_hot</span> <span class="o">+</span> <span class="n">noise</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">vecs_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">noise_input</span><span class="p">)</span>
+                <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">elif</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                <span class="n">vecs_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="n">ptr</span><span class="p">])</span>
+                <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">vecs_pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="n">ptr</span><span class="p">])</span>
+                <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;self.metadata[&#39;details&#39;][</span><span class="si">{}</span><span class="s2">][&#39;type&#39;] must be either `category` or &quot;</span>
+                    <span class="s2">&quot;`values`. Instead it was </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="p">)</span>
+
+        <span class="n">KL</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                    <span class="n">dist</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">vecs_gen</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+
+                    <span class="n">real</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">vecs_pos</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">real</span> <span class="o">=</span> <span class="n">real</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+                    <span class="n">KL</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_kl</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">elif</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">dist</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">vecs_gen</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">dist</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+                    <span class="n">real</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">vecs_pos</span><span class="p">[</span><span class="n">ptr</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">real</span> <span class="o">=</span> <span class="n">real</span> <span class="o">/</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+                    <span class="n">KL</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_kl</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dist</span><span class="p">)</span>
+
+                    <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;self.metadata[&#39;details&#39;][</span><span class="si">{}</span><span class="s2">][&#39;type&#39;] must be either `category` or &quot;</span>
+                        <span class="s2">&quot;`values`. Instead it was </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                    <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;discrim&#39;</span><span class="p">):</span>
+            <span class="n">discrim_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discriminator</span><span class="p">(</span><span class="n">vecs_pos</span><span class="p">)</span>
+            <span class="n">discrim_neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">discriminator</span><span class="p">(</span><span class="n">vecs_gen</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">build_losses</span><span class="p">(</span><span class="n">discrim_pos</span><span class="p">,</span> <span class="n">discrim_neg</span><span class="p">,</span> <span class="n">extra_g</span><span class="o">=</span><span class="n">KL</span><span class="p">,</span> <span class="n">l2_norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">l2norm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">collect_variables</span><span class="p">()</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_optimizer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;AdamOptimizer&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">==</span> <span class="s1">&#39;AdadeltaOptimizer&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdadeltaOptimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">GradientDescentOptimizer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TGANModel"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel">[docs]</a><span class="k">class</span> <span class="nc">TGANModel</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Main model from TGAN.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        continuous_columns (list[int]): 0-index list of column indices to be considered continuous.</span>
+<span class="sd">        output (str, optional): Path to store the model and its artifacts. Defaults to</span>
+<span class="sd">            :attr:`output`.</span>
+<span class="sd">        gpu (list[str], optional):Comma separated list of GPU(s) to use. Defaults to :attr:`None`.</span>
+<span class="sd">        max_epoch (int, optional): Number of epochs to use during training. Defaults to :attr:`5`.</span>
+<span class="sd">        steps_per_epoch (int, optional): Number of steps to run on each epoch. Defaults to</span>
+<span class="sd">            :attr:`10000`.</span>
+<span class="sd">        save_checkpoints(bool, optional): Whether or not to store checkpoints of the model after</span>
+<span class="sd">            each training epoch. Defaults to :attr:`True`</span>
+<span class="sd">        restore_session(bool, optional): Whether or not continue training from the last checkpoint.</span>
+<span class="sd">            Defaults to :attr:`True`.</span>
+<span class="sd">        batch_size (int, optional): Size of the batch to feed the model at each step. Defaults to</span>
+<span class="sd">            :attr:`200`.</span>
+<span class="sd">        z_dim (int, optional): Number of dimensions in the noise input for the generator.</span>
+<span class="sd">            Defaults to :attr:`100`.</span>
+<span class="sd">        noise (float, optional): Upper bound to the gaussian noise added to categorical columns.</span>
+<span class="sd">            Defaults to :attr:`0.2`.</span>
+<span class="sd">        l2norm (float, optional):</span>
+<span class="sd">            L2 reguralization coefficient when computing losses. Defaults to :attr:`0.00001`.</span>
+<span class="sd">        learning_rate (float, optional): Learning rate for the optimizer. Defaults to</span>
+<span class="sd">            :attr:`0.001`.</span>
+<span class="sd">        num_gen_rnn (int, optional): Defaults to :attr:`400`.</span>
+<span class="sd">        num_gen_feature (int, optional): Number of features of in the generator. Defaults to</span>
+<span class="sd">            :attr:`100`</span>
+<span class="sd">        num_dis_layers (int, optional): Defaults to :attr:`2`.</span>
+<span class="sd">        num_dis_hidden (int, optional): Defaults to :attr:`200`.</span>
+<span class="sd">        optimizer (str, optional): Name of the optimizer to use during `fit`,possible values are:</span>
+<span class="sd">            [`GradientDescentOptimizer`, `AdamOptimizer`, `AdadeltaOptimizer`]. Defaults to</span>
+<span class="sd">            :attr:`AdamOptimizer`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">continuous_columns</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+        <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">restore_session</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="n">l2norm</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">num_gen_rnn</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_gen_feature</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">num_dis_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_dis_hidden</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;AdamOptimizer&#39;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
+        <span class="c1"># Output</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continuous_columns</span> <span class="o">=</span> <span class="n">continuous_columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="s1">&#39;model&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">output</span>
+
+        <span class="c1"># Training params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_epoch</span> <span class="o">=</span> <span class="n">max_epoch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">steps_per_epoch</span> <span class="o">=</span> <span class="n">steps_per_epoch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoints</span> <span class="o">=</span> <span class="n">save_checkpoints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore_session</span> <span class="o">=</span> <span class="n">restore_session</span>
+
+        <span class="c1"># Model params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span> <span class="o">=</span> <span class="n">z_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">noise</span> <span class="o">=</span> <span class="n">noise</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">l2norm</span> <span class="o">=</span> <span class="n">l2norm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span> <span class="o">=</span> <span class="n">learning_rate</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_rnn</span> <span class="o">=</span> <span class="n">num_gen_rnn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span> <span class="o">=</span> <span class="n">num_gen_feature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_dis_layers</span> <span class="o">=</span> <span class="n">num_dis_layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_dis_hidden</span> <span class="o">=</span> <span class="n">num_dis_hidden</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimizer</span>
+
+        <span class="k">if</span> <span class="n">gpu</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gpu</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gpu</span> <span class="o">=</span> <span class="n">gpu</span>
+
+<div class="viewcode-block" id="TGANModel.get_model"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.get_model">[docs]</a>    <span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a new instance of the model.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">GraphBuilder</span><span class="p">(</span>
+            <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">,</span>
+            <span class="n">batch_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span>
+            <span class="n">z_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span><span class="p">,</span>
+            <span class="n">noise</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">noise</span><span class="p">,</span>
+            <span class="n">l2norm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">l2norm</span><span class="p">,</span>
+            <span class="n">learning_rate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">,</span>
+            <span class="n">num_gen_rnn</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_gen_rnn</span><span class="p">,</span>
+            <span class="n">num_gen_feature</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_gen_feature</span><span class="p">,</span>
+            <span class="n">num_dis_layers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dis_layers</span><span class="p">,</span>
+            <span class="n">num_dis_hidden</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_dis_hidden</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="p">,</span>
+            <span class="n">training</span><span class="o">=</span><span class="n">training</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TGANModel.prepare_sampling"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.prepare_sampling">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_sampling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prepare model for generate samples.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">training</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">predict_config</span> <span class="o">=</span> <span class="n">PredictConfig</span><span class="p">(</span>
+            <span class="n">session_init</span><span class="o">=</span><span class="n">SaverRestore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restore_path</span><span class="p">),</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">],</span>
+            <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;gen/gen&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">],</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_dataset_predictor</span> <span class="o">=</span> <span class="n">SimpleDatasetPredictor</span><span class="p">(</span>
+            <span class="n">predict_config</span><span class="p">,</span>
+            <span class="n">RandomZData</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">z_dim</span><span class="p">))</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TGANModel.fit"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fit the model to the given data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(pandas.DataFrame): dataset to fit the model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preprocessor</span> <span class="o">=</span> <span class="n">Preprocessor</span><span class="p">(</span><span class="n">continuous_columns</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">continuous_columns</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessor</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessor</span><span class="o">.</span><span class="n">metadata</span>
+        <span class="n">dataflow</span> <span class="o">=</span> <span class="n">TGANDataFlow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="n">batch_data</span> <span class="o">=</span> <span class="n">BatchData</span><span class="p">(</span><span class="n">dataflow</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+        <span class="n">input_queue</span> <span class="o">=</span> <span class="n">QueueInput</span><span class="p">(</span><span class="n">batch_data</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">training</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">trainer</span> <span class="o">=</span> <span class="n">GANTrainer</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">input_queue</span><span class="o">=</span><span class="n">input_queue</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">restore_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="p">,</span> <span class="s1">&#39;checkpoint&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restore_path</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_session</span><span class="p">:</span>
+            <span class="n">session_init</span> <span class="o">=</span> <span class="n">SaverRestore</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restore_path</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_dir</span><span class="p">,</span> <span class="s1">&#39;stats.json&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">starting_epoch</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;epoch_num&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">session_init</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">starting_epoch</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">restore_session</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">set_logger_dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_dir</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">callbacks</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_checkpoints</span><span class="p">:</span>
+            <span class="n">callbacks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ModelSaver</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_dir</span><span class="p">))</span>
+
+        <span class="n">trainer</span><span class="o">.</span><span class="n">train_with_defaults</span><span class="p">(</span>
+            <span class="n">callbacks</span><span class="o">=</span><span class="n">callbacks</span><span class="p">,</span>
+            <span class="n">steps_per_epoch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">steps_per_epoch</span><span class="p">,</span>
+            <span class="n">max_epoch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_epoch</span><span class="p">,</span>
+            <span class="n">session_init</span><span class="o">=</span><span class="n">session_init</span><span class="p">,</span>
+            <span class="n">starting_epoch</span><span class="o">=</span><span class="n">starting_epoch</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prepare_sampling</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TGANModel.sample"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate samples from model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_samples(int)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">max_iters</span> <span class="o">=</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span><span class="p">)</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simple_dataset_predictor</span><span class="o">.</span><span class="n">get_result</span><span class="p">()):</span>
+            <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">max_iters</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="n">results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ptr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                <span class="n">features</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">col_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="p">[:,</span> <span class="n">ptr</span><span class="p">:</span><span class="n">ptr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">elif</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                <span class="n">gaussian_components</span> <span class="o">=</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">results</span><span class="p">[:,</span> <span class="n">ptr</span><span class="p">:</span><span class="n">ptr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">ptr</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">pro</span> <span class="o">=</span> <span class="n">results</span><span class="p">[:,</span> <span class="n">ptr</span><span class="p">:</span><span class="n">ptr</span> <span class="o">+</span> <span class="n">gaussian_components</span><span class="p">]</span>
+                <span class="n">ptr</span> <span class="o">+=</span> <span class="n">gaussian_components</span>
+                <span class="n">features</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">col_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">val</span><span class="p">,</span> <span class="n">pro</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;self.metadata[&#39;details&#39;][</span><span class="si">{}</span><span class="s2">][&#39;type&#39;] must be either `category` or &quot;</span>
+                    <span class="s2">&quot;`values`. Instead it was </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">col_id</span><span class="p">,</span> <span class="n">col_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessor</span><span class="o">.</span><span class="n">reverse_transform</span><span class="p">(</span><span class="n">features</span><span class="p">)[:</span><span class="n">num_samples</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TGANModel.tar_folder"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.tar_folder">[docs]</a>    <span class="k">def</span> <span class="nf">tar_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tar_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate a tar of :self.output:.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">tar_name</span><span class="p">,</span> <span class="s1">&#39;w:gz&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar_handle</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">file_</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                    <span class="n">tar_handle</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">file_</span><span class="p">))</span>
+
+            <span class="n">tar_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TGANModel.load"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.load">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a pretrained model from a given path.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tarfile</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r:gz&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">tar_handle</span><span class="p">:</span>
+            <span class="n">destination_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">tar_handle</span><span class="o">.</span><span class="n">getmembers</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">tar_handle</span><span class="o">.</span><span class="n">extractall</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/TGANModel&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">destination_dir</span><span class="p">),</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">instance</span><span class="o">.</span><span class="n">prepare_sampling</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">instance</span></div>
+
+<div class="viewcode-block" id="TGANModel.save"><a class="viewcode-back" href="../../api/tgan.model.html#tgan.model.TGANModel.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the fitted model in the given path.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;The indicated path already exists. Use `force=True` to overwrite.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+        <span class="n">dataset_predictor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simple_dataset_predictor</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_dataset_predictor</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/TGANModel&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simple_dataset_predictor</span> <span class="o">=</span> <span class="n">dataset_predictor</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tar_folder</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Model saved successfully.&#39;</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

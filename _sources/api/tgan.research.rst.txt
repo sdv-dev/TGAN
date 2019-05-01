@@ -1,0 +1,16 @@
+tgan.research package
+=====================
+
+.. automodule:: tgan.research
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   tgan.research.evaluation
+   tgan.research.experiments
+

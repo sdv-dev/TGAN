@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tgan.data module &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="tgan.model module" href="tgan.model.html" />
+    <link rel="prev" title="tgan.cli module" href="tgan.cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="../_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="tgan.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="tgan.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">tgan.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tgan.model.html">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="tgan.html">tgan package</a> &raquo;</li>
+        
+      <li>tgan.data module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/DAI-Lab/TGAN/blob/master/docs/api/tgan.data.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-tgan.data">
+<span id="tgan-data-module"></span><h1>tgan.data module<a class="headerlink" href="#module-tgan.data" title="Permalink to this headline">¶</a></h1>
+<p>Data related functionalities.</p>
+<p>This modules contains the tools to preprare the data, from the raw csv files, to the DataFlow
+objects will be used to fit our models.</p>
+<dl class="class">
+<dt id="tgan.data.MultiModalNumberTransformer">
+<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">MultiModalNumberTransformer</code><span class="sig-paren">(</span><em>num_modes=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Reversible transform for multimodal data.</p>
+<p>To effectively sample values from a multimodal distribution, we cluster values of a
+numerical variable using a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html">skelarn.mixture.GaussianMixture</a> model (GMM).</p>
+<ul class="simple">
+<li><p>We train a GMM with <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span></code> components for each numerical variable <span class="math notranslate nohighlight">\(C_i\)</span>.
+GMM models a distribution with a weighted sum of <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span></code> Gaussian distributions.
+The means and standard deviations of the <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span></code> Gaussian distributions are
+<span class="math notranslate nohighlight">\({\eta}^{(1)}_{i}, ..., {\eta}^{(n)}_{i}\)</span> and
+<span class="math notranslate nohighlight">\({\sigma}^{(1)}_{i}, ...,{\sigma}^{(n)}_{i}\)</span>.</p></li>
+<li><p>We compute the probability of <span class="math notranslate nohighlight">\(c_{i,j}\)</span> coming from each of the <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span></code> Gaussian
+distributions as a vector <span class="math notranslate nohighlight">\({u}^{(1)}_{i,j}, ..., {u}^{(n)}_{i,j}\)</span>. u_{i,j} is a
+normalized probability distribution over <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span></code> Gaussian distributions.</p></li>
+<li><p>We normalize <span class="math notranslate nohighlight">\(c_{i,j}\)</span> as <span class="math notranslate nohighlight">\(v_{i,j} = (c_{i,j}−{\eta}^{(k)}_{i})/2{\sigma}^
+{(k)}_{i}\)</span>, where <span class="math notranslate nohighlight">\(k = arg max_k {u}^{(k)}_{i,j}\)</span>. We then clip <span class="math notranslate nohighlight">\(v_{i,j}\)</span> to
+[−0.99, 0.99].</p></li>
+</ul>
+<p>Then we use <span class="math notranslate nohighlight">\(u_i\)</span> and <span class="math notranslate nohighlight">\(v_i\)</span> to represent <span class="math notranslate nohighlight">\(c_i\)</span>. For simplicity,
+we cluster all the numerical features, i.e. both uni-modal and multi-modal features are
+clustered to <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span> <span class="pre">=</span> <span class="pre">5</span></code> Gaussian distributions.</p>
+<p>The simplification is fair because GMM automatically weighs <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span></code> components.
+For example, if a variable has only one mode and fits some Gaussian distribution, then GMM
+will assign a very low probability to <code class="xref py py-attr docutils literal notranslate"><span class="pre">n</span> <span class="pre">−</span> <span class="pre">1</span></code> components and only 1 remaining
+component actually works, which is equivalent to not clustering this feature.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_modes</strong> (<em>int</em>) – Number of modes on given data.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="tgan.data.MultiModalNumberTransformer.num_modes">
+<code class="descname">num_modes</code><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.num_modes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of components in the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html">skelarn.mixture.GaussianMixture</a> model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="tgan.data.MultiModalNumberTransformer.inverse_transform">
+<em class="property">static </em><code class="descname">inverse_transform</code><span class="sig-paren">(</span><em>data</em>, <em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer.inverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverse the clustering of values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.ndarray</em>) – Transformed data to restore.</p></li>
+<li><p><strong>info</strong> (<em>dict</em>) – Metadata.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Values in the original space.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.MultiModalNumberTransformer.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>data</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cluster values using a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html">skelarn.mixture.GaussianMixture</a> model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>numpy.ndarray</em>) – Values to cluster in array of shape (n,1).</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple containg the features,
+probabilities, averages and stds of the given data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple[numpy.ndarray, numpy.ndarray, list, list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tgan.data.Preprocessor">
+<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">Preprocessor</code><span class="sig-paren">(</span><em>continuous_columns=None</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Transform back and forth human-readable data into TGAN numerical features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>continous_columns</strong> (<em>list</em>) – List of columns to be considered continuous</p></li>
+<li><p><strong>metadata</strong> (<em>dict</em>) – Metadata to initialize the object.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="tgan.data.Preprocessor.continous_columns">
+<code class="descname">continous_columns</code><a class="headerlink" href="#tgan.data.Preprocessor.continous_columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as constructor argument.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.Preprocessor.metadata">
+<code class="descname">metadata</code><a class="headerlink" href="#tgan.data.Preprocessor.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Information about the transformations applied to the data and its format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.Preprocessor.continous_transformer">
+<code class="descname">continous_transformer</code><a class="headerlink" href="#tgan.data.Preprocessor.continous_transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformer for columns in <code class="xref py py-attr docutils literal notranslate"><span class="pre">continuous_columns</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tgan.data.MultiModalNumberTransformer" title="tgan.data.MultiModalNumberTransformer">MultiModalNumberTransformer</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.Preprocessor.categorical_transformer">
+<code class="descname">categorical_transformer</code><a class="headerlink" href="#tgan.data.Preprocessor.categorical_transformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformer for categorical columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>CategoricalTransformer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.Preprocessor.columns">
+<code class="descname">columns</code><a class="headerlink" href="#tgan.data.Preprocessor.columns" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of columns labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.Preprocessor.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the internal state of the object using <code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>pandas.DataFrame</em>) – Data to fit the object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.Preprocessor.fit_transform">
+<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>data</em>, <em>fitting=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.fit_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform human-readable data into TGAN numerical features.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – Data to transform.</p></li>
+<li><p><strong>fitting</strong> (<em>bool</em>) – Whether or not to update self.metadata.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Model features</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.Preprocessor.reverse_transform">
+<code class="descname">reverse_transform</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.reverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.reverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform TGAN numerical features back into human-readable data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.DataFrame</em>) – Data to transform.</p></li>
+<li><p><strong>fitting</strong> (<em>bool</em>) – Whether or not to update self.metadata.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Model features</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.Preprocessor.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the given dataframe without generating new metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>pandas.DataFrame</em>) – Data to fit the object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tgan.data.RandomZData">
+<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">RandomZData</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#RandomZData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.RandomZData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.dataflow.base.DataFlow</span></code></p>
+<p>Random dataflow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>shape</strong> (<em>tuple</em>) – Shape of the array to return on <a class="reference internal" href="#tgan.data.RandomZData.get_data" title="tgan.data.RandomZData.get_data"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_data()</span></code></a></p>
+</dd>
+</dl>
+<dl class="method">
+<dt id="tgan.data.RandomZData.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#RandomZData.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.RandomZData.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield random normal vectors of shape <code class="xref py py-attr docutils literal notranslate"><span class="pre">shape</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="tgan.data.TGANDataFlow">
+<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">TGANDataFlow</code><span class="sig-paren">(</span><em>data</em>, <em>metadata</em>, <em>shuffle=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.dataflow.base.RNGDataFlow</span></code></p>
+<p>Subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.RNGDataFlow</span></code> prepared to work with <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p>
+<dl class="attribute">
+<dt id="tgan.data.TGANDataFlow.shuffle">
+<code class="descname">shuffle</code><a class="headerlink" href="#tgan.data.TGANDataFlow.shuffle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wheter or not to shuffle the data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.TGANDataFlow.metadata">
+<code class="descname">metadata</code><a class="headerlink" href="#tgan.data.TGANDataFlow.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metadata for the given <a class="reference internal" href="#tgan.data.TGANDataFlow.data" title="tgan.data.TGANDataFlow.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.TGANDataFlow.num_features">
+<code class="descname">num_features</code><a class="headerlink" href="#tgan.data.TGANDataFlow.num_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of features in given data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.TGANDataFlow.data">
+<code class="descname">data</code><a class="headerlink" href="#tgan.data.TGANDataFlow.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepared data from <code class="xref py py-attr docutils literal notranslate"><span class="pre">filename</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="tgan.data.TGANDataFlow.distribution">
+<code class="descname">distribution</code><a class="headerlink" href="#tgan.data.TGANDataFlow.distribution" title="Permalink to this definition">¶</a></dt>
+<dd><p>DepecrationWarning?</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.TGANDataFlow.get_data">
+<code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow.get_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Yield the rows from <a class="reference internal" href="#tgan.data.TGANDataFlow.data" title="tgan.data.TGANDataFlow.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields</dt>
+<dd class="field-odd"><p><em>tuple</em> – Row of data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="tgan.data.TGANDataFlow.size">
+<code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of rows in data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of rows in <a class="reference internal" href="#tgan.data.TGANDataFlow.data" title="tgan.data.TGANDataFlow.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="tgan.data.check_inputs">
+<code class="descclassname">tgan.data.</code><code class="descname">check_inputs</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.check_inputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate inputs for functions whose first argument is a numpy.ndarray with shape (n,1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function</strong> (<em>callable</em>) – Method to validate.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Will check the inputs before calling <code class="xref py py-attr docutils literal notranslate"><span class="pre">function</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>callable</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If first argument is not a valid <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.array</span></code> of shape (n, 1).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tgan.data.check_metadata">
+<code class="descclassname">tgan.data.</code><code class="descname">check_metadata</code><span class="sig-paren">(</span><em>metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#check_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.check_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check that the given metadata has correct types for all its members.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>dict</em>) – Description of the inputs.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – If any of the details is not valid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="tgan.data.download_file">
+<code class="descclassname">tgan.data.</code><code class="descname">download_file</code><span class="sig-paren">(</span><em>url</em>, <em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#download_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.download_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download a file from url and save it as filename.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="tgan.data.load_demo_data">
+<code class="descclassname">tgan.data.</code><code class="descname">load_demo_data</code><span class="sig-paren">(</span><em>name</em>, <em>header=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#load_demo_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.load_demo_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch, load and prepare a dataset.</p>
+<p>If name is one of the demo datasets</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name or path of the dataset.</p></li>
+<li><p><strong>header</strong><strong>(</strong><strong>)</strong> – Header parameter when executing <code class="xref py py-attr docutils literal notranslate"><span class="pre">pandas.read_csv</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tgan.model.html" class="btn btn-neutral float-right" title="tgan.model module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="tgan.cli.html" class="btn btn-neutral float-left" title="tgan.cli module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

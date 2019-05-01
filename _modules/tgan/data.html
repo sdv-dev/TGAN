@@ -1,0 +1,728 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tgan.data &mdash; TGAN 0.1.0 documentation</title>
+  
+
+  
+  
+    <link rel="shortcut icon" href="../../_static/dai-logo-white.ico"/>
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> TGAN
+          
+
+          
+            
+            <img src="../../_static/dai-logo-white-200.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#requirements">Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#python">Python</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#data-format">Data Format</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#input-format">Input Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#output-format">Output Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#demo-datasets">Demo Datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#census-dataset">Census dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#cover-type">Cover type</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#quickstart">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#load-the-data">1. Load the data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#create-a-tgan-instance">2. Create a TGAN instance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#fit-the-model">3. Fit the model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#sample-new-data">4. Sample new data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#save-and-load-a-model">5. Save and Load a model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#loading-custom-datasets">Loading custom datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#model-parameters">Model Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#model-general-behavior">Model general behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#neural-network-definition-and-fitting">Neural network definition and fitting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#command-line-interface">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../readme.html#random-hyperparameter-search">Random hyperparameter search</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#input">Input</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#execution">Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../readme.html#output">Output</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#research">Research</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../readme.html#citation">Citation</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Resources</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/tgan.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/tgan.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.research.html">tgan.research package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../api/tgan.research.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/tgan.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.cli.html">tgan.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.data.html">tgan.data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.model.html">tgan.model module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/tgan.trainer.html">tgan.trainer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#types-of-contributions">Types of Contributions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#report-bugs">Report Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#fix-bugs">Fix Bugs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#implement-features">Implement Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#write-documentation">Write Documentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../contributing.html#submit-feedback">Submit Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#unit-testing-guidelines">Unit Testing Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#tips">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../contributing.html#release-workflow">Release Workflow</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../history.html">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../history.html#id1">0.1.0</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">TGAN</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>tgan.data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tgan.data</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Data related functionalities.</span>
+
+<span class="sd">This modules contains the tools to preprare the data, from the raw csv files, to the DataFlow</span>
+<span class="sd">objects will be used to fit our models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">import</span> <span class="nn">certifi</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">urllib3</span>
+<span class="kn">from</span> <span class="nn">sklearn.mixture</span> <span class="k">import</span> <span class="n">GaussianMixture</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="k">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="k">import</span> <span class="n">DataFlow</span><span class="p">,</span> <span class="n">RNGDataFlow</span>
+
+<span class="n">DEMO_DATASETS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;census&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s1">&#39;http://hdi-project-tgan.s3.amazonaws.com/census-train.csv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;data/census.csv&#39;</span><span class="p">,</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">38</span><span class="p">]</span>
+    <span class="p">),</span>
+    <span class="s1">&#39;covertype&#39;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s1">&#39;http://hdi-project-tgan.s3.amazonaws.com/covertype-train.csv&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;data/covertype.csv&#39;</span><span class="p">,</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="check_metadata"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.check_metadata">[docs]</a><span class="k">def</span> <span class="nf">check_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check that the given metadata has correct types for all its members.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        metadata(dict): Description of the inputs.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If any of the details is not valid.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The given metadata contains unsupported types.&#39;</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]]),</span> <span class="n">message</span></div>
+
+
+<div class="viewcode-block" id="check_inputs"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.check_inputs">[docs]</a><span class="k">def</span> <span class="nf">check_inputs</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validate inputs for functions whose first argument is a numpy.ndarray with shape (n,1).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        function(callable): Method to validate.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        callable: Will check the inputs before calling :attr:`function`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If first argument is not a valid :class:`numpy.array` of shape (n, 1).</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">decorated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The argument `data` must be a numpy.ndarray with shape (n, 1).&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">decorated</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">function</span><span class="o">.</span><span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">decorated</span></div>
+
+
+<div class="viewcode-block" id="TGANDataFlow"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.TGANDataFlow">[docs]</a><span class="k">class</span> <span class="nc">TGANDataFlow</span><span class="p">(</span><span class="n">RNGDataFlow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Subclass of :class:`tensorpack.RNGDataFlow` prepared to work with :class:`numpy.ndarray`.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        shuffle(bool): Wheter or not to shuffle the data.</span>
+<span class="sd">        metadata(dict): Metadata for the given :attr:`data`.</span>
+<span class="sd">        num_features(int): Number of features in given data.</span>
+<span class="sd">        data(list): Prepared data from :attr:`filename`.</span>
+<span class="sd">        distribution(list): DepecrationWarning?</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">metadata</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filename(str): Path to the json file containing the metadata.</span>
+<span class="sd">            shuffle(bool): Wheter or not to shuffle the data.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If any column_info[&#39;type&#39;] is not supported</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_state</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;num_features&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distribution</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">column_id</span><span class="p">,</span> <span class="n">column_info</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                <span class="n">col_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">column_id</span><span class="p">]</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">col_data</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">cluster</span> <span class="o">=</span> <span class="n">col_data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                <span class="n">col_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">column_id</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">col_data</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;column_info[&#39;type&#39;] must be either &#39;category&#39; or &#39;value&#39;.&quot;</span>
+                    <span class="s2">&quot;Instead it was &#39;</span><span class="si">{}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">column_info</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span>
+                <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+
+<div class="viewcode-block" id="TGANDataFlow.size"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.TGANDataFlow.size">[docs]</a>    <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the number of rows in data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: Number of rows in :attr:`data`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TGANDataFlow.get_data"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.TGANDataFlow.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Yield the rows from :attr:`data`.</span>
+
+<span class="sd">        Yields:</span>
+<span class="sd">            tuple: Row of data.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterate over self.data.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length of batches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RandomZData"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.RandomZData">[docs]</a><span class="k">class</span> <span class="nc">RandomZData</span><span class="p">(</span><span class="n">DataFlow</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Random dataflow.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        shape(tuple): Shape of the array to return on :meth:`get_data`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shape</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RandomZData</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+
+<div class="viewcode-block" id="RandomZData.get_data"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.RandomZData.get_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Yield random normal vectors of shape :attr:`shape`.&quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span></div>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return data.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Length of batches.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MultiModalNumberTransformer"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.MultiModalNumberTransformer">[docs]</a><span class="k">class</span> <span class="nc">MultiModalNumberTransformer</span><span class="p">:</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Reversible transform for multimodal data.</span>
+
+<span class="sd">    To effectively sample values from a multimodal distribution, we cluster values of a</span>
+<span class="sd">    numerical variable using a `skelarn.mixture.GaussianMixture`_ model (GMM).</span>
+
+<span class="sd">    * We train a GMM with :attr:`n` components for each numerical variable :math:`C_i`.</span>
+<span class="sd">      GMM models a distribution with a weighted sum of :attr:`n` Gaussian distributions.</span>
+<span class="sd">      The means and standard deviations of the :attr:`n` Gaussian distributions are</span>
+<span class="sd">      :math:`{\eta}^{(1)}_{i}, ..., {\eta}^{(n)}_{i}` and</span>
+<span class="sd">      :math:`{\sigma}^{(1)}_{i}, ...,{\sigma}^{(n)}_{i}`.</span>
+
+<span class="sd">    * We compute the probability of :math:`c_{i,j}` coming from each of the :attr:`n` Gaussian</span>
+<span class="sd">      distributions as a vector :math:`{u}^{(1)}_{i,j}, ..., {u}^{(n)}_{i,j}`. u_{i,j} is a</span>
+<span class="sd">      normalized probability distribution over :attr:`n` Gaussian distributions.</span>
+
+<span class="sd">    * We normalize :math:`c_{i,j}` as :math:`v_{i,j} = (c_{i,j}−{\eta}^{(k)}_{i})/2{\sigma}^</span>
+<span class="sd">      {(k)}_{i}`, where :math:`k = arg max_k {u}^{(k)}_{i,j}`. We then clip :math:`v_{i,j}` to</span>
+<span class="sd">      [−0.99, 0.99].</span>
+
+<span class="sd">    Then we use :math:`u_i` and :math:`v_i` to represent :math:`c_i`. For simplicity,</span>
+<span class="sd">    we cluster all the numerical features, i.e. both uni-modal and multi-modal features are</span>
+<span class="sd">    clustered to :attr:`n = 5` Gaussian distributions.</span>
+
+<span class="sd">    The simplification is fair because GMM automatically weighs :attr:`n` components.</span>
+<span class="sd">    For example, if a variable has only one mode and fits some Gaussian distribution, then GMM</span>
+<span class="sd">    will assign a very low probability to :attr:`n − 1` components and only 1 remaining</span>
+<span class="sd">    component actually works, which is equivalent to not clustering this feature.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_modes(int): Number of modes on given data.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        num_modes(int): Number of components in the `skelarn.mixture.GaussianMixture`_ model.</span>
+
+<span class="sd">    .. _skelarn.mixture.GaussianMixture: https://scikit-learn.org/stable/modules/generated/</span>
+<span class="sd">        sklearn.mixture.GaussianMixture.html</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_modes</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize instance.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_modes</span> <span class="o">=</span> <span class="n">num_modes</span>
+
+<div class="viewcode-block" id="MultiModalNumberTransformer.transform"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.MultiModalNumberTransformer.transform">[docs]</a>    <span class="nd">@check_inputs</span>
+    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Cluster values using a `skelarn.mixture.GaussianMixture`_ model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(numpy.ndarray): Values to cluster in array of shape (n,1).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[numpy.ndarray, numpy.ndarray, list, list]: Tuple containg the features,</span>
+<span class="sd">            probabilities, averages and stds of the given data.</span>
+
+<span class="sd">        .. _skelarn.mixture.GaussianMixture: https://scikit-learn.org/stable/modules/generated/</span>
+<span class="sd">            sklearn.mixture.GaussianMixture.html</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">GaussianMixture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_modes</span><span class="p">)</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="n">means</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">means_</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_modes</span><span class="p">))</span>
+        <span class="n">stds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">covariances_</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_modes</span><span class="p">))</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="n">means</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">stds</span><span class="p">)</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">argmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">))</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="n">argmax</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="n">features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">features</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">features</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">means</span><span class="o">.</span><span class="n">flat</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">stds</span><span class="o">.</span><span class="n">flat</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MultiModalNumberTransformer.inverse_transform"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.MultiModalNumberTransformer.inverse_transform">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">inverse_transform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Reverse the clustering of values.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(numpy.ndarray): Transformed data to restore.</span>
+<span class="sd">            info(dict): Metadata.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           numpy.ndarray: Values in the original space.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">probs</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+        <span class="n">p_argmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;means&#39;</span><span class="p">])</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;stds&#39;</span><span class="p">])</span>
+
+        <span class="n">select_mean</span> <span class="o">=</span> <span class="n">mean</span><span class="p">[</span><span class="n">p_argmax</span><span class="p">]</span>
+        <span class="n">select_std</span> <span class="o">=</span> <span class="n">std</span><span class="p">[</span><span class="n">p_argmax</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">features</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">select_std</span> <span class="o">+</span> <span class="n">select_mean</span></div></div>
+
+
+<div class="viewcode-block" id="Preprocessor"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.Preprocessor">[docs]</a><span class="k">class</span> <span class="nc">Preprocessor</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Transform back and forth human-readable data into TGAN numerical features.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        continous_columns(list): List of columns to be considered continuous</span>
+<span class="sd">        metadata(dict): Metadata to initialize the object.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        continous_columns(list): Same as constructor argument.</span>
+<span class="sd">        metadata(dict): Information about the transformations applied to the data and its format.</span>
+<span class="sd">        continous_transformer(MultiModalNumberTransformer):</span>
+<span class="sd">            Transformer for columns in :attr:`continuous_columns`</span>
+<span class="sd">        categorical_transformer(CategoricalTransformer):</span>
+<span class="sd">            Transformer for categorical columns.</span>
+<span class="sd">        columns(list): List of columns labels.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">continuous_columns</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize object, set arguments as attributes, initialize transformers.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">continuous_columns</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">continuous_columns</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">continuous_columns</span> <span class="o">=</span> <span class="n">continuous_columns</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">continous_transformer</span> <span class="o">=</span> <span class="n">MultiModalNumberTransformer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">categorical_transformer</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="Preprocessor.fit_transform"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.Preprocessor.fit_transform">[docs]</a>    <span class="k">def</span> <span class="nf">fit_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">fitting</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform human-readable data into TGAN numerical features.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(pandas.DataFrame): Data to transform.</span>
+<span class="sd">            fitting(bool): Whether or not to update self.metadata.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: Model features</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">num_cols</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">num_cols</span><span class="p">))</span>
+
+        <span class="n">transformed_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">details</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">continuous_columns</span><span class="p">:</span>
+                <span class="n">column_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">features</span><span class="p">,</span> <span class="n">probs</span><span class="p">,</span> <span class="n">means</span><span class="p">,</span> <span class="n">stds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">continous_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">column_data</span><span class="p">)</span>
+                <span class="n">transformed_data</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">features</span><span class="p">,</span> <span class="n">probs</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">fitting</span><span class="p">:</span>
+                    <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;means&quot;</span><span class="p">:</span> <span class="n">means</span><span class="p">,</span>
+                        <span class="s2">&quot;stds&quot;</span><span class="p">:</span> <span class="n">stds</span><span class="p">,</span>
+                        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="mi">5</span>
+                    <span class="p">})</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">column_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_transformer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">column_data</span><span class="p">)</span>
+                <span class="n">transformed_data</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="n">fitting</span><span class="p">:</span>
+                    <span class="n">mapping</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_transformer</span><span class="o">.</span><span class="n">classes_</span>
+                    <span class="n">details</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;category&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;mapping&quot;</span><span class="p">:</span> <span class="n">mapping</span><span class="p">,</span>
+                        <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">mapping</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                    <span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">fitting</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;num_features&quot;</span><span class="p">:</span> <span class="n">num_cols</span><span class="p">,</span>
+                <span class="s2">&quot;details&quot;</span><span class="p">:</span> <span class="n">details</span>
+            <span class="p">}</span>
+            <span class="n">check_metadata</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span>
+
+        <span class="k">return</span> <span class="n">transformed_data</span></div>
+
+<div class="viewcode-block" id="Preprocessor.transform"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.Preprocessor.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform the given dataframe without generating new metadata.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(pandas.DataFrame): Data to fit the object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">fitting</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Preprocessor.fit"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.Preprocessor.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the internal state of the object using :attr:`data`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(pandas.DataFrame): Data to fit the object.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Preprocessor.reverse_transform"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.Preprocessor.reverse_transform">[docs]</a>    <span class="k">def</span> <span class="nf">reverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform TGAN numerical features back into human-readable data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data(pandas.DataFrame): Data to transform.</span>
+<span class="sd">            fitting(bool): Whether or not to update self.metadata.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: Model features</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;num_features&#39;</span><span class="p">]):</span>
+            <span class="n">column_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;f</span><span class="si">%02d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">column_metadata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;details&#39;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">column_metadata</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span>
+                <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">continous_transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">column_data</span><span class="p">,</span> <span class="n">column_metadata</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">column_metadata</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;category&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">categorical_transformer</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">column_metadata</span><span class="p">[</span><span class="s1">&#39;mapping&#39;</span><span class="p">]</span>
+                <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">categorical_transformer</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+                    <span class="n">column_data</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+
+            <span class="n">table</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">table</span><span class="p">)))</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
+
+
+<div class="viewcode-block" id="download_file"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.download_file">[docs]</a><span class="k">def</span> <span class="nf">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Download a file from url and save it as filename.&quot;&quot;&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">urllib3</span><span class="o">.</span><span class="n">PoolManager</span><span class="p">(</span>
+        <span class="n">cert_reqs</span><span class="o">=</span><span class="s1">&#39;CERT_REQUIRED&#39;</span><span class="p">,</span>
+        <span class="n">ca_certs</span><span class="o">=</span><span class="n">certifi</span><span class="o">.</span><span class="n">where</span><span class="p">())</span>
+
+    <span class="k">with</span> <span class="n">conn</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">preload_content</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">out</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">resp</span><span class="p">,</span> <span class="n">out</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_demo_data"><a class="viewcode-back" href="../../api/tgan.data.html#tgan.data.load_demo_data">[docs]</a><span class="k">def</span> <span class="nf">load_demo_data</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Fetch, load and prepare a dataset.</span>
+
+<span class="sd">    If name is one of the demo datasets</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        name(str): Name or path of the dataset.</span>
+<span class="sd">        header(): Header parameter when executing :attr:`pandas.read_csv`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">DEMO_DATASETS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params</span><span class="p">:</span>
+        <span class="n">url</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">continuous_columns</span> <span class="o">=</span> <span class="n">params</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+
+            <span class="n">download_file</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a valid dataset name. &#39;</span>
+            <span class="s1">&#39;Supported values are: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">DEMO_DATASETS</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="n">header</span><span class="p">),</span> <span class="n">continuous_columns</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, MIT Data To AI Lab
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
