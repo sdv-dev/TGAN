@@ -444,6 +444,12 @@ experiments/
     ...
 ```
 
+## Research
+
+The first **TAGN** version was built as the supporting software for the [Synthesizing Tabular Data using Generative Adversarial Networks](https://arxiv.org/pdf/1811.11264.pdf) paper by Lei Xu and Kalyan Veeramachaneni.
+
+The exact version of software mentioned in the paper can be found in the releases section as the [research pre-release](https://github.com/DAI-Lab/TGAN/releases/tag/research)
+
 ## Citation
 
 If you use TGAN, please cite the following work:
