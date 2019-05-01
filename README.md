@@ -1,5 +1,5 @@
 <p align="left">
-<img width=15% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="SteganoGAN" />
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="DAI-Lab" />
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
@@ -17,11 +17,9 @@ generate numerical columns and categorical columns.
 * Documentation: https://DAI-Lab.github.io/TGAN
 * Homepage: https://github.com/DAI-Lab/TGAN
 
-## Getting Started
+# Requirements
 
-### Requirements
-
-#### Python
+## Python
 
 **TGAN** has been developed and runs on Python [3.5](https://www.python.org/downloads/release/python-356/),
 [3.6](https://www.python.org/downloads/release/python-360/) and
@@ -31,7 +29,7 @@ Also, although it is not strictly required, the usage of a [virtualenv](https://
 is highly recommended in order to avoid interfering with other software installed in the system where **TGAN**
 is run.
 
-### Installation
+# Installation
 
 The simplest and recommended way to install TGAN is using `pip`:
 
@@ -50,9 +48,9 @@ make install
 For development, you can use `make install-develop` instead in order to install all the required
 dependencies for testing and code linting.
 
-### Data Format
+# Data Format
 
-#### <a id="data-format-input"> </a> Input
+## Input Format
 
 In order to be able to sample new synthetic data, **TGAN** first needs to be *fitted* to
 existing data.
@@ -81,35 +79,35 @@ no missing values for any of the rows.
 that they represent a magnitude, and which ones are categorical, as during the preprocessing of
 the data, numerical and categorical columns will be processed differently.
 
-#### Output
+## Output Format
 
 The output of **TGAN** is a table of sampled data with the same columns as the input table and as
 many rows as requested.
 
-### Demo Datasets
+## Demo Datasets
 
 **TGAN** includes a few datasets to use for development or demonstration purposes. These datasets
 come from the [UCI Machine Learning repository](http://archive.ics.uci.edu/ml), and have been
 preprocessed to be ready to use with **TGAN**, following the requirements specified in the
-[Input](#--input) section.
+[Input Format](#input-format) section.
 
 These datasets can be browsed and directly downloaded from the
 [hdi-project-tgan AWS S3 Bucket](http://hdi-project-tgan.s3.amazonaws.com/index.html)
 
-#### Census dataset
+### Census dataset
 
 This dataset contains a single table, with information from the census, labeled with information of
 wheter or not the income of is greater than 50.000 $/year. It's a single csv file, containing
 199522 rows and 41 columns. From these 41 columns, only 7 are identified as continuous. In
 **TGAN** this dataset is called `census`.
 
-#### Cover type
+### Cover type
 
 This dataset contains a single table with cartographic information labeled with the different
 forrest cover types. It's a single csv file, containing 465588 rows and 55 columns. From these
 55 columns, 10 are identified as continuous. In **TGAN** this dataset is called `covertype`.
 
-## Quickstart
+# Quickstart
 
 In this short tutorial we will guide you through a series of steps that will help you getting
 started with the most basic usage of **TGAN** in order to generate samples from a given dataset.
@@ -122,7 +120,7 @@ pip install jupyter
 jupyter notebook examples/Usage_Example.ipynb
 ```
 
-### 1. Load the data
+## 1. Load the data
 
 The first step is to load the data wich we will use to fit TGAN. In order to do so, we will first
 import the function `tgan.data.load_data` and call it with the name of the dataset that we want to
@@ -157,7 +155,7 @@ dataset ready to be used to fit the model.
 
 ```
 
-### 2. Create a TGAN instance
+## 2. Create a TGAN instance
 
 The next step is to import TGAN and create an instance of the model.
 
@@ -171,7 +169,7 @@ This will create a TGAN instance with the default parameters:
 >>> tgan = TGANModel(continuous_columns)
 ```
 
-### 3. Fit the model
+## 3. Fit the model
 
 Once you have a **TGAN** instance, you can proceed to call it's `fit` method passing the `data` that
 you loaded before in order to start the fitting process:
@@ -186,7 +184,7 @@ screen.
 **NOTE** Depending on the performance of the system you are running, and the parameters selected
 for the model, this step can take up to a few hours.
 
-### 4. Sample new data
+## 4. Sample new data
 
 After the model has been fitted, you are ready to generate new samples by calling the `sample`
 method of the `TGAN` instance passing it the desired amount of samples:
@@ -214,7 +212,7 @@ method of the `TGAN` instance passing it the desired amount of samples:
 The returned object, `samples`, is a `pandas.DataFrame` containing a table of synthetic data with
 the same format as the input data and 1000 rows as we requested.
 
-### 5. Save and Load a model
+## 5. Save and Load a model
 
 In the steps above we saw that the fitting process can take a lot of time, so we probably would
 like to avoid having to fit every we want to generate samples. Instead we can fit a model once,
@@ -270,7 +268,7 @@ method:
 
 At this point we could use this model instance to generate more samples.
 
-## Loading custom datasets
+# Loading custom datasets
 
 In the previous steps we used some demonstration data but we did not show you how to load your own
 dataset.
@@ -299,17 +297,17 @@ it, like we did before:
 >>> tgan.fit(data)
 ```
 
-## Model Parameters
+# Model Parameters
 
 If you want to change the default behavior of `TGANModel`, such as as different `batch_size` or
 `num_epochs`, you can do so by passing different arguments when creating the instance.
 
-### Model general behavior
+## Model general behavior
 
 * continous_columns (`list[int]`, required): List of columns indices to be considered continuous.
 * output (`str`, default=`output`): Path to store the model and its artifacts.
 
-### Neural network definition and fitting
+## Neural network definition and fitting
 
 * max_epoch (`int`, default=`100`): Number of epochs to use during training.
 * steps_per_epoch (`int`, default=`10000`): Number of steps to run on each epoch.
@@ -352,19 +350,19 @@ arguments in a explicit way, this can be achieved with the following lines:
    ...: )
 ```
 
-## Command-line interface
+# Command-line interface
 
 We include a command-line interface that allows users to access TGAN functionality. Currently only
 one action is supported.
 
-### Random hyperparameter search
+## Random hyperparameter search
 
-#### Input
+### Input
 
 To run random searchs for the best model hyperparameters for a given dataset, we will need:
 
 * A dataset, in a csv file, without any missing value, only columns of type `bool`, `str`, `int` or
-  `float` and only one type for column, as specified in [Data Format Input](#data-format-input).
+  `float` and only one type for column, as specified in the [Input Format](#input-format).
 
 * A JSON file containing the configuration for the search. This configuration shall contain:
 
@@ -379,7 +377,7 @@ To run random searchs for the best model hyperparameters for a given dataset, we
 You can see an example of such a json file in [examples/config.json](examples/config.json), which you
 can download and use as a template.
 
-#### Execution
+### Execution
 
 Once we have prepared everything we can launch the random hyperparameter search with this command:
 
@@ -399,7 +397,7 @@ This will run the random search, wich basically consist of the folling steps:
 4. We then train machine learning models on both the real and synthetic datasets.
 5. We use these trained models on real test data and see how well they perform.
 
-#### Output
+### Output
 
 After the experiment has finished, the following can be found:
 
@@ -444,13 +442,13 @@ experiments/
     ...
 ```
 
-## Research
+# Research
 
 The first **TAGN** version was built as the supporting software for the [Synthesizing Tabular Data using Generative Adversarial Networks](https://arxiv.org/pdf/1811.11264.pdf) paper by Lei Xu and Kalyan Veeramachaneni.
 
 The exact version of software mentioned in the paper can be found in the releases section as the [research pre-release](https://github.com/DAI-Lab/TGAN/releases/tag/research)
 
-## Citation
+# Citation
 
 If you use TGAN, please cite the following work:
 
