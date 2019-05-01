@@ -1,0 +1,9 @@
+{
+    "name": "census",
+    "num_random_search": 10,
+    "train_csv": "data/census.csv",
+    "continuous_cols": [0, 5, 16, 17, 18, 29, 38],
+    "epoch": 5,
+    "steps_per_epoch": 10000,
+    "sample_rows": 10000
+}
