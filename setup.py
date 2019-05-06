@@ -95,6 +95,6 @@ setup(
     test_suite='tests',
     tests_require=test_require,
     url='https://github.com/DAI-Lab/TGAN',
-    version='0.1.0-dev',
+    version='0.1.0',
     zip_safe=False,
 )
