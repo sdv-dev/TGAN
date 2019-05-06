@@ -17,8 +17,6 @@ install_requires = [
     'scikit-learn>=0.20.2',
     'tensorflow>=1.13.0, <2.0',
     'tensorpack==0.9.4',
-    'urllib3>=1.24.1',
-    'certifi>=2018.11.29'
 ]
 
 setup_requires = [
