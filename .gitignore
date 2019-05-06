@@ -140,3 +140,6 @@ data/
 logs/
 model/
 docs/api/
+
+# Vim
+.*.swp
