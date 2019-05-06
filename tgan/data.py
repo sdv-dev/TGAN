@@ -4,12 +4,10 @@ This modules contains the tools to preprare the data, from the raw csv files, to
 objects will be used to fit our models.
 """
 import os
-import shutil
+import urllib
 
-import certifi
 import numpy as np
 import pandas as pd
-import urllib3
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import LabelEncoder
 from tensorpack import DataFlow, RNGDataFlow
@@ -413,16 +411,6 @@ class Preprocessor:
         return result
 
 
-def download_file(url, file_name):
-    """Download a file from url and save it as filename."""
-    conn = urllib3.PoolManager(
-        cert_reqs='CERT_REQUIRED',
-        ca_certs=certifi.where())
-
-    with conn.request('GET', url, preload_content=False) as resp, open(file_name, 'wb') as out:
-        shutil.copyfileobj(resp, out)
-
-
 def load_demo_data(name, header=None):
     """Fetch, load and prepare a dataset.
 
@@ -442,7 +430,7 @@ def load_demo_data(name, header=None):
             if not os.path.exists(base_path):
                 os.makedirs(base_path)
 
-            download_file(url, file_path)
+            urllib.request.urlretrieve(url, file_path)
 
     else:
         message = (
