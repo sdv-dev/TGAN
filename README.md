@@ -5,17 +5,21 @@
 
 [![PyPi Shield](https://img.shields.io/pypi/v/TGAN.svg)](https://pypi.python.org/pypi/TGAN)
 [![Travis CI Shield](https://travis-ci.org/DAI-Lab/TGAN.svg?branch=master)](https://travis-ci.org/DAI-Lab/TGAN)
+[![CodeCov](https://codecov.io/gh/DAI-Lab/TGAN/branch/master/graph/badge.svg)](https://codecov.io/gh/DAI-Lab/TGAN)
+[![Downloads](https://pepy.tech/badge/tgan)](https://pepy.tech/project/tgan)
 
 # TGAN
 
 Generative adversarial training for synthesizing tabular data.
 
-TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data. Currently, TGAN can
-generate numerical columns and categorical columns.
-
 * Free software: MIT license
 * Documentation: https://DAI-Lab.github.io/TGAN
 * Homepage: https://github.com/DAI-Lab/TGAN
+
+# Overview
+
+TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data. Currently, TGAN can
+generate numerical columns and categorical columns.
 
 # Requirements
 
@@ -448,7 +452,14 @@ The first **TAGN** version was built as the supporting software for the [Synthes
 
 The exact version of software mentioned in the paper can be found in the releases section as the [research pre-release](https://github.com/DAI-Lab/TGAN/releases/tag/research)
 
-# Citation
+# What's next?
+
+For more details about **TGAN** and all its possibilities and features, please check the
+[project documentation site](https://DAI-Lab.github.io/TGAN/)!
+
+# Citing TGAN
+
+If you use TGAN for yor research, please consider citing the following paper (https://arxiv.org/pdf/1811.11264.pdf):
 
 If you use TGAN, please cite the following work:
 
@@ -462,4 +473,3 @@ If you use TGAN, please cite the following work:
   year={2018}
 }
 ```
-You can find the original paper [here](https://arxiv.org/pdf/1811.11264.pdf)
