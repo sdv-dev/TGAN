@@ -85,6 +85,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#python">Python</a></li>
 </ul>
@@ -124,7 +125,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#research">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#citation">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#citing-tgan">Citing TGAN</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
@@ -244,25 +246,25 @@
 <p>Tune and evaluate TGAN models.</p>
 <dl class="function">
 <dt id="tgan.research.experiments.fit_score_model">
-<code class="descclassname">tgan.research.experiments.</code><code class="descname">fit_score_model</code><span class="sig-paren">(</span><em>name</em>, <em>model_kwargs</em>, <em>train_data</em>, <em>test_data</em>, <em>continuous_columns</em>, <em>sample_rows</em>, <em>store_samples</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#fit_score_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.fit_score_model" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.research.experiments.</code><code class="sig-name descname">fit_score_model</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">model_kwargs</em>, <em class="sig-param">train_data</em>, <em class="sig-param">test_data</em>, <em class="sig-param">continuous_columns</em>, <em class="sig-param">sample_rows</em>, <em class="sig-param">store_samples</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#fit_score_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.fit_score_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit and score models using given params.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tgan.research.experiments.numpy_default">
-<code class="descclassname">tgan.research.experiments.</code><code class="descname">numpy_default</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#numpy_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.numpy_default" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.research.experiments.</code><code class="sig-name descname">numpy_default</code><span class="sig-paren">(</span><em class="sig-param">obj</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#numpy_default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.numpy_default" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change numpy objects into json-serializable ones.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tgan.research.experiments.prepare_hyperparameter_search">
-<code class="descclassname">tgan.research.experiments.</code><code class="descname">prepare_hyperparameter_search</code><span class="sig-paren">(</span><em>epoch</em>, <em>steps_per_epoch</em>, <em>num_random_search</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#prepare_hyperparameter_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.prepare_hyperparameter_search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.research.experiments.</code><code class="sig-name descname">prepare_hyperparameter_search</code><span class="sig-paren">(</span><em class="sig-param">epoch</em>, <em class="sig-param">steps_per_epoch</em>, <em class="sig-param">num_random_search</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#prepare_hyperparameter_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.prepare_hyperparameter_search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepare hyperparameters.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="tgan.research.experiments.run_experiment">
-<code class="descclassname">tgan.research.experiments.</code><code class="descname">run_experiment</code><span class="sig-paren">(</span><em>name</em>, <em>epoch</em>, <em>steps_per_epoch</em>, <em>sample_rows</em>, <em>train_csv</em>, <em>continuous_cols</em>, <em>num_random_search</em>, <em>store_samples=True</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.run_experiment" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.research.experiments.</code><code class="sig-name descname">run_experiment</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">epoch</em>, <em class="sig-param">steps_per_epoch</em>, <em class="sig-param">sample_rows</em>, <em class="sig-param">train_csv</em>, <em class="sig-param">continuous_cols</em>, <em class="sig-param">num_random_search</em>, <em class="sig-param">store_samples=True</em>, <em class="sig-param">force=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#run_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.run_experiment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run experiment using the given params and collect the results.</p>
 <p>The experiment run the following steps:</p>
 <ol class="arabic simple">
@@ -276,7 +278,7 @@ synthetic training dataset Tsynth.</p></li>
 
 <dl class="function">
 <dt id="tgan.research.experiments.run_experiments">
-<code class="descclassname">tgan.research.experiments.</code><code class="descname">run_experiments</code><span class="sig-paren">(</span><em>config_path</em>, <em>output_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#run_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.run_experiments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.research.experiments.</code><code class="sig-name descname">run_experiments</code><span class="sig-paren">(</span><em class="sig-param">config_path</em>, <em class="sig-param">output_path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/research/experiments.html#run_experiments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.research.experiments.run_experiments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run experiments specified in JSON file.</p>
 </dd></dl>
 

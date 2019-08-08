@@ -2,6 +2,6 @@ tgan.model module
 =================
 
 .. automodule:: tgan.model
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:

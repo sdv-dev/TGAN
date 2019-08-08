@@ -85,6 +85,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#python">Python</a></li>
 </ul>
@@ -124,7 +125,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#research">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#citation">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#citing-tgan">Citing TGAN</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
@@ -244,7 +246,7 @@
 objects will be used to fit our models.</p>
 <dl class="class">
 <dt id="tgan.data.MultiModalNumberTransformer">
-<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">MultiModalNumberTransformer</code><span class="sig-paren">(</span><em>num_modes=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">MultiModalNumberTransformer</code><span class="sig-paren">(</span><em class="sig-param">num_modes=5</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Reversible transform for multimodal data.</p>
 <p>To effectively sample values from a multimodal distribution, we cluster values of a
@@ -276,7 +278,7 @@ component actually works, which is equivalent to not clustering this feature.</p
 </dl>
 <dl class="attribute">
 <dt id="tgan.data.MultiModalNumberTransformer.num_modes">
-<code class="descname">num_modes</code><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.num_modes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">num_modes</code><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.num_modes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of components in the <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html">skelarn.mixture.GaussianMixture</a> model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -285,9 +287,9 @@ component actually works, which is equivalent to not clustering this feature.</p
 </dl>
 </dd></dl>
 
-<dl class="staticmethod">
+<dl class="method">
 <dt id="tgan.data.MultiModalNumberTransformer.inverse_transform">
-<em class="property">static </em><code class="descname">inverse_transform</code><span class="sig-paren">(</span><em>data</em>, <em>info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer.inverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="sig-name descname">inverse_transform</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">info</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer.inverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.inverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reverse the clustering of values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -307,7 +309,7 @@ component actually works, which is equivalent to not clustering this feature.</p
 
 <dl class="method">
 <dt id="tgan.data.MultiModalNumberTransformer.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>data</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#MultiModalNumberTransformer.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.MultiModalNumberTransformer.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cluster values using a <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.mixture.GaussianMixture.html">skelarn.mixture.GaussianMixture</a> model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -327,7 +329,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="class">
 <dt id="tgan.data.Preprocessor">
-<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">Preprocessor</code><span class="sig-paren">(</span><em>continuous_columns=None</em>, <em>metadata=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">Preprocessor</code><span class="sig-paren">(</span><em class="sig-param">continuous_columns=None</em>, <em class="sig-param">metadata=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Transform back and forth human-readable data into TGAN numerical features.</p>
 <dl class="field-list simple">
@@ -340,7 +342,7 @@ probabilities, averages and stds of the given data.</p>
 </dl>
 <dl class="attribute">
 <dt id="tgan.data.Preprocessor.continous_columns">
-<code class="descname">continous_columns</code><a class="headerlink" href="#tgan.data.Preprocessor.continous_columns" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">continous_columns</code><a class="headerlink" href="#tgan.data.Preprocessor.continous_columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Same as constructor argument.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -351,7 +353,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.Preprocessor.metadata">
-<code class="descname">metadata</code><a class="headerlink" href="#tgan.data.Preprocessor.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">metadata</code><a class="headerlink" href="#tgan.data.Preprocessor.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Information about the transformations applied to the data and its format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -362,7 +364,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.Preprocessor.continous_transformer">
-<code class="descname">continous_transformer</code><a class="headerlink" href="#tgan.data.Preprocessor.continous_transformer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">continous_transformer</code><a class="headerlink" href="#tgan.data.Preprocessor.continous_transformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transformer for columns in <code class="xref py py-attr docutils literal notranslate"><span class="pre">continuous_columns</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -373,7 +375,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.Preprocessor.categorical_transformer">
-<code class="descname">categorical_transformer</code><a class="headerlink" href="#tgan.data.Preprocessor.categorical_transformer" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">categorical_transformer</code><a class="headerlink" href="#tgan.data.Preprocessor.categorical_transformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transformer for categorical columns.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -384,7 +386,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.Preprocessor.columns">
-<code class="descname">columns</code><a class="headerlink" href="#tgan.data.Preprocessor.columns" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">columns</code><a class="headerlink" href="#tgan.data.Preprocessor.columns" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of columns labels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -395,7 +397,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="method">
 <dt id="tgan.data.Preprocessor.fit">
-<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the internal state of the object using <code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -406,7 +408,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="method">
 <dt id="tgan.data.Preprocessor.fit_transform">
-<code class="descname">fit_transform</code><span class="sig-paren">(</span><em>data</em>, <em>fitting=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.fit_transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">fit_transform</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">fitting=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.fit_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.fit_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform human-readable data into TGAN numerical features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -426,7 +428,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="method">
 <dt id="tgan.data.Preprocessor.reverse_transform">
-<code class="descname">reverse_transform</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.reverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.reverse_transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">reverse_transform</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.reverse_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.reverse_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform TGAN numerical features back into human-readable data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -446,7 +448,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="method">
 <dt id="tgan.data.Preprocessor.transform">
-<code class="descname">transform</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.transform" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transform</code><span class="sig-paren">(</span><em class="sig-param">data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#Preprocessor.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.Preprocessor.transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform the given dataframe without generating new metadata.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -459,7 +461,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="class">
 <dt id="tgan.data.RandomZData">
-<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">RandomZData</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#RandomZData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.RandomZData" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">RandomZData</code><span class="sig-paren">(</span><em class="sig-param">shape</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#RandomZData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.RandomZData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.dataflow.base.DataFlow</span></code></p>
 <p>Random dataflow.</p>
 <dl class="field-list simple">
@@ -469,7 +471,7 @@ probabilities, averages and stds of the given data.</p>
 </dl>
 <dl class="method">
 <dt id="tgan.data.RandomZData.get_data">
-<code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#RandomZData.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.RandomZData.get_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#RandomZData.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.RandomZData.get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield random normal vectors of shape <code class="xref py py-attr docutils literal notranslate"><span class="pre">shape</span></code>.</p>
 </dd></dl>
 
@@ -477,12 +479,12 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="class">
 <dt id="tgan.data.TGANDataFlow">
-<em class="property">class </em><code class="descclassname">tgan.data.</code><code class="descname">TGANDataFlow</code><span class="sig-paren">(</span><em>data</em>, <em>metadata</em>, <em>shuffle=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">TGANDataFlow</code><span class="sig-paren">(</span><em class="sig-param">data</em>, <em class="sig-param">metadata</em>, <em class="sig-param">shuffle=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.dataflow.base.RNGDataFlow</span></code></p>
 <p>Subclass of <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.RNGDataFlow</span></code> prepared to work with <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code>.</p>
 <dl class="attribute">
 <dt id="tgan.data.TGANDataFlow.shuffle">
-<code class="descname">shuffle</code><a class="headerlink" href="#tgan.data.TGANDataFlow.shuffle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">shuffle</code><a class="headerlink" href="#tgan.data.TGANDataFlow.shuffle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wheter or not to shuffle the data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -493,7 +495,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.TGANDataFlow.metadata">
-<code class="descname">metadata</code><a class="headerlink" href="#tgan.data.TGANDataFlow.metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">metadata</code><a class="headerlink" href="#tgan.data.TGANDataFlow.metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Metadata for the given <a class="reference internal" href="#tgan.data.TGANDataFlow.data" title="tgan.data.TGANDataFlow.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -504,7 +506,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.TGANDataFlow.num_features">
-<code class="descname">num_features</code><a class="headerlink" href="#tgan.data.TGANDataFlow.num_features" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">num_features</code><a class="headerlink" href="#tgan.data.TGANDataFlow.num_features" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of features in given data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -515,7 +517,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.TGANDataFlow.data">
-<code class="descname">data</code><a class="headerlink" href="#tgan.data.TGANDataFlow.data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">data</code><a class="headerlink" href="#tgan.data.TGANDataFlow.data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepared data from <code class="xref py py-attr docutils literal notranslate"><span class="pre">filename</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -526,7 +528,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="attribute">
 <dt id="tgan.data.TGANDataFlow.distribution">
-<code class="descname">distribution</code><a class="headerlink" href="#tgan.data.TGANDataFlow.distribution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">distribution</code><a class="headerlink" href="#tgan.data.TGANDataFlow.distribution" title="Permalink to this definition">¶</a></dt>
 <dd><p>DepecrationWarning?</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -537,7 +539,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="method">
 <dt id="tgan.data.TGANDataFlow.get_data">
-<code class="descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow.get_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_data</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow.get_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow.get_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Yield the rows from <a class="reference internal" href="#tgan.data.TGANDataFlow.data" title="tgan.data.TGANDataFlow.data"><code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields</dt>
@@ -548,7 +550,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="method">
 <dt id="tgan.data.TGANDataFlow.size">
-<code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow.size" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#TGANDataFlow.size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.TGANDataFlow.size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the number of rows in data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -564,7 +566,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="function">
 <dt id="tgan.data.check_inputs">
-<code class="descclassname">tgan.data.</code><code class="descname">check_inputs</code><span class="sig-paren">(</span><em>function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.check_inputs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">check_inputs</code><span class="sig-paren">(</span><em class="sig-param">function</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#check_inputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.check_inputs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate inputs for functions whose first argument is a numpy.ndarray with shape (n,1).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -584,7 +586,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="function">
 <dt id="tgan.data.check_metadata">
-<code class="descclassname">tgan.data.</code><code class="descname">check_metadata</code><span class="sig-paren">(</span><em>metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#check_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.check_metadata" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">check_metadata</code><span class="sig-paren">(</span><em class="sig-param">metadata</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#check_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.check_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that the given metadata has correct types for all its members.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -601,7 +603,7 @@ probabilities, averages and stds of the given data.</p>
 
 <dl class="function">
 <dt id="tgan.data.load_demo_data">
-<code class="descclassname">tgan.data.</code><code class="descname">load_demo_data</code><span class="sig-paren">(</span><em>name</em>, <em>header=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#load_demo_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.load_demo_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">tgan.data.</code><code class="sig-name descname">load_demo_data</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">header=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/data.html#load_demo_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.data.load_demo_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fetch, load and prepare a dataset.</p>
 <p>If name is one of the demo datasets</p>
 <dl class="field-list simple">

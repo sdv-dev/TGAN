@@ -84,6 +84,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#requirements">Requirements</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="readme.html#python">Python</a></li>
 </ul>
@@ -123,7 +124,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="readme.html#research">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="readme.html#citation">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#what-s-next">What’s next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="readme.html#citing-tgan">Citing TGAN</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul>
@@ -239,16 +241,21 @@
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p><a class="reference external image-reference" href="https://pypi.python.org/pypi/TGAN"><img alt="PyPi Shield" src="https://img.shields.io/pypi/v/TGAN.svg" /></a>
 <a class="reference external image-reference" href="https://travis-ci.org/DAI-Lab/TGAN"><img alt="Travis CI Shield" src="https://travis-ci.org/DAI-Lab/TGAN.svg?branch=master" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/DAI-Lab/TGAN"><img alt="CodeCov" src="https://codecov.io/gh/DAI-Lab/TGAN/branch/master/graph/badge.svg" /></a>
+<a class="reference external image-reference" href="https://pepy.tech/project/tgan"><img alt="Downloads" src="https://pepy.tech/badge/tgan" /></a>
 <div class="section" id="tgan">
 <h1>TGAN<a class="headerlink" href="#tgan" title="Permalink to this headline">¶</a></h1>
 <p>Generative adversarial training for synthesizing tabular data.</p>
-<p>TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data. Currently, TGAN can
-generate numerical columns and categorical columns.</p>
 <ul class="simple">
 <li><p>Free software: MIT license</p></li>
 <li><p>Documentation: <a class="reference external" href="https://DAI-Lab.github.io/TGAN">https://DAI-Lab.github.io/TGAN</a></p></li>
 <li><p>Homepage: <a class="reference external" href="https://github.com/DAI-Lab/TGAN">https://github.com/DAI-Lab/TGAN</a></p></li>
 </ul>
+</div>
+<div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>TGAN is a tabular data synthesizer. It can generate fully synthetic data from real data. Currently, TGAN can
+generate numerical columns and categorical columns.</p>
 </div>
 <div class="section" id="requirements">
 <h1>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h1>
@@ -265,13 +272,13 @@ is run.</p>
 <div class="section" id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
 <p>The simplest and recommended way to install TGAN is using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install tgan
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">tgan</span>
 </pre></div>
 </div>
 <p>Alternatively, you can also clone the repository and install it from sources</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:DAI-Lab/TGAN.git
-cd TGAN
-make install
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="o">@</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">:</span><span class="n">DAI</span><span class="o">-</span><span class="n">Lab</span><span class="o">/</span><span class="n">TGAN</span><span class="p">.</span><span class="n">git</span>
+<span class="n">cd</span> <span class="n">TGAN</span>
+<span class="n">make</span> <span class="n">install</span>
 </pre></div>
 </div>
 <p>For development, you can use <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install-develop</span></code> instead in order to install all the required
@@ -291,7 +298,7 @@ rules:</p>
 <li><p>Each column contains data of only one type.</p></li>
 </ul>
 <p>An example of such a tables would be:</p>
-<table class="docutils align-center">
+<table class="docutils align-default">
 <colgroup>
 <col style="width: 25%" />
 <col style="width: 25%" />
@@ -369,8 +376,8 @@ forrest cover types. It’s a single csv file, containing 465588 rows and 55 col
 started with the most basic usage of <strong>TGAN</strong> in order to generate samples from a given dataset.</p>
 <p><strong>NOTE</strong>: The following examples are also covered in a <a class="reference external" href="https://jupyter.org/">Jupyter</a> notebook,
 which you can execute by running the following commands inside your <em>virtualenv</em>:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pip install jupyter
-jupyter notebook examples/Usage_Example.ipynb
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">jupyter</span>
+<span class="n">jupyter</span> <span class="n">notebook</span> <span class="n">examples</span><span class="o">/</span><span class="n">Usage_Example</span><span class="p">.</span><span class="n">ipynb</span>
 </pre></div>
 </div>
 <div class="section" id="load-the-data">
@@ -385,20 +392,20 @@ and obtain two objects:</p>
 dataset ready to be used to fit the model.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">continuous_columns</span></code>, that will contain a <code class="docutils literal notranslate"><span class="pre">list</span></code> with the indices of continuous columns.</p></li>
 </ol>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">tgan.data</span> <span class="kn">import</span> <span class="n">load_demo_data</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">data</span><span class="p">,</span> <span class="n">continuous_columns</span> <span class="o">=</span> <span class="n">load_demo_data</span><span class="p">(</span><span class="s1">&#39;census&#39;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">from</span> <span class="n">tgan</span><span class="p">.</span><span class="k">data</span> <span class="n">import</span> <span class="n">load_demo_data</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">data</span><span class="p">,</span> <span class="n">continuous_columns</span> <span class="o">=</span> <span class="n">load_demo_data</span><span class="p">(</span><span class="s1">&#39;census&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">data</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">T</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
                               <span class="mi">0</span>                                     <span class="mi">1</span>                             <span class="mi">2</span>
 <span class="mi">0</span>                            <span class="mi">73</span>                                    <span class="mi">58</span>                            <span class="mi">18</span>
-<span class="mi">1</span>               <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span>        <span class="n">Self</span><span class="o">-</span><span class="n">employed</span><span class="o">-</span><span class="ow">not</span> <span class="n">incorporated</span>               <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span>
+<span class="mi">1</span>               <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>        <span class="k">Self</span><span class="o">-</span><span class="n">employed</span><span class="o">-</span><span class="k">not</span> <span class="n">incorporated</span>               <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>
 <span class="mi">2</span>                             <span class="mi">0</span>                                     <span class="mi">4</span>                             <span class="mi">0</span>
 <span class="mi">3</span>                             <span class="mi">0</span>                                    <span class="mi">34</span>                             <span class="mi">0</span>
-<span class="mi">4</span>          <span class="n">High</span> <span class="n">school</span> <span class="n">graduate</span>            <span class="n">Some</span> <span class="n">college</span> <span class="n">but</span> <span class="n">no</span> <span class="n">degree</span>                    <span class="mi">10</span><span class="n">th</span> <span class="n">grade</span>
+<span class="mi">4</span>          <span class="n">High</span> <span class="n">school</span> <span class="n">graduate</span>            <span class="k">Some</span> <span class="n">college</span> <span class="n">but</span> <span class="k">no</span> <span class="n">degree</span>                    <span class="mi">10</span><span class="n">th</span> <span class="n">grade</span>
 <span class="mi">5</span>                             <span class="mi">0</span>                                     <span class="mi">0</span>                             <span class="mi">0</span>
-<span class="mi">6</span>               <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span>                       <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span>                   <span class="n">High</span> <span class="n">school</span>
+<span class="mi">6</span>               <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>                       <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>                   <span class="n">High</span> <span class="n">school</span>
 <span class="mi">7</span>                       <span class="n">Widowed</span>                              <span class="n">Divorced</span>                 <span class="n">Never</span> <span class="n">married</span>
-<span class="mi">8</span>   <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span> <span class="ow">or</span> <span class="n">children</span>                          <span class="n">Construction</span>   <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span> <span class="ow">or</span> <span class="n">children</span>
-<span class="mi">9</span>               <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span>   <span class="n">Precision</span> <span class="n">production</span> <span class="n">craft</span> <span class="o">&amp;</span> <span class="n">repair</span>               <span class="n">Not</span> <span class="ow">in</span> <span class="n">universe</span>
+<span class="mi">8</span>   <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span> <span class="k">or</span> <span class="n">children</span>                          <span class="n">Construction</span>   <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span> <span class="k">or</span> <span class="n">children</span>
+<span class="mi">9</span>               <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>   <span class="k">Precision</span> <span class="n">production</span> <span class="n">craft</span> <span class="o">&amp;</span> <span class="n">repair</span>               <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>
 
 <span class="o">&gt;&gt;&gt;</span> <span class="n">continuous_columns</span>
 <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">38</span><span class="p">]</span>
@@ -411,7 +418,7 @@ dataset ready to be used to fit the model.</p></li>
 <p>To do so, we need to import the <code class="docutils literal notranslate"><span class="pre">tgan.model.TGANModel</span></code> class and call it with the
 <code class="docutils literal notranslate"><span class="pre">continuous_columns</span></code> as unique argument.</p>
 <p>This will create a TGAN instance with the default parameters:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">tgan.model</span> <span class="kn">import</span> <span class="n">TGANModel</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">from</span> <span class="n">tgan</span><span class="p">.</span><span class="n">model</span> <span class="n">import</span> <span class="n">TGANModel</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span> <span class="o">=</span> <span class="n">TGANModel</span><span class="p">(</span><span class="n">continuous_columns</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -420,7 +427,7 @@ dataset ready to be used to fit the model.</p></li>
 <h2>3. Fit the model<a class="headerlink" href="#fit-the-model" title="Permalink to this headline">¶</a></h2>
 <p>Once you have a <strong>TGAN</strong> instance, you can proceed to call it’s <code class="docutils literal notranslate"><span class="pre">fit</span></code> method passing the <code class="docutils literal notranslate"><span class="pre">data</span></code> that
 you loaded before in order to start the fitting process:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tgan.fit(data)
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="k">data</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This process will not return anything, however, the progress of the fitting will be printed in the
@@ -432,22 +439,22 @@ for the model, this step can take up to a few hours.</p>
 <h2>4. Sample new data<a class="headerlink" href="#sample-new-data" title="Permalink to this headline">¶</a></h2>
 <p>After the model has been fitted, you are ready to generate new samples by calling the <code class="docutils literal notranslate"><span class="pre">sample</span></code>
 method of the <code class="docutils literal notranslate"><span class="pre">TGAN</span></code> instance passing it the desired amount of samples:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; num_samples = 1000
-&gt;&gt;&gt; samples = tgan.sample(num_samples)
-&gt;&gt;&gt; samples.head(3).T[:10]
-                                         0                                     1                                   2
-0                                       12                                    27                                  56
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">samples</span> <span class="o">=</span> <span class="n">tgan</span><span class="p">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">samples</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">T</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+                                         <span class="mi">0</span>                                     <span class="mi">1</span>                                   <span class="mi">2</span>
+<span class="mi">0</span>                                       <span class="mi">12</span>                                    <span class="mi">27</span>                                  <span class="mi">56</span>
 
-0                                       12                                    27                                  56
-1                          Not in universe        Self-employed-not incorporated                             Private
-2                                        0                                     4                                  35
-3                                        0                                    34                                  22
-4                                 Children            Some college but no degree          Some college but no degree
-5                                        0                                     0                                 500
-6                          Not in universe                       Not in universe                     Not in universe
-7                            Never married       Married-civilian spouse present     Married-civilian spouse present
-8              Not in universe or children                          Construction   Finance insurance and real estate
-9                          Not in universe   Precision production craft &amp; repair      Adm support including clerical
+<span class="mi">0</span>                                       <span class="mi">12</span>                                    <span class="mi">27</span>                                  <span class="mi">56</span>
+<span class="mi">1</span>                          <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>        <span class="k">Self</span><span class="o">-</span><span class="n">employed</span><span class="o">-</span><span class="k">not</span> <span class="n">incorporated</span>                             <span class="n">Private</span>
+<span class="mi">2</span>                                        <span class="mi">0</span>                                     <span class="mi">4</span>                                  <span class="mi">35</span>
+<span class="mi">3</span>                                        <span class="mi">0</span>                                    <span class="mi">34</span>                                  <span class="mi">22</span>
+<span class="mi">4</span>                                 <span class="n">Children</span>            <span class="k">Some</span> <span class="n">college</span> <span class="n">but</span> <span class="k">no</span> <span class="n">degree</span>          <span class="k">Some</span> <span class="n">college</span> <span class="n">but</span> <span class="k">no</span> <span class="n">degree</span>
+<span class="mi">5</span>                                        <span class="mi">0</span>                                     <span class="mi">0</span>                                 <span class="mi">500</span>
+<span class="mi">6</span>                          <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>                       <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>                     <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>
+<span class="mi">7</span>                            <span class="n">Never</span> <span class="n">married</span>       <span class="n">Married</span><span class="o">-</span><span class="n">civilian</span> <span class="n">spouse</span> <span class="n">present</span>     <span class="n">Married</span><span class="o">-</span><span class="n">civilian</span> <span class="n">spouse</span> <span class="n">present</span>
+<span class="mi">8</span>              <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span> <span class="k">or</span> <span class="n">children</span>                          <span class="n">Construction</span>   <span class="n">Finance</span> <span class="n">insurance</span> <span class="k">and</span> <span class="nb">real</span> <span class="n">estate</span>
+<span class="mi">9</span>                          <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>   <span class="k">Precision</span> <span class="n">production</span> <span class="n">craft</span> <span class="o">&amp;</span> <span class="n">repair</span>      <span class="n">Adm</span> <span class="n">support</span> <span class="k">including</span> <span class="n">clerical</span>
 </pre></div>
 </div>
 <p>The returned object, <code class="docutils literal notranslate"><span class="pre">samples</span></code>, is a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> containing a table of synthetic data with
@@ -461,41 +468,41 @@ save it, and load it every time we want to sample new data.</p>
 <p>If we have a fitted model, we can save it by calling it’s <code class="docutils literal notranslate"><span class="pre">save</span></code> method, that only takes
 as argument the path where the model will be stored. Similarly, the <code class="docutils literal notranslate"><span class="pre">TGANModel.load</span></code> allows to load
 a model stored on disk by passing as argument the path where the model is stored.</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; model_path = &#39;models/mymodel.pkl&#39;
-&gt;&gt;&gt; tgan.save(model_path)
-Model saved successfully.
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">model_path</span> <span class="o">=</span> <span class="s1">&#39;models/mymodel.pkl&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+<span class="n">Model</span> <span class="n">saved</span> <span class="n">successfully</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Bear in mind that in case the file already exists, <strong>TGAN</strong> will avoid overwritting it unless the
 <code class="docutils literal notranslate"><span class="pre">force=True</span></code> argument is passed:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tgan.save(model_path)
-The indicated path already exists. Use `force=True` to overwrite.
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+<span class="n">The</span> <span class="n">indicated</span> <span class="n">path</span> <span class="n">already</span> <span class="k">exists</span><span class="p">.</span> <span class="n">Use</span> <span class="o">`</span><span class="k">force</span><span class="o">=</span><span class="k">True</span><span class="o">`</span> <span class="k">to</span> <span class="n">overwrite</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>In order to do so:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tgan.save(model_path, force=True)
-Model saved successfully.
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="k">force</span><span class="o">=</span><span class="k">True</span><span class="p">)</span>
+<span class="n">Model</span> <span class="n">saved</span> <span class="n">successfully</span><span class="p">.</span>
 </pre></div>
 </div>
 <p>Once the model is saved, it can be loaded back as a <strong>TGAN</strong> instance by using the <code class="docutils literal notranslate"><span class="pre">TGANModel.load</span></code>
 method:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; new_tgan = TGANModel.load(model_path)
-&gt;&gt;&gt; new_samples = new_tgan.sample(num_samples)
-&gt;&gt;&gt; new_samples.head(3).T[:10]
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">new_tgan</span> <span class="o">=</span> <span class="n">TGANModel</span><span class="p">.</span><span class="k">load</span><span class="p">(</span><span class="n">model_path</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">new_samples</span> <span class="o">=</span> <span class="n">new_tgan</span><span class="p">.</span><span class="n">sample</span><span class="p">(</span><span class="n">num_samples</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">new_samples</span><span class="p">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">).</span><span class="n">T</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
 
-                                         0                                     1                                   2
-0                                       12                                    27                                  56
+                                         <span class="mi">0</span>                                     <span class="mi">1</span>                                   <span class="mi">2</span>
+<span class="mi">0</span>                                       <span class="mi">12</span>                                    <span class="mi">27</span>                                  <span class="mi">56</span>
 
-0                                       12                                    27                                  56
-1                          Not in universe        Self-employed-not incorporated                             Private
-2                                        0                                     4                                  35
-3                                        0                                    34                                  22
-4                                 Children            Some college but no degree          Some college but no degree
-5                                        0                                     0                                 500
-6                          Not in universe                       Not in universe                     Not in universe
-7                            Never married       Married-civilian spouse present     Married-civilian spouse present
-8              Not in universe or children                          Construction   Finance insurance and real estate
-9                          Not in universe   Precision production craft &amp; repair      Adm support including clerical
+<span class="mi">0</span>                                       <span class="mi">12</span>                                    <span class="mi">27</span>                                  <span class="mi">56</span>
+<span class="mi">1</span>                          <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>        <span class="k">Self</span><span class="o">-</span><span class="n">employed</span><span class="o">-</span><span class="k">not</span> <span class="n">incorporated</span>                             <span class="n">Private</span>
+<span class="mi">2</span>                                        <span class="mi">0</span>                                     <span class="mi">4</span>                                  <span class="mi">35</span>
+<span class="mi">3</span>                                        <span class="mi">0</span>                                    <span class="mi">34</span>                                  <span class="mi">22</span>
+<span class="mi">4</span>                                 <span class="n">Children</span>            <span class="k">Some</span> <span class="n">college</span> <span class="n">but</span> <span class="k">no</span> <span class="n">degree</span>          <span class="k">Some</span> <span class="n">college</span> <span class="n">but</span> <span class="k">no</span> <span class="n">degree</span>
+<span class="mi">5</span>                                        <span class="mi">0</span>                                     <span class="mi">0</span>                                 <span class="mi">500</span>
+<span class="mi">6</span>                          <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>                       <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>                     <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>
+<span class="mi">7</span>                            <span class="n">Never</span> <span class="n">married</span>       <span class="n">Married</span><span class="o">-</span><span class="n">civilian</span> <span class="n">spouse</span> <span class="n">present</span>     <span class="n">Married</span><span class="o">-</span><span class="n">civilian</span> <span class="n">spouse</span> <span class="n">present</span>
+<span class="mi">8</span>              <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span> <span class="k">or</span> <span class="n">children</span>                          <span class="n">Construction</span>   <span class="n">Finance</span> <span class="n">insurance</span> <span class="k">and</span> <span class="nb">real</span> <span class="n">estate</span>
+<span class="mi">9</span>                          <span class="k">Not</span> <span class="k">in</span> <span class="n">universe</span>   <span class="k">Precision</span> <span class="n">production</span> <span class="n">craft</span> <span class="o">&amp;</span> <span class="n">repair</span>      <span class="n">Adm</span> <span class="n">support</span> <span class="k">including</span> <span class="n">clerical</span>
 </pre></div>
 </div>
 <p>At this point we could use this model instance to generate more samples.</p>
@@ -511,16 +518,16 @@ the CSV file that you want to load.</p>
 <p>Additionally, you will need to create 0-indexed list of columns indices to be considered continuous.</p>
 <p>For example, if we want to load a local CSV file, <code class="docutils literal notranslate"><span class="pre">path/to/my.csv</span></code>, that has as continuous columns
 their first 4 columns, that is, indices <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3]</span></code>, we would do it like this:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/census.csv&#39;</span><span class="p">)</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="k">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/census.csv&#39;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">continuous_columns</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Now you can use the <code class="docutils literal notranslate"><span class="pre">continuous_columns</span></code> to create a <strong>TGAN</strong> instance and use the <code class="docutils literal notranslate"><span class="pre">data</span></code> to <code class="docutils literal notranslate"><span class="pre">fit</span></code>
 it, like we did before:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">tgan.model</span> <span class="kn">import</span> <span class="n">TGANModel</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">from</span> <span class="n">tgan</span><span class="p">.</span><span class="n">model</span> <span class="n">import</span> <span class="n">TGANModel</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span> <span class="o">=</span> <span class="n">TGANModel</span><span class="p">(</span><span class="n">continuous_columns</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="k">data</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -556,25 +563,25 @@ values are: [<code class="docutils literal notranslate"><span class="pre">Gradie
 </ul>
 <p>If you wanted to create an identical instance to the one created on step 2, but passing the
 arguments in a explicit way, this can be achieved with the following lines:</p>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">tgan.model</span> <span class="kn">import</span> <span class="n">TGANModel</span>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="k">from</span> <span class="n">tgan</span><span class="p">.</span><span class="n">model</span> <span class="n">import</span> <span class="n">TGANModel</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">tgan</span> <span class="o">=</span> <span class="n">TGANModel</span><span class="p">(</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">continuous_columns</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">output</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">max_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">save_checkpoints</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">restore_session</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">z_dim</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">noise</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">l2norm</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">num_gen_rnn</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">num_gen_feature</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">num_dis_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">num_dis_hidden</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
-   <span class="o">...</span><span class="p">:</span>     <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;AdamOptimizer&#39;</span>
-   <span class="o">...</span><span class="p">:</span> <span class="p">)</span>
+   <span class="p">...:</span>     <span class="n">continuous_columns</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="k">output</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">max_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">save_checkpoints</span><span class="o">=</span><span class="k">True</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">restore_session</span><span class="o">=</span><span class="k">True</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">z_dim</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">noise</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">l2norm</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">00001</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">learning_rate</span><span class="o">=</span><span class="mi">0</span><span class="p">.</span><span class="mi">001</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">num_gen_rnn</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">num_gen_feature</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">num_dis_layers</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">num_dis_hidden</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+   <span class="p">...:</span>     <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;AdamOptimizer&#39;</span>
+   <span class="p">...:</span> <span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -658,14 +665,14 @@ like the example, the summary will look like this:</p></li>
 in the <code class="docutils literal notranslate"><span class="pre">experiments</span></code> folder. In each folder, sampled data and the models can be found. For a configuration
 like the example, this will look like this:</p></li>
 </ul>
-<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>experiments/
-  census/
-    data/       # Sampled data with each of the models in the random search.
-    model_0/
-      logs/     # Training logs
-      model/    # Tensorflow model checkpoints
-    model_1/    # 9 more folders, one for each model in the random search
-    ...
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span><span class="n">experiments</span><span class="o">/</span>
+  <span class="n">census</span><span class="o">/</span>
+    <span class="k">data</span><span class="o">/</span>       <span class="o">#</span> <span class="n">Sampled</span> <span class="k">data</span> <span class="k">with</span> <span class="k">each</span> <span class="k">of</span> <span class="n">the</span> <span class="n">models</span> <span class="k">in</span> <span class="n">the</span> <span class="n">random</span> <span class="k">search</span><span class="p">.</span>
+    <span class="n">model_0</span><span class="o">/</span>
+      <span class="n">logs</span><span class="o">/</span>     <span class="o">#</span> <span class="n">Training</span> <span class="n">logs</span>
+      <span class="n">model</span><span class="o">/</span>    <span class="o">#</span> <span class="n">Tensorflow</span> <span class="n">model</span> <span class="n">checkpoints</span>
+    <span class="n">model_1</span><span class="o">/</span>    <span class="o">#</span> <span class="mi">9</span> <span class="k">more</span> <span class="n">folders</span><span class="p">,</span> <span class="n">one</span> <span class="k">for</span> <span class="k">each</span> <span class="n">model</span> <span class="k">in</span> <span class="n">the</span> <span class="n">random</span> <span class="k">search</span>
+    <span class="p">...</span>
 </pre></div>
 </div>
 </div>
@@ -676,8 +683,14 @@ like the example, this will look like this:</p></li>
 <p>The first <strong>TAGN</strong> version was built as the supporting software for the <a class="reference external" href="https://arxiv.org/pdf/1811.11264.pdf">Synthesizing Tabular Data using Generative Adversarial Networks</a> paper by Lei Xu and Kalyan Veeramachaneni.</p>
 <p>The exact version of software mentioned in the paper can be found in the releases section as the <a class="reference external" href="https://github.com/DAI-Lab/TGAN/releases/tag/research">research pre-release</a></p>
 </div>
-<div class="section" id="citation">
-<h1>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="what-s-next">
+<h1>What’s next?<a class="headerlink" href="#what-s-next" title="Permalink to this headline">¶</a></h1>
+<p>For more details about <strong>TGAN</strong> and all its possibilities and features, please check the
+<a class="reference external" href="https://DAI-Lab.github.io/TGAN/">project documentation site</a>!</p>
+</div>
+<div class="section" id="citing-tgan">
+<h1>Citing TGAN<a class="headerlink" href="#citing-tgan" title="Permalink to this headline">¶</a></h1>
+<p>If you use TGAN for yor research, please consider citing the following paper (<a class="reference external" href="https://arxiv.org/pdf/1811.11264.pdf">https://arxiv.org/pdf/1811.11264.pdf</a>):</p>
 <p>If you use TGAN, please cite the following work:</p>
 <blockquote>
 <div><p>Lei Xu, Kalyan Veeramachaneni. 2018. Synthesizing Tabular Data using Generative Adversarial Networks.</p>
@@ -690,7 +703,6 @@ like the example, this will look like this:</p></li>
 <span class="nb">}</span>
 </pre></div>
 </div>
-<p>You can find the original paper <a class="reference external" href="https://arxiv.org/pdf/1811.11264.pdf">here</a></p>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">

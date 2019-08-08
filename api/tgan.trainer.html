@@ -85,6 +85,7 @@
             
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">TGAN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#overview">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#requirements">Requirements</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../readme.html#python">Python</a></li>
 </ul>
@@ -124,7 +125,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../readme.html#research">Research</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../readme.html#citation">Citation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#what-s-next">What’s next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../readme.html#citing-tgan">Citing TGAN</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Resources</span></p>
 <ul class="current">
@@ -242,7 +244,7 @@
 <p>GAN Models.</p>
 <dl class="class">
 <dt id="tgan.trainer.GANTrainer">
-<em class="property">class </em><code class="descclassname">tgan.trainer.</code><code class="descname">GANTrainer</code><span class="sig-paren">(</span><em>model</em>, <em>input_queue</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#GANTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.GANTrainer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.trainer.</code><code class="sig-name descname">GANTrainer</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">input_queue</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#GANTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.GANTrainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.train.tower.TowerTrainer</span></code></p>
 <p>GanTrainer model.</p>
 <p>We need to set <code class="xref py py-meth docutils literal notranslate"><span class="pre">tower_func()</span></code> because it’s a <code class="xref py py-class docutils literal notranslate"><span class="pre">TowerTrainer</span></code>, and only
@@ -261,7 +263,7 @@ Just calling <code class="xref py py-meth docutils literal notranslate"><span cl
 
 <dl class="class">
 <dt id="tgan.trainer.MultiGPUGANTrainer">
-<em class="property">class </em><code class="descclassname">tgan.trainer.</code><code class="descname">MultiGPUGANTrainer</code><span class="sig-paren">(</span><em>nr_gpu</em>, <em>input</em>, <em>model</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#MultiGPUGANTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.MultiGPUGANTrainer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.trainer.</code><code class="sig-name descname">MultiGPUGANTrainer</code><span class="sig-paren">(</span><em class="sig-param">nr_gpu</em>, <em class="sig-param">input</em>, <em class="sig-param">model</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#MultiGPUGANTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.MultiGPUGANTrainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.train.tower.TowerTrainer</span></code></p>
 <p>A replacement of GANTrainer (optimize d and g one by one) with multi-gpu support.</p>
 <dl class="field-list simple">
@@ -277,7 +279,7 @@ Just calling <code class="xref py py-meth docutils literal notranslate"><span cl
 
 <dl class="class">
 <dt id="tgan.trainer.SeparateGANTrainer">
-<em class="property">class </em><code class="descclassname">tgan.trainer.</code><code class="descname">SeparateGANTrainer</code><span class="sig-paren">(</span><em>input</em>, <em>model</em>, <em>d_period=1</em>, <em>g_period=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#SeparateGANTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.SeparateGANTrainer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">tgan.trainer.</code><code class="sig-name descname">SeparateGANTrainer</code><span class="sig-paren">(</span><em class="sig-param">input</em>, <em class="sig-param">model</em>, <em class="sig-param">d_period=1</em>, <em class="sig-param">g_period=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#SeparateGANTrainer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.SeparateGANTrainer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tensorpack.train.tower.TowerTrainer</span></code></p>
 <p>A GAN trainer which runs two optimization ops with a certain ratio.</p>
 <dl class="field-list simple">
@@ -292,7 +294,7 @@ Just calling <code class="xref py py-meth docutils literal notranslate"><span cl
 </dl>
 <dl class="method">
 <dt id="tgan.trainer.SeparateGANTrainer.run_step">
-<code class="descname">run_step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#SeparateGANTrainer.run_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.SeparateGANTrainer.run_step" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">run_step</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tgan/trainer.html#SeparateGANTrainer.run_step"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tgan.trainer.SeparateGANTrainer.run_step" title="Permalink to this definition">¶</a></dt>
 <dd><p>Define the training iteration.</p>
 </dd></dl>
 

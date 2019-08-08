@@ -2,9 +2,9 @@ tgan.research package
 =====================
 
 .. automodule:: tgan.research
-    :members:
-    :undoc-members:
-    :show-inheritance:
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Submodules
 ----------
@@ -13,4 +13,3 @@ Submodules
 
    tgan.research.evaluation
    tgan.research.experiments
-
