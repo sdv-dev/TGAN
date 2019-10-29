@@ -8,7 +8,7 @@
 [![CodeCov](https://codecov.io/gh/DAI-Lab/TGAN/branch/master/graph/badge.svg)](https://codecov.io/gh/DAI-Lab/TGAN)
 [![Downloads](https://pepy.tech/badge/tgan)](https://pepy.tech/project/tgan)
 
-__We are happy to announce that our new model for synthetic data called [CTGAN](https://DAI-Lab.github.io/CTGAN) is open-sourced. Please check the new model in [this repo](https://DAI-Lab.github.io/CTGAN). The new model is simpler and gives better performance on many datasets.__
+__We are happy to announce that our new model for synthetic data called [CTGAN](https://github.com/DAI-Lab/CTGAN) is open-sourced. Please check the new model in [this repo](https://github.com/DAI-Lab/CTGAN). The new model is simpler and gives better performance on many datasets.__
 
 # TGAN
 
