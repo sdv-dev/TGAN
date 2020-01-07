@@ -235,9 +235,9 @@
 <span></span><span class="sd">&quot;&quot;&quot;GAN Models.&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="k">import</span> <span class="n">StagingInput</span><span class="p">,</span> <span class="n">TowerTrainer</span>
-<span class="kn">from</span> <span class="nn">tensorpack.graph_builder</span> <span class="k">import</span> <span class="n">DataParallelBuilder</span><span class="p">,</span> <span class="n">LeastLoadedDeviceSetter</span>
-<span class="kn">from</span> <span class="nn">tensorpack.tfutils.tower</span> <span class="k">import</span> <span class="n">TowerContext</span><span class="p">,</span> <span class="n">TowerFuncWrapper</span>
+<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="kn">import</span> <span class="n">StagingInput</span><span class="p">,</span> <span class="n">TowerTrainer</span>
+<span class="kn">from</span> <span class="nn">tensorpack.graph_builder</span> <span class="kn">import</span> <span class="n">DataParallelBuilder</span><span class="p">,</span> <span class="n">LeastLoadedDeviceSetter</span>
+<span class="kn">from</span> <span class="nn">tensorpack.tfutils.tower</span> <span class="kn">import</span> <span class="n">TowerContext</span><span class="p">,</span> <span class="n">TowerFuncWrapper</span>
 
 
 <div class="viewcode-block" id="GANTrainer"><a class="viewcode-back" href="../../api/tgan.trainer.html#tgan.trainer.GANTrainer">[docs]</a><span class="k">class</span> <span class="nc">GANTrainer</span><span class="p">(</span><span class="n">TowerTrainer</span><span class="p">):</span>
@@ -255,7 +255,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_queue</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">input_queue</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="n">inputs_desc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_inputs_desc</span><span class="p">()</span>
@@ -303,7 +303,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">d_period</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g_period</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">d_period</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">g_period</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">SeparateGANTrainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_d_period</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">d_period</span><span class="p">)</span>
@@ -345,7 +345,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nr_gpu</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nr_gpu</span><span class="p">,</span> <span class="nb">input</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Initialize object.&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MultiGPUGANTrainer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">nr_gpu</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>

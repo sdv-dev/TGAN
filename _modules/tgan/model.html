@@ -250,15 +250,15 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">tensorpack</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BatchData</span><span class="p">,</span> <span class="n">BatchNorm</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">FullyConnected</span><span class="p">,</span> <span class="n">InputDesc</span><span class="p">,</span> <span class="n">ModelDescBase</span><span class="p">,</span> <span class="n">ModelSaver</span><span class="p">,</span>
     <span class="n">PredictConfig</span><span class="p">,</span> <span class="n">QueueInput</span><span class="p">,</span> <span class="n">SaverRestore</span><span class="p">,</span> <span class="n">SimpleDatasetPredictor</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">tensorpack.tfutils.scope_utils</span> <span class="k">import</span> <span class="n">auto_reuse_variable_scope</span>
-<span class="kn">from</span> <span class="nn">tensorpack.tfutils.summary</span> <span class="k">import</span> <span class="n">add_moving_summary</span>
-<span class="kn">from</span> <span class="nn">tensorpack.utils.argtools</span> <span class="k">import</span> <span class="n">memoized</span>
+<span class="kn">from</span> <span class="nn">tensorpack.tfutils.scope_utils</span> <span class="kn">import</span> <span class="n">auto_reuse_variable_scope</span>
+<span class="kn">from</span> <span class="nn">tensorpack.tfutils.summary</span> <span class="kn">import</span> <span class="n">add_moving_summary</span>
+<span class="kn">from</span> <span class="nn">tensorpack.utils.argtools</span> <span class="kn">import</span> <span class="n">memoized</span>
 
-<span class="kn">from</span> <span class="nn">tgan.data</span> <span class="k">import</span> <span class="n">Preprocessor</span><span class="p">,</span> <span class="n">RandomZData</span><span class="p">,</span> <span class="n">TGANDataFlow</span>
-<span class="kn">from</span> <span class="nn">tgan.trainer</span> <span class="k">import</span> <span class="n">GANTrainer</span>
+<span class="kn">from</span> <span class="nn">tgan.data</span> <span class="kn">import</span> <span class="n">Preprocessor</span><span class="p">,</span> <span class="n">RandomZData</span><span class="p">,</span> <span class="n">TGANDataFlow</span>
+<span class="kn">from</span> <span class="nn">tgan.trainer</span> <span class="kn">import</span> <span class="n">GANTrainer</span>
 
 <span class="n">TUNABLE_VARIABLES</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;batch_size&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
@@ -282,7 +282,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">metadata</span><span class="p">,</span>
         <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
@@ -826,7 +826,7 @@
 <span class="sd">            :attr:`AdamOptimizer`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">continuous_columns</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">gpu</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_epoch</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
         <span class="n">save_checkpoints</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">restore_session</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
         <span class="n">l2norm</span><span class="o">=</span><span class="mf">0.00001</span><span class="p">,</span> <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">num_gen_rnn</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_gen_feature</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>

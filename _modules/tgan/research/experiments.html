@@ -241,11 +241,11 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
-<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
-<span class="kn">from</span> <span class="nn">tensorpack.utils</span> <span class="k">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">tensorpack.utils</span> <span class="kn">import</span> <span class="n">logger</span>
 
-<span class="kn">from</span> <span class="nn">tgan.model</span> <span class="k">import</span> <span class="n">TUNABLE_VARIABLES</span><span class="p">,</span> <span class="n">TGANModel</span>
-<span class="kn">from</span> <span class="nn">tgan.research.evaluation</span> <span class="k">import</span> <span class="n">evaluate_classification</span>
+<span class="kn">from</span> <span class="nn">tgan.model</span> <span class="kn">import</span> <span class="n">TUNABLE_VARIABLES</span><span class="p">,</span> <span class="n">TGANModel</span>
+<span class="kn">from</span> <span class="nn">tgan.research.evaluation</span> <span class="kn">import</span> <span class="n">evaluate_classification</span>
 
 
 <div class="viewcode-block" id="prepare_hyperparameter_search"><a class="viewcode-back" href="../../../api/tgan.research.experiments.html#tgan.research.experiments.prepare_hyperparameter_search">[docs]</a><span class="k">def</span> <span class="nf">prepare_hyperparameter_search</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">steps_per_epoch</span><span class="p">,</span> <span class="n">num_random_search</span><span class="p">):</span>
