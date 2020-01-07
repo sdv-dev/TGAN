@@ -1,22 +1,22 @@
 <p align="left">
-<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="DAI-Lab" />
+<img width=20% src="https://dai.lids.mit.edu/wp-content/uploads/2018/06/Logo_DAI_highres.png" alt="sdv-dev" />
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
 [![PyPi Shield](https://img.shields.io/pypi/v/TGAN.svg)](https://pypi.python.org/pypi/TGAN)
-[![Travis CI Shield](https://travis-ci.org/DAI-Lab/TGAN.svg?branch=master)](https://travis-ci.org/DAI-Lab/TGAN)
-[![CodeCov](https://codecov.io/gh/DAI-Lab/TGAN/branch/master/graph/badge.svg)](https://codecov.io/gh/DAI-Lab/TGAN)
+[![Travis CI Shield](https://travis-ci.org/sdv-dev/TGAN.svg?branch=master)](https://travis-ci.org/sdv-dev/TGAN)
+[![CodeCov](https://codecov.io/gh/sdv-dev/TGAN/branch/master/graph/badge.svg)](https://codecov.io/gh/sdv-dev/TGAN)
 [![Downloads](https://pepy.tech/badge/tgan)](https://pepy.tech/project/tgan)
 
-__We are happy to announce that our new model for synthetic data called [CTGAN](https://github.com/DAI-Lab/CTGAN) is open-sourced. Please check the new model in [this repo](https://github.com/DAI-Lab/CTGAN). The new model is simpler and gives better performance on many datasets.__
+__We are happy to announce that our new model for synthetic data called [CTGAN](https://github.com/sdv-dev/CTGAN) is open-sourced. Please check the new model in [this repo](https://github.com/sdv-dev/CTGAN). The new model is simpler and gives better performance on many datasets.__
 
 # TGAN
 
 Generative adversarial training for synthesizing tabular data.
 
 * Free software: MIT license
-* Documentation: https://DAI-Lab.github.io/TGAN
-* Homepage: https://github.com/DAI-Lab/TGAN
+* Documentation: https://sdv-dev.github.io/TGAN
+* Homepage: https://github.com/sdv-dev/TGAN
 
 # Overview
 
@@ -46,7 +46,7 @@ pip install tgan
 Alternatively, you can also clone the repository and install it from sources
 
 ```
-git clone git@github.com:DAI-Lab/TGAN.git
+git clone git@github.com:sdv-dev/TGAN.git
 cd TGAN
 make install
 ```
@@ -450,14 +450,14 @@ experiments/
 
 # Research
 
-The first **TAGN** version was built as the supporting software for the [Synthesizing Tabular Data using Generative Adversarial Networks](https://arxiv.org/pdf/1811.11264.pdf) paper by Lei Xu and Kalyan Veeramachaneni.
+The first **TGAN** version was built as the supporting software for the [Synthesizing Tabular Data using Generative Adversarial Networks](https://arxiv.org/pdf/1811.11264.pdf) paper by Lei Xu and Kalyan Veeramachaneni.
 
-The exact version of software mentioned in the paper can be found in the releases section as the [research pre-release](https://github.com/DAI-Lab/TGAN/releases/tag/research)
+The exact version of software mentioned in the paper can be found in the releases section as the [research pre-release](https://github.com/sdv-dev/TGAN/releases/tag/research)
 
 # What's next?
 
 For more details about **TGAN** and all its possibilities and features, please check the
-[project documentation site](https://DAI-Lab.github.io/TGAN/)!
+[project documentation site](https://sdv-dev.github.io/TGAN/)!
 
 # Citing TGAN
 

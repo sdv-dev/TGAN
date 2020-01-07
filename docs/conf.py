@@ -55,7 +55,7 @@ title = project + ' Documentation',
 copyright = '2019, MIT Data To AI Lab'
 author = 'MIT Data To AI Lab'
 description = 'Generative adversarial training for synthesizing tabular data.'
-user = 'DAI-Lab'
+user = 'sdv-dev'
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout

@@ -201,6 +201,6 @@ Once this is done, run of the following commands:
 
     make release-major
 
-.. _GitHub issues page: https://github.com/DAI-Lab/TGAN/issues
-.. _Travis Build Status page: https://travis-ci.org/DAI-Lab/TGAN/pull_requests
+.. _GitHub issues page: https://github.com/sdv-dev/TGAN/issues
+.. _Travis Build Status page: https://travis-ci.org/sdv-dev/TGAN/pull_requests
 .. _Google docstrings style: https://google.github.io/styleguide/pyguide.html?showone=Comments#Comments

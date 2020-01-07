@@ -94,7 +94,7 @@ setup(
     setup_requires=setup_requires,
     test_suite='tests',
     tests_require=test_require,
-    url='https://github.com/DAI-Lab/TGAN',
+    url='https://github.com/sdv-dev/TGAN',
     version='0.1.1-dev',
     zip_safe=False,
 )
