@@ -14,7 +14,7 @@ __We are happy to announce that our new model for synthetic data called [CTGAN](
 
 Generative adversarial training for synthesizing tabular data.
 
-* Free software: MIT license
+* License: [MIT](https://github.com/sdv-dev/TGAN/blob/master/LICENSE)
 * Documentation: https://sdv-dev.github.io/TGAN
 * Homepage: https://github.com/sdv-dev/TGAN
 
