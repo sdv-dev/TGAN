@@ -3,6 +3,7 @@
 <i>An open source project from Data to AI Lab at MIT.</i>
 </p>
 
+[![Development Status](https://img.shields.io/badge/Development%20Status-2%20--%20Pre--Alpha-yellow)](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 [![PyPi Shield](https://img.shields.io/pypi/v/TGAN.svg)](https://pypi.python.org/pypi/TGAN)
 [![Travis CI Shield](https://travis-ci.org/sdv-dev/TGAN.svg?branch=master)](https://travis-ci.org/sdv-dev/TGAN)
 [![CodeCov](https://codecov.io/gh/sdv-dev/TGAN/branch/master/graph/badge.svg)](https://codecov.io/gh/sdv-dev/TGAN)
@@ -15,6 +16,7 @@ __We are happy to announce that our new model for synthetic data called [CTGAN](
 Generative adversarial training for synthesizing tabular data.
 
 * License: [MIT](https://github.com/sdv-dev/TGAN/blob/master/LICENSE)
+* Development Status: [Pre-Alpha](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
 * Documentation: https://sdv-dev.github.io/TGAN
 * Homepage: https://github.com/sdv-dev/TGAN
 
