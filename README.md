@@ -17,7 +17,6 @@ Generative adversarial training for synthesizing tabular data.
 
 * License: [MIT](https://github.com/sdv-dev/TGAN/blob/master/LICENSE)
 * Development Status: [Pre-Alpha](https://pypi.org/search/?c=Development+Status+%3A%3A+2+-+Pre-Alpha)
-* Documentation: https://sdv-dev.github.io/TGAN
 * Homepage: https://github.com/sdv-dev/TGAN
 
 # Overview
@@ -455,11 +454,6 @@ experiments/
 The first **TGAN** version was built as the supporting software for the [Synthesizing Tabular Data using Generative Adversarial Networks](https://arxiv.org/pdf/1811.11264.pdf) paper by Lei Xu and Kalyan Veeramachaneni.
 
 The exact version of software mentioned in the paper can be found in the releases section as the [research pre-release](https://github.com/sdv-dev/TGAN/releases/tag/research)
-
-# What's next?
-
-For more details about **TGAN** and all its possibilities and features, please check the
-[project documentation site](https://sdv-dev.github.io/TGAN/)!
 
 # Citing TGAN
 
